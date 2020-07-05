@@ -12,9 +12,13 @@ public class CombatController : MonoBehaviour {
     private List<Card> deck = new List<Card>();
     private List<Card> hand = new List<Card>();
     private List<Card> discardPile = new List<Card>();
-    private System.Random rand = new System.Random();
 
-    public List<GameObject> whiteRectangles;
+
+
+    private System.Random rand = new System.Random();
+    //public List<GameObject> whiteRectangles;
+    public GameObject handGameObject; //card display objects will get added to this dynamically
+    public GameObject cardDisplayPrefab;
 
 
     private void Start() {
@@ -30,7 +34,7 @@ public class CombatController : MonoBehaviour {
         deck.Add(new Card("red"));
 
         ShuffleDeck();
-        DrawCards(5);
+        DrawCards(4);
         ShowCardsInHand();
 
         PrintCards("deck:", deck);
@@ -66,22 +70,32 @@ public class CombatController : MonoBehaviour {
         //takes num cards from the deck and adds them to the hand
         for (int i = 0; i<num; i++) {
             Card card = deck[i];
-            deck.RemoveAt(i);
             hand.Add(card);
+        }
+        //remove the top "num" cards from the deck
+        for (int i = 0; i < num; i++) {
+            deck.RemoveAt(0);
         }
     }
 
     private void ShowCardsInHand() {
-        //changes the colors of the on-screen cards to match the cards in the parameter "cards"
+        //creates handDisplayPrefab instances for each card currently in the hand
+        //changes the color of those instances to match the cards in the hand
+        float cardDisplayWidth = cardDisplayPrefab.transform.localScale.x * cardDisplayPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        
         for (int i = 0; i < hand.Count; i++) {
-            GameObject whiteRectangle = whiteRectangles[i];
-            Card card = hand[i];
+            GameObject newCardDisplay = Instantiate(cardDisplayPrefab);
+            newCardDisplay.transform.parent = handGameObject.transform;
+            Vector2 cardPos = newCardDisplay.transform.position;
+            cardPos.x += i * cardDisplayWidth * 1.2f;
+            newCardDisplay.transform.position = cardPos;
 
             Color color = Color.red;
-            if (card.cardName == "blue") {
+            if (hand[i].cardName == "blue") {
                 color = Color.blue;
             }
-            whiteRectangle.GetComponent<SpriteRenderer>().color = color;
+            newCardDisplay.GetComponent<SpriteRenderer>().color = color;
+
         }
     }
     
