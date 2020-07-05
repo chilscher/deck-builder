@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b2309636f8920489a5b11685c31005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardsInHand:
+  whiteRectangles:
   - {fileID: 849603864}
   - {fileID: 1527874958}
   - {fileID: 196892251}
