@@ -12,6 +12,7 @@ public class CombatController : MonoBehaviour {
     private List<Card> deck = new List<Card>();
     private List<Card> hand = new List<Card>();
     private List<Card> discardPile = new List<Card>();
+    private List<Enemy> enemies = new List<Enemy>();
 
 
 
@@ -40,6 +41,10 @@ public class CombatController : MonoBehaviour {
         PrintCards("deck:", deck);
         PrintCards("hand:", hand);
         PrintCards("discard:", discardPile);
+
+        enemies.Add(new Enemy("Skeleton", 12));
+
+        DisplayEnemies();
     }
 
     private void Update() {
@@ -98,7 +103,12 @@ public class CombatController : MonoBehaviour {
 
         }
     }
-    
+
+    private void DisplayEnemies() {
+        Debug.Log(enemies);
+
+    }
+
     private void PrintCards(string introText, List<Card> cards) {
         //prints the name of the parameter "cards"
         string output = introText + " - ";
