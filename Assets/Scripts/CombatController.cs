@@ -98,7 +98,7 @@ public class CombatController : MonoBehaviour {
             GameObject.Destroy(t.gameObject);
         }
 
-        //set the width of a single cardDisplayPrefab object
+        //set the width of a single cardDisplay object
         float cardDisplayWidth = displayCardPrefab.transform.localScale.x * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         
         for (int i = 0; i < hand.Count; i++) {
@@ -107,14 +107,22 @@ public class CombatController : MonoBehaviour {
             newCardDisplay.transform.parent = handGameObject.transform;
 
             //setting the position in world space
-            Vector2 cardPos = Vector2.zero;
-            cardPos.x += i * cardDisplayWidth * (1 + gapBetweenCardsInHand); //each card is placed cardDisplayWidth * (1+gap) distance apart
-            cardPos.x -= (hand.Count -1) * cardDisplayWidth * (1 + gapBetweenCardsInHand) /2; //move all cards over by half the width of all cards
-            //center the card on the parent transform's position in the x and y directions
-            //when transferred to world space, the central position of the cards should be 0,0 with regards to the hand gameobject coordinate system
-            cardPos.x += handGameObject.transform.position.x;
-            cardPos.y += handGameObject.transform.position.y;
-            newCardDisplay.transform.position = cardPos; //apply the calculated position to the card
+
+            //start with the position of the handGameObject
+            Vector2 cardPos = handGameObject.transform.position;
+
+            //then move each card horizontally dependent upon its place in the hand
+            //the fist card is moved over by 0, the second is moved by the width of a card, plus some pre-defined gap distance
+            //the third is moved by the width of 2 cards, plus twice the pre-defined gap distance
+            cardPos.x += i * cardDisplayWidth * (1 + gapBetweenCardsInHand);
+
+            //then, move every card horizontally by half of the total width of the hand
+            //without this line, a 5-card hand has the 1st card in the center of the screen
+            //with this line, a 5-card hand has the 3rd card in the center of the screen
+            cardPos.x -= (hand.Count -1) * cardDisplayWidth * (1 + gapBetweenCardsInHand) /2;
+
+            //apply the calculated position to the card's transform
+            newCardDisplay.transform.position = cardPos;
 
             //color the card
             Color color = Color.red;
