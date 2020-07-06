@@ -6,12 +6,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 [System.Serializable]
-public class Card{
+public class CardData{
     //a card in the game
 
     public string cardName;
     
-    public Card (string name) {
+    public CardData (string name) {
         cardName = name;
     }
 
