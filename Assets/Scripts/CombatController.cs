@@ -44,9 +44,11 @@ public class CombatController : MonoBehaviour {
         ShowNumberInPile(deckGameObject, deck);
         ShowNumberInPile(discardPileGameObject, discardPile);
 
+        /*
         PrintCards("deck:", deck);
         PrintCards("hand:", hand);
         PrintCards("discard:", discardPile);
+        */
 
         enemies.Add(new Enemy("Skeleton", 12));
 
@@ -131,6 +133,9 @@ public class CombatController : MonoBehaviour {
             }
             newCardDisplay.GetComponent<SpriteRenderer>().color = color;
 
+            //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
+            newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
+
         }
     }
 
@@ -157,5 +162,16 @@ public class CombatController : MonoBehaviour {
         pile.transform.Find("Tens").GetComponent<SpriteRenderer>().sprite = numbers[tens];
         pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sprite = numbers[ones];
     }
-    
+
+    public void PrintDeck() {
+        //prints the cards in the deck
+        //a temporary function used by TouchHandler, until proper Deck-tapping functionality is added
+        PrintCards("deck: ", deck);
+    }
+    public void PrintDiscard() {
+        //prints the cards in the discard pile
+        //a temporary function used by TouchHandler, until proper Discard-tapping functionality is added
+        PrintCards("discard: ", discardPile);
+    }
+
 }
