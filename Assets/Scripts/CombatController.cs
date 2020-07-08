@@ -19,6 +19,7 @@ public class CombatController : MonoBehaviour {
     private System.Random rand = new System.Random();
     //public List<GameObject> whiteRectangles;
     public GameObject handGameObject; //card display objects will get added to this dynamically
+    public GameObject enemiesGameObject;
     public GameObject displayCardPrefab;
 
     public List<Sprite> numbers; //assumed to be exactly 10 numbers
@@ -94,7 +95,7 @@ public class CombatController : MonoBehaviour {
     private void ShowCardsInHand() {
         //creates handDisplayPrefab instances for each card currently in the hand
         //changes the color of those instances to match the cards in the hand
-
+        
         //first, delete all the cards in the current hand
         foreach (Transform t in handGameObject.transform) {
             GameObject.Destroy(t.gameObject);
@@ -140,10 +141,50 @@ public class CombatController : MonoBehaviour {
     }
 
     private void DisplayEnemies() {
-        Debug.Log(enemies);
+
+        float cardDisplayWidth = displayCardPrefab.transform.localScale.x * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        float cardDisplayHeight = displayCardPrefab.transform.localScale.y * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+
+        for (int i = 0; i < enemies.Count; i++) {
+            GameObject newEnemyDisplay = Instantiate(displayCardPrefab);
+            newEnemyDisplay.transform.parent = enemiesGameObject.transform;
+
+            Vector2 enemyPos = enemiesGameObject.transform.position;
+
+            newEnemyDisplay.transform.position = enemyPos;
+
+            newEnemyDisplay.GetComponent<SpriteRenderer>().color = Color.green;
+
+            GameObject enemyName = new GameObject();
+            enemyName.transform.parent = newEnemyDisplay.transform;
+
+            Vector2 enemyNamePos = enemiesGameObject.transform.position;
+            enemyNamePos.x -= cardDisplayWidth / 4;
+            enemyNamePos.y += cardDisplayHeight / 3;
+
+            enemyName.AddComponent<TextMesh>().text = enemies[i].enemyName;
+            enemyName.transform.position = enemyNamePos;
+            enemyName.GetComponent<TextMesh>().characterSize = 0.2f;
+            enemyName.GetComponent<TextMesh>().offsetZ = -0.2f;
+            enemyName.GetComponent<TextMesh>().color = Color.black;
+
+
+            GameObject enemyHP = new GameObject();
+            enemyHP.transform.parent = newEnemyDisplay.transform;
+
+            Vector2 enemyHPPos = enemiesGameObject.transform.position;
+            enemyHPPos.x -= cardDisplayWidth / 4;
+
+            enemyHP.AddComponent<TextMesh>().text = "HP:" + (enemies[i].hitPoints - enemies[i].hitPointDamage) + "/" + enemies[i].hitPoints;
+            enemyHP.transform.position = enemyHPPos;
+            enemyHP.GetComponent<TextMesh>().characterSize = 0.2f;
+            enemyHP.GetComponent<TextMesh>().offsetZ = -0.2f;
+            enemyHP.GetComponent<TextMesh>().color = Color.black;
+
+        }
 
     }
-   
+
     private void PrintCards(string introText, List<CardData> cards) {
         //prints the name of the parameter "cards"
         string output = introText + " - ";
@@ -160,7 +201,9 @@ public class CombatController : MonoBehaviour {
         int tens = num / 10;
         int ones = num - (tens * 10);
         pile.transform.Find("Tens").GetComponent<SpriteRenderer>().sprite = numbers[tens];
+        pile.transform.Find("Tens").GetComponent<SpriteRenderer>().sortingOrder = 1;
         pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sprite = numbers[ones];
+        pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sortingOrder = 1;
     }
 
     public void PrintDeck() {

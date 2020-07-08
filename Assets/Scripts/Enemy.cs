@@ -12,11 +12,13 @@ public class Enemy
 
     public string enemyName;
     public int hitPoints;
+    public int hitPointDamage;
 
     public Enemy(string name, int hp)
     {
         enemyName = name;
         hitPoints = hp;
+        hitPointDamage = 0;
     }
 
 }
