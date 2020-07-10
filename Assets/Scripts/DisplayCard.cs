@@ -11,9 +11,12 @@ public class DisplayCard: MonoBehaviour{
 
     [HideInInspector]
     public CardData associatedCard;
+    [HideInInspector]
+    public CombatController combatController;
     
     public void ClickedCard() {
-        print("you tapped a card! it is: " + associatedCard.cardName);
+        //print("you tapped a card! it is: " + associatedCard.cardName);
+        combatController.MoveCardFromHandToDiscard(associatedCard);
     }
 
 }

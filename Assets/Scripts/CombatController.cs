@@ -27,6 +27,8 @@ public class CombatController : MonoBehaviour {
     public GameObject deckGameObject;
     public GameObject discardPileGameObject;
 
+    public int drawNum; //the number of cards the player draws at the start of their turn
+
 
     private void Start() {
         deck.Add(new CardData("blue"));
@@ -41,16 +43,10 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData("red"));
 
         ShuffleDeck();
-        DrawCards(5);
+        DrawCards(drawNum);
         ShowCardsInHand();
         ShowNumberInPile(deckGameObject, deck);
         ShowNumberInPile(discardPileGameObject, discardPile);
-
-        /*
-        PrintCards("deck:", deck);
-        PrintCards("hand:", hand);
-        PrintCards("discard:", discardPile);
-        */
 
         enemies.Add(new EnemyData("Katie", 12));
 
@@ -82,15 +78,39 @@ public class CombatController : MonoBehaviour {
     }
 
     private void DrawCards(int num) {
-        //takes num cards from the deck and adds them to the hand
-        for (int i = 0; i<num; i++) {
-            CardData card = deck[i];
-            hand.Add(card);
+        //draws num cards from the deck and adds them to the hand. shuffles the discard pile into the deck if more cards need to be drawn
+
+        if (deck.Count == 0 && discardPile.Count == 0) { //if the deck and discard pile are empty, do nothing
+            return;
         }
-        //remove the top "num" cards from the deck
-        for (int i = 0; i < num; i++) {
-            deck.RemoveAt(0);
+        else if (deck.Count >= num) { //if the deck has enough cards to draw, draw num from the top
+            //add num cards from the top of the deck to the hand
+            for (int i = 0; i < num; i++) {
+                CardData card = deck[i];
+                hand.Add(card);
+            }
+            //remove the top "num" cards from the deck
+            for (int i = 0; i < num; i++) {
+                deck.RemoveAt(0);
+            }
         }
+        else { //if the deck does not have enough cards to draw, draw as many as you can, then shuffle the discard pile into the deck, and call DrawCards again
+            //draw the rest of the deck
+            int alreadyDrawn = deck.Count;
+            DrawCards(deck.Count);
+
+            //add cards from the discard pile to the deck
+            deck = discardPile;
+            discardPile = new List<CardData>();
+
+            //shuffle the deck with the new cards in it
+            ShuffleDeck();
+
+            //draw the remaining cards
+            DrawCards(num - alreadyDrawn);
+        }
+        
+
     }
 
     private void ShowCardsInHand() {
@@ -137,7 +157,8 @@ public class CombatController : MonoBehaviour {
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
-
+            //set the DisplayCard's CombatController reference, so when you click the DisplayCard you can call some CombatController functions
+            newCardDisplay.GetComponent<DisplayCard>().combatController = this;
         }
     }
 
@@ -201,6 +222,22 @@ public class CombatController : MonoBehaviour {
         //prints the cards in the discard pile
         //a temporary function used by TouchHandler, until proper Discard-tapping functionality is added
         PrintCards("discard: ", discardPile);
+    }
+
+    public void MoveCardFromHandToDiscard(CardData card) {
+        //takes card from hand and moves it to the discard pile, then re-displays the hand, deck, and discard pile
+
+        //move the card from the hand to the discard pile
+        hand.Remove(card);
+        discardPile.Add(card);
+        
+        //temporarily here, for playtesting - if you play the last card from your hand, refill your hand from the deck
+        if (hand.Count == 0) { DrawCards(drawNum); }
+        
+        //display the cards in the hand, deck, and discard pile
+        ShowCardsInHand();
+        ShowNumberInPile(discardPileGameObject, discardPile);
+        ShowNumberInPile(deckGameObject, deck);
     }
 
 }
