@@ -194,7 +194,7 @@ public class TouchHandler : MonoBehaviour {
         //drags the DisplayCard object around the screen while the player holds their finger down        
         Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
-        movingCard.transform.position = relativeCardPosition + worldPos2d; //takes the current touch position and adds the relative position of the touch to the card, to get the card's new position
+        movingCard.transform.position = worldPos2d - relativeCardPosition; //takes the current touch position and subtracts the relative position of the touch to the card, to get the card's new position
     }
      
 }
