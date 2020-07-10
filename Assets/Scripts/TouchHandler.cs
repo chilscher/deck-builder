@@ -17,11 +17,18 @@ using UnityEngine.EventSystems;
 
 
 public class TouchHandler : MonoBehaviour {
-
-    CombatController combatController; //defined at the start of the scene, used to call functions for objects once they have been clicked
-
     //to be attached to the camera in the combat scene
     //detects the player's touch or mouse inputs, and calls the touch function for the appropriate object
+
+
+    private CombatController combatController; //defined at the start of the scene, used to call functions for objects once they have been clicked
+
+    //variables used to drag a card around the screen
+    private DisplayCard movingCard; //the card to be dragged
+    private bool shouldMoveCard = false; //if the card should move to follow the player's touch
+    private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
+    
+
 
     private void Start() {
         //define variables that are used to call functions
@@ -31,25 +38,32 @@ public class TouchHandler : MonoBehaviour {
     private void Update() {
         //every frame, check for any touch inputs
 
-        //process a click with the mouse, in the unity editor
-#if UNITY_EDITOR
+        //process a click with the mouse
         if (Input.GetMouseButtonDown(0)) {
             List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
             GameObject o = ChooseObjectToTouch(objs);
             InteractWithObject(o);
         }
-#endif
-        //process a touch with the finger, on a smartphone
-        if (Input.touchCount > 0) {
-            for (int i = 0; i < Input.touches.Length; i++) {
-                if (Input.touches[i].phase == TouchPhase.Began) {
 
-                    List<GameObject> objs = FindAllObjectCollisions(Input.touches[i].position);
-                    GameObject o = ChooseObjectToTouch(objs);
-                    InteractWithObject(o);
-                }
+
+        //process the mouse being held down
+        if (Input.GetMouseButton(0)) {
+            //if the player is dragging a card, move the card to match the current mouse position
+            if (shouldMoveCard) {
+                DragCard();
             }
         }
+
+        //process the mouse being released
+        if (Input.GetMouseButtonUp(0)) {
+            //if the player is moving a card, stop moving it
+            //for testing, when the player releases a card, run its click function
+            if (shouldMoveCard) {
+                shouldMoveCard = false;
+                movingCard.ReleasedCard();
+            }
+        }
+        
     }
 
     private List<GameObject> FindAllObjectCollisions(Vector2 pos) {
@@ -66,7 +80,7 @@ public class TouchHandler : MonoBehaviour {
         }
 
         //find touched objects in world space
-        Vector3 wp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 wp = Camera.main.ScreenToWorldPoint(pos);
         Vector2 touchPos = new Vector2(wp.x, wp.y);
         if (Physics2D.OverlapPoint(touchPos) != null) {
             Collider2D[] overlaps = Physics2D.OverlapPointAll(touchPos);
@@ -145,7 +159,8 @@ public class TouchHandler : MonoBehaviour {
 
         //if the object is a DisplayCard, click it
         if (type == "Display Card") {
-            obj.GetComponent<DisplayCard>().ClickedCard();
+            SetCardToDrag(obj.GetComponent<DisplayCard>());
+            //obj.GetComponent<DisplayCard>().ClickedCard();
         }
 
         //if the object is the Discard Pile
@@ -159,5 +174,27 @@ public class TouchHandler : MonoBehaviour {
         }
 
     }
+
+    private void SetCardToDrag(DisplayCard dc) {
+        //sets the designated DisplayCard to follow the player's finger across the screen
+        //called when a DisplayCard is tapped
+
+        //set the touchHandler to drag the card
+        movingCard = dc;
+        shouldMoveCard = true;
+
+        //define the touch's position relative to the card's position.
+        //ex: if the player taps a card in the top-left of the boxcollider, and the player drags the card, the card will be moved so that the top-left of the boxcollider remains under their finger
+        Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
+        relativeCardPosition = worldPos2d - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
+    }
     
+    private void DragCard() {
+        //drags the DisplayCard object around the screen while the player holds their finger down        
+        Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
+        movingCard.transform.position = relativeCardPosition + worldPos2d; //takes the current touch position and adds the relative position of the touch to the card, to get the card's new position
+    }
+     
 }

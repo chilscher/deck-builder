@@ -14,8 +14,19 @@ public class DisplayCard: MonoBehaviour{
     [HideInInspector]
     public CombatController combatController;
     
-    public void ClickedCard() {
-        //print("you tapped a card! it is: " + associatedCard.cardName);
+    public void ReleasedCard() { 
+        //what happens when the player is dragging this card around and then releases it
+
+        //some temporary unique text based on what card this is
+        //later, the card effect will go here
+        if (associatedCard.cardName == "red") {
+            print("you stabbed with your Dragon Dagger!");
+        }
+        else if (associatedCard.cardName == "blue") {
+            print("you held up your Rune Kiteshield!");
+        }
+
+        //discard the card
         combatController.MoveCardFromHandToDiscard(associatedCard);
     }
 
