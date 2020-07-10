@@ -271,6 +271,8 @@ MonoBehaviour:
   enemiesGameObject: {fileID: 953934554}
   displayCardPrefab: {fileID: 4870686121329278908, guid: f14510db93af35b4397e5096435a7c8a,
     type: 3}
+  enemySpritePrefab: {fileID: 7002800415312843669, guid: a43a60da270c5a34ab9fd3d85cf7e9a3,
+    type: 3}
   numbers:
   - {fileID: 21300000, guid: 684d518044768a544a9e28e2c3b49ef1, type: 3}
   - {fileID: 21300000, guid: 8ed85043c0e0f234fad58d9cd06d1b26, type: 3}

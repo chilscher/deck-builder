@@ -12,7 +12,7 @@ public class CombatController : MonoBehaviour {
     private List<CardData> deck = new List<CardData>();
     private List<CardData> hand = new List<CardData>();
     private List<CardData> discardPile = new List<CardData>();
-    private List<Enemy> enemies = new List<Enemy>();
+    private List<EnemyData> enemies = new List<EnemyData>();
 
     public float gapBetweenCardsInHand = 0.2f; //the space between cards in the hand is this number * the width of a card
 
@@ -21,6 +21,7 @@ public class CombatController : MonoBehaviour {
     public GameObject handGameObject; //card display objects will get added to this dynamically
     public GameObject enemiesGameObject;
     public GameObject displayCardPrefab;
+    public GameObject enemySpritePrefab;
 
     public List<Sprite> numbers; //assumed to be exactly 10 numbers
     public GameObject deckGameObject;
@@ -51,7 +52,7 @@ public class CombatController : MonoBehaviour {
         PrintCards("discard:", discardPile);
         */
 
-        enemies.Add(new Enemy("Skeleton", 12));
+        enemies.Add(new EnemyData("Katie", 12));
 
         DisplayEnemies();
 
@@ -142,44 +143,29 @@ public class CombatController : MonoBehaviour {
 
     private void DisplayEnemies() {
 
-        float cardDisplayWidth = displayCardPrefab.transform.localScale.x * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-        float cardDisplayHeight = displayCardPrefab.transform.localScale.y * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+        float cardDisplayWidth = enemySpritePrefab.transform.localScale.x * enemySpritePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        float cardDisplayHeight = enemySpritePrefab.transform.localScale.y * enemySpritePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
 
         for (int i = 0; i < enemies.Count; i++) {
-            GameObject newEnemyDisplay = Instantiate(displayCardPrefab);
+            // render enemy
+            GameObject newEnemyDisplay = Instantiate(enemySpritePrefab);
             newEnemyDisplay.transform.parent = enemiesGameObject.transform;
 
             Vector2 enemyPos = enemiesGameObject.transform.position;
 
             newEnemyDisplay.transform.position = enemyPos;
 
-            newEnemyDisplay.GetComponent<SpriteRenderer>().color = Color.green;
+            //render enemy name
+            Transform enemyName = newEnemyDisplay.transform.GetChild(0);
 
-            GameObject enemyName = new GameObject();
-            enemyName.transform.parent = newEnemyDisplay.transform;
-
-            Vector2 enemyNamePos = enemiesGameObject.transform.position;
-            enemyNamePos.x -= cardDisplayWidth / 4;
-            enemyNamePos.y += cardDisplayHeight / 3;
-
-            enemyName.AddComponent<TextMesh>().text = enemies[i].enemyName;
-            enemyName.transform.position = enemyNamePos;
-            enemyName.GetComponent<TextMesh>().characterSize = 0.2f;
-            enemyName.GetComponent<TextMesh>().offsetZ = -0.2f;
-            enemyName.GetComponent<TextMesh>().color = Color.black;
+            enemyName.GetComponent<TextMesh>().text = enemies[i].enemyName;
 
 
-            GameObject enemyHP = new GameObject();
-            enemyHP.transform.parent = newEnemyDisplay.transform;
+            //render enemy hp
+            Transform enemyHP = newEnemyDisplay.transform.GetChild(1);
 
-            Vector2 enemyHPPos = enemiesGameObject.transform.position;
-            enemyHPPos.x -= cardDisplayWidth / 4;
+            enemyHP.GetComponent<TextMesh>().text = "HP:" + (enemies[i].hitPoints - enemies[i].hitPointDamage) + "/" + enemies[i].hitPoints;
 
-            enemyHP.AddComponent<TextMesh>().text = "HP:" + (enemies[i].hitPoints - enemies[i].hitPointDamage) + "/" + enemies[i].hitPoints;
-            enemyHP.transform.position = enemyHPPos;
-            enemyHP.GetComponent<TextMesh>().characterSize = 0.2f;
-            enemyHP.GetComponent<TextMesh>().offsetZ = -0.2f;
-            enemyHP.GetComponent<TextMesh>().color = Color.black;
 
         }
 
