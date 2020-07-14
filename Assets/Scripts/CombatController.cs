@@ -29,8 +29,20 @@ public class CombatController : MonoBehaviour {
 
     public int drawNum; //the number of cards the player draws at the start of their turn
 
+    public Catalog catalog;
 
     private void Start() {
+        deck.Add(new CardData(catalog.GetCardWithName("red")));
+        deck.Add(new CardData(catalog.GetCardWithName("red")));
+        deck.Add(new CardData(catalog.GetCardWithName("red")));
+        deck.Add(new CardData(catalog.GetCardWithName("red")));
+        deck.Add(new CardData(catalog.GetCardWithName("red")));
+        deck.Add(new CardData(catalog.GetCardWithName("blue")));
+        deck.Add(new CardData(catalog.GetCardWithName("blue")));
+        deck.Add(new CardData(catalog.GetCardWithName("blue")));
+        deck.Add(new CardData(catalog.GetCardWithName("blue")));
+        deck.Add(new CardData(catalog.GetCardWithName("blue")));
+        /*
         deck.Add(new CardData("blue"));
         deck.Add(new CardData("blue"));
         deck.Add(new CardData("blue"));
@@ -41,6 +53,7 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData("red"));
         deck.Add(new CardData("red"));
         deck.Add(new CardData("red"));
+        */
 
         ShuffleDeck();
         DrawCards(drawNum);
@@ -148,12 +161,8 @@ public class CombatController : MonoBehaviour {
             //apply the calculated position to the card's transform
             newCardDisplay.transform.position = cardPos;
 
-            //color the card
-            Color color = Color.red;
-            if (hand[i].cardName == "blue") {
-                color = Color.blue;
-            }
-            newCardDisplay.GetComponent<SpriteRenderer>().color = color;
+            //set the display image to match the card's sprite
+            newCardDisplay.GetComponent<SpriteRenderer>().sprite = hand[i].source.sprite;
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
@@ -196,7 +205,7 @@ public class CombatController : MonoBehaviour {
         //prints the name of the parameter "cards"
         string output = introText + " - ";
         foreach (CardData c in cards) {
-            output += c.cardName;
+            output += c.source.cardName;
             output += " - ";
         }
         print(output);

@@ -287,6 +287,7 @@ MonoBehaviour:
   deckGameObject: {fileID: 1448618012}
   discardPileGameObject: {fileID: 1841558314}
   drawNum: 5
+  catalog: {fileID: 1906865166}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -297,7 +298,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -638,7 +639,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedCard:
-    cardName: blue
+    source:
+      cardName: 
+      text: 
+      sprite: {fileID: 0}
   combatController: {fileID: 0}
 --- !u!61 &999078828
 BoxCollider2D:
@@ -760,7 +764,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedCard:
-    cardName: red
+    source:
+      cardName: 
+      text: 
+      sprite: {fileID: 0}
   combatController: {fileID: 0}
 --- !u!61 &1093006894
 BoxCollider2D:
@@ -961,7 +968,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedCard:
-    cardName: blue
+    source:
+      cardName: 
+      text: 
+      sprite: {fileID: 0}
   combatController: {fileID: 0}
 --- !u!61 &1299660523
 BoxCollider2D:
@@ -1191,7 +1201,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedCard:
-    cardName: blue
+    source:
+      cardName: 
+      text: 
+      sprite: {fileID: 0}
   combatController: {fileID: 0}
 --- !u!61 &1562294155
 BoxCollider2D:
@@ -1313,7 +1326,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedCard:
-    cardName: red
+    source:
+      cardName: 
+      text: 
+      sprite: {fileID: 0}
   combatController: {fileID: 0}
 --- !u!61 &1650079845
 BoxCollider2D:
@@ -1497,6 +1513,56 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1906865165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1906865167}
+  - component: {fileID: 1906865166}
+  m_Layer: 0
+  m_Name: Catalog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1906865166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906865165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a715b2b8bc84246acdef2d62e2f332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cards:
+  - cardName: red
+    text: i am a stabby
+    sprite: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
+  - cardName: blue
+    text: ooo look at me im a shield
+    sprite: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
+--- !u!4 &1906865167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906865165}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.18409449, y: -3.0711193, z: -0.13330267}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1970144472
 GameObject:
   m_ObjectHideFlags: 0

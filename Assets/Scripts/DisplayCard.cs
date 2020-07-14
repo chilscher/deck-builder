@@ -19,10 +19,10 @@ public class DisplayCard: MonoBehaviour{
 
         //some temporary unique text based on what card this is
         //later, the card effect will go here
-        if (associatedCard.cardName == "red") {
+        if (associatedCard.source.cardName == "red") {
             print("you stabbed with your Dragon Dagger!");
         }
-        else if (associatedCard.cardName == "blue") {
+        else if (associatedCard.source.cardName == "blue") {
             print("you held up your Rune Kiteshield!");
         }
 

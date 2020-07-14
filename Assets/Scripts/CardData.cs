@@ -7,12 +7,11 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 [System.Serializable]
 public class CardData{
-    //a card in the game
+    //a card in the game, which inherits its data from a PlatonicCard within the Catalog
 
-    public string cardName;
-    
-    public CardData (string name) {
-        cardName = name;
+    public PlatonicCard source; //the PlatonicCard from which this CardData inherits
+
+    public CardData(PlatonicCard source) { 
+        this.source = source;
     }
-
 }
