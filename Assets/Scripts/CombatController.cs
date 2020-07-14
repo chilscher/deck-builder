@@ -9,31 +9,43 @@ using UnityEngine.SceneManagement;
 public class CombatController : MonoBehaviour {
     //controls the flow of combat, including handling player inputs and tracking damage
 
+    //the various lists of the player's cards. they start empty
     private List<CardData> deck = new List<CardData>();
     private List<CardData> hand = new List<CardData>();
     private List<CardData> discardPile = new List<CardData>();
-    private List<EnemyData> enemies = new List<EnemyData>();
 
-    public float gapBetweenCardsInHand = 0.2f; //the space between cards in the hand is this number * the width of a card
-
-    private System.Random rand = new System.Random();
-    //public List<GameObject> whiteRectangles;
-    public GameObject handGameObject; //card display objects will get added to this dynamically
-    public GameObject enemiesGameObject;
-    public GameObject displayCardPrefab;
-    public GameObject enemySpritePrefab;
-
-    public List<Sprite> numbers; //assumed to be exactly 10 numbers
+    //the gameobjects that show where the player's cards are
     public GameObject deckGameObject;
     public GameObject discardPileGameObject;
+    public GameObject handGameObject; //card display objects will get added to this dynamically
+    public float gapBetweenCardsInHand = 0.2f; //the space between cards in the hand is this number * the width of a card
+
+    //dealing with counting and displaying the player's mana
     public GameObject manaGameObject;
-
-    public int drawNum; //the number of cards the player draws at the start of their turn
-
-    public Catalog catalog;
     [HideInInspector]
     public int mana;
-    public int maxMana;
+
+    //the list of all possible cards
+    public Catalog catalog; //currently assigned via the inspector, but will eventually be assigned in runtime, once the combat scene is loaded from another scene
+
+    //dealing with holding and displaying enemies
+    public GameObject enemiesGameObject;
+    public GameObject enemySpritePrefab;
+    private List<EnemyData> enemies = new List<EnemyData>();
+
+    //the DisplayCard's prefab, which is instantiated to create a visual display of a card
+    public GameObject displayCardPrefab;
+
+    //general utility
+    private System.Random rand = new System.Random();
+    public List<Sprite> numbers; //assumed to be exactly 10 numbers
+
+    //the variables that are edited for game balance
+    public int drawNum; //the number of cards the player draws at the start of their turn
+    public int maxMana; //the mana that the player starts each turn with
+
+
+
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
@@ -203,7 +215,7 @@ public class CombatController : MonoBehaviour {
     }
 
     private void PrintCards(string introText, List<CardData> cards) {
-        //prints the name of the parameter "cards"
+        //prints the names of all cards in "cards"
         string output = introText + " - ";
         foreach (CardData c in cards) {
             output += c.source.cardName;
