@@ -108,6 +108,10 @@ public class TouchHandler : MonoBehaviour {
         //is the object the Deck?
         if (obj.name == "Deck Display") {
             return "Deck";
+        }        
+        //is the object the End Turn Button?
+        if (obj.name == "End Turn Button") {
+            return "End Turn";
         }
 
         //if it is none of the above, return a useless value that corresponds to none of them
@@ -137,6 +141,13 @@ public class TouchHandler : MonoBehaviour {
         }
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Deck") {
+                return obj;
+            }
+        }        
+        
+        //then, look for the End Turn Button
+        foreach (GameObject obj in gos) {
+            if (IdentifyObject(obj) == "End Turn") {
                 return obj;
             }
         }
@@ -171,6 +182,11 @@ public class TouchHandler : MonoBehaviour {
         //if the object is the Deck
         if (type == "Deck") {
             combatController.PrintDeck();
+        }
+
+        //if the object is the End Turn Button
+        if (type == "End Turn") {
+            combatController.EndTurn();
         }
 
     }

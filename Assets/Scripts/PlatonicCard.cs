@@ -15,4 +15,5 @@ public class PlatonicCard{
     public string cardName;
     public string text;
     public Sprite sprite;
+    public int manaCost;
 }

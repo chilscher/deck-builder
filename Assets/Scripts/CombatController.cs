@@ -26,12 +26,17 @@ public class CombatController : MonoBehaviour {
     public List<Sprite> numbers; //assumed to be exactly 10 numbers
     public GameObject deckGameObject;
     public GameObject discardPileGameObject;
+    public GameObject manaGameObject;
 
     public int drawNum; //the number of cards the player draws at the start of their turn
 
     public Catalog catalog;
+    [HideInInspector]
+    public int mana;
+    public int maxMana;
 
     private void Start() {
+        //set up the player's deck. temporarily here until the deck is passed in from another scene
         deck.Add(new CardData(catalog.GetCardWithName("red")));
         deck.Add(new CardData(catalog.GetCardWithName("red")));
         deck.Add(new CardData(catalog.GetCardWithName("red")));
@@ -42,29 +47,22 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
-        /*
-        deck.Add(new CardData("blue"));
-        deck.Add(new CardData("blue"));
-        deck.Add(new CardData("blue"));
-        deck.Add(new CardData("blue"));
-        deck.Add(new CardData("blue"));
-        deck.Add(new CardData("red"));
-        deck.Add(new CardData("red"));
-        deck.Add(new CardData("red"));
-        deck.Add(new CardData("red"));
-        deck.Add(new CardData("red"));
-        */
 
+        //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
+        enemies.Add(new EnemyData("Katie", 12));
+
+        //sets the player's mana to their max value
+        mana = maxMana;
+
+        //basic display functions
         ShuffleDeck();
         DrawCards(drawNum);
         ShowCardsInHand();
         ShowNumberInPile(deckGameObject, deck);
         ShowNumberInPile(discardPileGameObject, discardPile);
-
-        enemies.Add(new EnemyData("Katie", 12));
-
+        ShowMana();
         DisplayEnemies();
-
+        
     }
 
     private void Update() {
@@ -161,6 +159,9 @@ public class CombatController : MonoBehaviour {
             //apply the calculated position to the card's transform
             newCardDisplay.transform.position = cardPos;
 
+            //set the card's starting position here
+            newCardDisplay.GetComponent<DisplayCard>().startingPosition = cardPos;
+
             //set the display image to match the card's sprite
             newCardDisplay.GetComponent<SpriteRenderer>().sprite = hand[i].source.sprite;
 
@@ -222,6 +223,15 @@ public class CombatController : MonoBehaviour {
         pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sortingOrder = 1;
     }
 
+    private void ShowMana() {
+        //shows the amount of mana the player has left. does not show if the player has more than 9 mana
+        if (mana > 9) {
+            print("lots of mana!");
+            return;
+        }
+        manaGameObject.transform.Find("Ones").GetComponent<SpriteRenderer>().sprite = numbers[mana];
+    }
+
     public void PrintDeck() {
         //prints the cards in the deck
         //a temporary function used by TouchHandler, until proper Deck-tapping functionality is added
@@ -247,6 +257,31 @@ public class CombatController : MonoBehaviour {
         ShowCardsInHand();
         ShowNumberInPile(discardPileGameObject, discardPile);
         ShowNumberInPile(deckGameObject, deck);
+
+        //show the amount of mana the player has left. temporarily here, until it has a better spot
+        ShowMana();
+    }
+
+    public void DiscardHand() {
+        //discards all cards in the player's hand
+        foreach(CardData card in hand) {
+            discardPile.Add(card);
+        }
+        hand = new List<CardData>();
+    }
+
+    public void EndTurn() {
+        //ends the player's turn. discards their entire hand, draws a new hand, and rests their mana.
+
+        mana = maxMana;
+        DiscardHand();
+        DrawCards(drawNum);        
+        
+        //update the visuals
+        ShowCardsInHand();
+        ShowNumberInPile(discardPileGameObject, discardPile);
+        ShowNumberInPile(deckGameObject, deck);
+        ShowMana();
     }
 
 }
