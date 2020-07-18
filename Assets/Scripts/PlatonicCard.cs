@@ -14,6 +14,7 @@ public class PlatonicCard{
     //the CardData script points towards this script as the source for the card's actual information, like name, text, image, etc
     public string cardName;
     public string text;
-    public Sprite sprite;
+    public Sprite cardArt;
     public int manaCost;
+    public Sprite frameArt;
 }

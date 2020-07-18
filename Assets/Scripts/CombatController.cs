@@ -187,8 +187,11 @@ public class CombatController : MonoBehaviour {
             //set the card's starting position here
             newCardDisplay.GetComponent<DisplayCard>().startingPosition = cardPos;
 
-            //set the display image to match the card's sprite
-            newCardDisplay.GetComponent<SpriteRenderer>().sprite = hand[i].source.sprite;
+            //set the card art to match the provided card art sprite
+            newCardDisplay.transform.Find("Card Art").GetComponent<SpriteRenderer>().sprite = hand[i].source.cardArt;
+
+            //set the card's frame art to match the provided frame art sprite
+            newCardDisplay.GetComponent<SpriteRenderer>().sprite = hand[i].source.frameArt;
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
