@@ -46,6 +46,15 @@ public class CombatController : MonoBehaviour {
 
 
 
+    public GameObject currentHealthGameObject; //displays the current hp
+    public GameObject maxHealthGameObject; //displays the max hp
+    private int healthRemaining;
+    public int startingHealth;
+    public GameObject shieldDisplayGameObject;
+    private int shieldCount = 0;
+
+
+
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
@@ -66,15 +75,19 @@ public class CombatController : MonoBehaviour {
         //sets the player's mana to their max value
         mana = maxMana;
 
+        //sets the player's health to its max value
+        healthRemaining = startingHealth;
+
         //basic display functions
         ShuffleDeck();
         DrawCards(drawNum);
         ShowCardsInHand();
-        ShowNumberInPile(deckGameObject, deck);
-        ShowNumberInPile(discardPileGameObject, discardPile);
+        ShowNumberInPile(deckGameObject, deck.Count);
+        ShowNumberInPile(discardPileGameObject, discardPile.Count);
         ShowMana();
         DisplayEnemies();
-        
+        DisplayHealth();
+        DisplayShields();
     }
 
     private void Update() {
@@ -224,9 +237,8 @@ public class CombatController : MonoBehaviour {
         print(output);
     }
 
-    private void ShowNumberInPile(GameObject pile, List<CardData> source) {
+    private void ShowNumberInPile(GameObject pile, int num) {
         //shows the number of cards left in the deck or discard pile
-        int num = source.Count;
         int tens = num / 10;
         int ones = num - (tens * 10);
         pile.transform.Find("Tens").GetComponent<SpriteRenderer>().sprite = numbers[tens];
@@ -267,8 +279,8 @@ public class CombatController : MonoBehaviour {
         
         //display the cards in the hand, deck, and discard pile
         ShowCardsInHand();
-        ShowNumberInPile(discardPileGameObject, discardPile);
-        ShowNumberInPile(deckGameObject, deck);
+        ShowNumberInPile(discardPileGameObject, discardPile.Count);
+        ShowNumberInPile(deckGameObject, deck.Count);
 
         //show the amount of mana the player has left. temporarily here, until it has a better spot
         ShowMana();
@@ -287,13 +299,32 @@ public class CombatController : MonoBehaviour {
 
         mana = maxMana;
         DiscardHand();
-        DrawCards(drawNum);        
+        DrawCards(drawNum);
+        shieldCount = 0;
         
         //update the visuals
         ShowCardsInHand();
-        ShowNumberInPile(discardPileGameObject, discardPile);
-        ShowNumberInPile(deckGameObject, deck);
+        ShowNumberInPile(discardPileGameObject, discardPile.Count);
+        ShowNumberInPile(deckGameObject, deck.Count);
         ShowMana();
+        DisplayShields();
+    }
+
+    private void DisplayHealth() {
+        //shows the player's current health and max health
+        ShowNumberInPile(currentHealthGameObject, healthRemaining);
+        ShowNumberInPile(maxHealthGameObject, startingHealth);
+    }
+
+    private void DisplayShields() {
+        //shows the player's current number of shields
+        ShowNumberInPile(shieldDisplayGameObject, shieldCount);
+    }
+
+    public void AddShields(int count) {
+        //adds count to the player's shield total
+        shieldCount += count;
+        DisplayShields();
     }
 
 }

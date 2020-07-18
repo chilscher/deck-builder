@@ -33,6 +33,7 @@ public class DisplayCard: MonoBehaviour{
         }
         else if (associatedCard.source.cardName == "blue") {
             print("you held up your Rune Kiteshield!");
+            combatController.AddShields(3);
         }
 
         //subtract the card's mana cost from the player's remaining mana
