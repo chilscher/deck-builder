@@ -194,6 +194,12 @@ public class CombatController : MonoBehaviour {
             newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
             //set the DisplayCard's CombatController reference, so when you click the DisplayCard you can call some CombatController functions
             newCardDisplay.GetComponent<DisplayCard>().combatController = this;
+
+
+            //set the visual's text, name, and mana cost from the card data
+            newCardDisplay.transform.Find("Name").GetComponent<TextMesh>().text = hand[i].source.cardName.ToUpper();
+            newCardDisplay.transform.Find("Text").GetComponent<TextMesh>().text = hand[i].source.text.ToUpper();
+            newCardDisplay.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sprite = numbers[hand[i].source.manaCost];
         }
     }
 
