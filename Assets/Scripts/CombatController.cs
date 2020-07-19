@@ -209,6 +209,10 @@ public class CombatController : MonoBehaviour {
 
     private void DisplayEnemies() {
 
+        foreach (Transform t in enemiesGameObject.transform) {
+            GameObject.Destroy(t.gameObject);
+        }
+
         float cardDisplayWidth = enemySpritePrefab.transform.localScale.x * enemySpritePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
         float cardDisplayHeight = enemySpritePrefab.transform.localScale.y * enemySpritePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
 
@@ -337,6 +341,26 @@ public class CombatController : MonoBehaviour {
         //adds count to the player's shield total
         shieldCount += count;
         DisplayShields();
+    }
+
+    public void DealDamageToEnemy(CardData card, EnemyData enemy){
+      // print(enemy);
+      // print(card.source.cardName);
+
+      // if card is red (temporary identity)
+      if (card.source.cardName == "red"){
+        // deal damage to enemy
+        enemy.hitPointDamage += 4;
+
+        // if the enemy data has more damage than it has hitpoints, remove it
+        if (enemy.hitPointDamage >= enemy.hitPoints){
+          enemies.Remove(enemy);
+          print($"{enemy.enemyName} defeated!");
+        }
+
+        // rerender enemies
+        DisplayEnemies();
+      }
     }
 
 }

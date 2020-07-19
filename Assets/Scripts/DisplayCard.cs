@@ -35,18 +35,32 @@ public class DisplayCard: MonoBehaviour{
           List<GameObject> possibleEnemies = touchHandler.FindAllObjectCollisions(Input.mousePosition);
 
           foreach (GameObject element in possibleEnemies){
+            if (element.name != "Display Card(Clone)"){
+
+            }
             if (element.name == "Enemy Sprite(Clone)"){
-              print("we found a baddie!");
-              print(element);
+              EnemyData enemyData = element.GetComponent<EnemySprite>().associatedEnemy;
+              // print("we found a baddie!");
+              // print(element.GetComponent<EnemySprite>());
+              // print(enemyData);
 
 
               print("you stabbed with your Dragon Dagger!");
 
+              //subtract the card's mana cost from the player's remaining mana
               combatController.mana -= associatedCard.source.manaCost;
 
+              //discard the card
               combatController.MoveCardFromHandToDiscard(associatedCard);
 
+              combatController.DealDamageToEnemy(associatedCard, enemyData);
+
             } else {
+              // bug!
+              // this else gets trigger if the card is placed anywhere, even on the enemy
+              // however, the position is not reset because the above code is already running
+              // be aware of bugs; this could be a race condition
+                print(element.name);
                 print("No enemy selected; please try again");
 
                 transform.position = startingPosition;
@@ -62,9 +76,7 @@ public class DisplayCard: MonoBehaviour{
             combatController.MoveCardFromHandToDiscard(associatedCard);
         }
 
-        //subtract the card's mana cost from the player's remaining mana
 
-        //discard the card
     }
 
 }
