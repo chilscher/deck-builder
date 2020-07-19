@@ -42,7 +42,7 @@ public class DisplayCard: MonoBehaviour{
 
             //if an enemy was found, play the card targeting that enemy
             if (enemy != null) {
-                PlayCardWithTarget(enemy.GetComponent<EnemySprite>().associatedEnemy);
+                PlayCard(enemy.GetComponent<EnemySprite>().associatedEnemy);
             }
 
             //if no enemy was found, return the card to where it was in the hand
@@ -53,40 +53,43 @@ public class DisplayCard: MonoBehaviour{
 
         //if the card does not require a target to be played, just play the card
         else {
-            PlayCardWithoutTarget();
+            PlayCard();
         }
 
 
     }
 
-    private void PlayCardWithTarget(EnemyData enemy) {
-        //plays the associated card taking one specific enemy as a target
-        if (associatedCard.source.cardName == "red") {
-            print("you stabbed with your Dragon Dagger!");
+    private void PlayCard(EnemyData enemy = null) {
+        //plays the associated card. if a target enemy is required for the effect, it can be provided
 
-            //subtract the card's mana cost from the player's remaining mana
-            combatController.mana -= associatedCard.source.manaCost;
+        //iterate through all the effects of the card, and do each one
+        foreach(string effect in associatedCard.source.effects) {
+            
+            //first, check if the effect has an associated value (ex, deal 4 damage has the associated value 4)
+            //this assumes the associated value is separated from the rest of the effect by the character '='
+            int associatedValue = 0;
+            if (effect.Split('=').Length > 1) {
+                associatedValue = int.Parse(effect.Split('=')[1]); //split the value from the end of the string, and cast it to an int
+            }
 
-            //discard the card
-            combatController.MoveCardFromHandToDiscard(associatedCard);
-
-            //damage the enemy
-            combatController.DealDamageToEnemy(associatedCard, enemy);
+            //apply the card effect
+            DoCardEffect(effect, associatedValue, enemy);
         }
 
+        //subtract the card's mana cost from the player's remaining mana
+        combatController.mana -= associatedCard.source.manaCost;
+
+        //discard the card
+        combatController.MoveCardFromHandToDiscard(associatedCard);
     }
 
-    private void PlayCardWithoutTarget() {
-        //plays the associated card without requiring a target
-        if (associatedCard.source.cardName == "blue") {
-            print("you held up your Rune Kiteshield!");
-            combatController.AddShields(3);
-
-            //subtract the card's mana cost from the player's remaining mana
-            combatController.mana -= associatedCard.source.manaCost;
-
-            //discard the card
-            combatController.MoveCardFromHandToDiscard(associatedCard);
+    private void DoCardEffect(string effect, int value = 0, EnemyData enemy = null) {
+        //executes the card effect
+        if (effect.Contains("do damage")) {
+            combatController.DealDamageToEnemy(value, enemy);
+        }
+        else if (effect.Contains("shield")) {
+            combatController.AddShields(value);
         }
     }
 }

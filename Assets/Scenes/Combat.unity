@@ -1858,6 +1858,7 @@ MonoBehaviour:
       cardArt: {fileID: 0}
       frameArt: {fileID: 0}
       requiresTarget: 0
+      effects: []
   combatController: {fileID: 0}
   touchHandler: {fileID: 0}
   startingPosition: {x: 0, y: 0}
@@ -2172,6 +2173,7 @@ MonoBehaviour:
       cardArt: {fileID: 0}
       frameArt: {fileID: 0}
       requiresTarget: 0
+      effects: []
   combatController: {fileID: 0}
   touchHandler: {fileID: 0}
   startingPosition: {x: 0, y: 0}
@@ -2730,6 +2732,7 @@ MonoBehaviour:
       cardArt: {fileID: 0}
       frameArt: {fileID: 0}
       requiresTarget: 0
+      effects: []
   combatController: {fileID: 0}
   touchHandler: {fileID: 0}
   startingPosition: {x: 0, y: 0}
@@ -3156,6 +3159,7 @@ MonoBehaviour:
       cardArt: {fileID: 0}
       frameArt: {fileID: 0}
       requiresTarget: 0
+      effects: []
   combatController: {fileID: 0}
   touchHandler: {fileID: 0}
   startingPosition: {x: 0, y: 0}
@@ -3393,6 +3397,7 @@ MonoBehaviour:
       cardArt: {fileID: 0}
       frameArt: {fileID: 0}
       requiresTarget: 0
+      effects: []
   combatController: {fileID: 0}
   touchHandler: {fileID: 0}
   startingPosition: {x: 0, y: 0}
@@ -3792,17 +3797,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cards:
   - cardName: red
-    text: i am a stabby
+    text: deal 4 damage
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
     frameArt: {fileID: 21300000, guid: eb808cc4c596a1340a9d357f0be62500, type: 3}
     requiresTarget: 1
+    effects:
+    - do damage=4
   - cardName: blue
-    text: ooo look at me im a shield
+    text: apply 3 shield
     manaCost: 1
     cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
     frameArt: {fileID: 21300000, guid: 15f6f659a1e722b46a23b3e756376765, type: 3}
     requiresTarget: 0
+    effects:
+    - shield=3
+  - cardName: purple
+    text: 'deal 2 damage
+
+      apply 2 shield'
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: 354da493c16a1974ba673639346d9eac, type: 3}
+    frameArt: {fileID: 21300000, guid: 3e23dc4190b6dd54fb35bae1b70ee8f9, type: 3}
+    requiresTarget: 1
+    effects:
+    - do damage=2
+    - shield=2
 --- !u!4 &1906865167
 Transform:
   m_ObjectHideFlags: 0

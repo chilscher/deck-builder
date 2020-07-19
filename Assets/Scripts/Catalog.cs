@@ -11,7 +11,7 @@ public class Catalog : MonoBehaviour {
     
     public PlatonicCard[] cards; //the collection of cards. cards are added and modified in the inspector
     
-    void Awake() {
+    void Start() {
         DontDestroyOnLoad(gameObject); //retain the catalog in between scenes
     }
 

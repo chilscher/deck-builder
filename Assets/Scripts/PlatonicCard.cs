@@ -15,6 +15,7 @@ public class PlatonicCard {
 
     [Header("Displayed Info")]
     public string cardName;
+    [TextArea(1, 3)] //makes the text box take up multiple lines in the inspector, which enables line spaces
     public string text;
     public int manaCost;
 
@@ -24,4 +25,6 @@ public class PlatonicCard {
 
     [Header("Effect Data")]
     public bool requiresTarget;
+
+    public List<string> effects;
 }
