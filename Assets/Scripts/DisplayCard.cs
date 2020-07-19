@@ -28,55 +28,65 @@ public class DisplayCard: MonoBehaviour{
             return;
         }
 
-        //some temporary unique text based on what card this is
-        //later, the card effect will go here
-        if (associatedCard.source.cardName == "red") {
+        //if the card requires a target to be played, check to see if it is on top of an enemy
+        if (associatedCard.source.requiresTarget) {
 
-          List<GameObject> possibleEnemies = touchHandler.FindAllObjectCollisions(Input.mousePosition);
-
-          foreach (GameObject element in possibleEnemies){
-            if (element.name != "Display Card(Clone)"){
-
+            //find the enemy that the player is holding the card over
+            List<GameObject> possibleEnemies = touchHandler.FindAllObjectCollisions(Input.mousePosition);
+            GameObject enemy = null;
+            foreach(GameObject element in possibleEnemies) {
+                if (element.GetComponent<EnemySprite>() != null) {
+                    enemy = element;
+                }
             }
-            if (element.name == "Enemy Sprite(Clone)"){
-              EnemyData enemyData = element.GetComponent<EnemySprite>().associatedEnemy;
-              // print("we found a baddie!");
-              // print(element.GetComponent<EnemySprite>());
-              // print(enemyData);
 
+            //if an enemy was found, play the card targeting that enemy
+            if (enemy != null) {
+                PlayCardWithTarget(enemy.GetComponent<EnemySprite>().associatedEnemy);
+            }
 
-              print("you stabbed with your Dragon Dagger!");
-
-              //subtract the card's mana cost from the player's remaining mana
-              combatController.mana -= associatedCard.source.manaCost;
-
-              //discard the card
-              combatController.MoveCardFromHandToDiscard(associatedCard);
-
-              combatController.DealDamageToEnemy(associatedCard, enemyData);
-
-            } else {
-              // bug!
-              // this else gets trigger if the card is placed anywhere, even on the enemy
-              // however, the position is not reset because the above code is already running
-              // be aware of bugs; this could be a race condition
-                print(element.name);
-                print("No enemy selected; please try again");
-
+            //if no enemy was found, return the card to where it was in the hand
+            else {
                 transform.position = startingPosition;
             }
-          }
         }
-        else if (associatedCard.source.cardName == "blue") {
-            print("you held up your Rune Kiteshield!");
-            combatController.AddShields(3);
 
-            combatController.mana -= associatedCard.source.manaCost;
-
-            combatController.MoveCardFromHandToDiscard(associatedCard);
+        //if the card does not require a target to be played, just play the card
+        else {
+            PlayCardWithoutTarget();
         }
 
 
     }
 
+    private void PlayCardWithTarget(EnemyData enemy) {
+        //plays the associated card taking one specific enemy as a target
+        if (associatedCard.source.cardName == "red") {
+            print("you stabbed with your Dragon Dagger!");
+
+            //subtract the card's mana cost from the player's remaining mana
+            combatController.mana -= associatedCard.source.manaCost;
+
+            //discard the card
+            combatController.MoveCardFromHandToDiscard(associatedCard);
+
+            //damage the enemy
+            combatController.DealDamageToEnemy(associatedCard, enemy);
+        }
+
+    }
+
+    private void PlayCardWithoutTarget() {
+        //plays the associated card without requiring a target
+        if (associatedCard.source.cardName == "blue") {
+            print("you held up your Rune Kiteshield!");
+            combatController.AddShields(3);
+
+            //subtract the card's mana cost from the player's remaining mana
+            combatController.mana -= associatedCard.source.manaCost;
+
+            //discard the card
+            combatController.MoveCardFromHandToDiscard(associatedCard);
+        }
+    }
 }
