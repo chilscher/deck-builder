@@ -1854,8 +1854,9 @@ MonoBehaviour:
     source:
       cardName: 
       text: 
-      sprite: {fileID: 0}
+      cardArt: {fileID: 0}
       manaCost: 0
+      frameArt: {fileID: 0}
   combatController: {fileID: 0}
   startingPosition: {x: 0, y: 0}
 --- !u!61 &999078828
@@ -2165,8 +2166,9 @@ MonoBehaviour:
     source:
       cardName: 
       text: 
-      sprite: {fileID: 0}
+      cardArt: {fileID: 0}
       manaCost: 0
+      frameArt: {fileID: 0}
   combatController: {fileID: 0}
   startingPosition: {x: 0, y: 0}
 --- !u!61 &1093006894
@@ -2720,8 +2722,9 @@ MonoBehaviour:
     source:
       cardName: 
       text: 
-      sprite: {fileID: 0}
+      cardArt: {fileID: 0}
       manaCost: 0
+      frameArt: {fileID: 0}
   combatController: {fileID: 0}
   startingPosition: {x: 0, y: 0}
 --- !u!61 &1299660523
@@ -3143,8 +3146,9 @@ MonoBehaviour:
     source:
       cardName: 
       text: 
-      sprite: {fileID: 0}
+      cardArt: {fileID: 0}
       manaCost: 0
+      frameArt: {fileID: 0}
   combatController: {fileID: 0}
   startingPosition: {x: 0, y: 0}
 --- !u!61 &1562294155
@@ -3377,8 +3381,9 @@ MonoBehaviour:
     source:
       cardName: 
       text: 
-      sprite: {fileID: 0}
+      cardArt: {fileID: 0}
       manaCost: 0
+      frameArt: {fileID: 0}
   combatController: {fileID: 0}
   startingPosition: {x: 0, y: 0}
 --- !u!61 &1650079845
@@ -3778,12 +3783,14 @@ MonoBehaviour:
   cards:
   - cardName: red
     text: i am a stabby
-    sprite: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
+    cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
     manaCost: 1
+    frameArt: {fileID: 21300000, guid: eb808cc4c596a1340a9d357f0be62500, type: 3}
   - cardName: blue
     text: ooo look at me im a shield
-    sprite: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
+    cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
     manaCost: 1
+    frameArt: {fileID: 21300000, guid: 15f6f659a1e722b46a23b3e756376765, type: 3}
 --- !u!4 &1906865167
 Transform:
   m_ObjectHideFlags: 0
