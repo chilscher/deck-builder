@@ -145,14 +145,14 @@ public class CombatController : MonoBehaviour {
             //draw the remaining cards
             DrawCards(num - alreadyDrawn);
         }
-        
+
 
     }
 
     private void ShowCardsInHand() {
         //creates handDisplayPrefab instances for each card currently in the hand
         //changes the color of those instances to match the cards in the hand
-        
+
         //first, delete all the cards in the current hand
         foreach (Transform t in handGameObject.transform) {
             GameObject.Destroy(t.gameObject);
@@ -160,7 +160,7 @@ public class CombatController : MonoBehaviour {
 
         //set the width of a single cardDisplay object
         float cardDisplayWidth = displayCardPrefab.transform.localScale.x * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-        
+
         for (int i = 0; i < hand.Count; i++) {
             //for each card, create a card display object, and set it as a child of the hand gameobject
             GameObject newCardDisplay = Instantiate(displayCardPrefab);
@@ -194,6 +194,7 @@ public class CombatController : MonoBehaviour {
             newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
             //set the DisplayCard's CombatController reference, so when you click the DisplayCard you can call some CombatController functions
             newCardDisplay.GetComponent<DisplayCard>().combatController = this;
+            newCardDisplay.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
         }
     }
 
@@ -210,6 +211,8 @@ public class CombatController : MonoBehaviour {
             Vector2 enemyPos = enemiesGameObject.transform.position;
 
             newEnemyDisplay.transform.position = enemyPos;
+
+            newEnemyDisplay.GetComponent<EnemySprite>().associatedEnemy = enemies[i];
 
             //render enemy name
             Transform enemyName = newEnemyDisplay.transform.GetChild(0);
@@ -273,10 +276,10 @@ public class CombatController : MonoBehaviour {
         //move the card from the hand to the discard pile
         hand.Remove(card);
         discardPile.Add(card);
-        
+
         //temporarily here, for playtesting - if you play the last card from your hand, refill your hand from the deck
         if (hand.Count == 0) { DrawCards(drawNum); }
-        
+
         //display the cards in the hand, deck, and discard pile
         ShowCardsInHand();
         ShowNumberInPile(discardPileGameObject, discardPile.Count);
@@ -301,7 +304,7 @@ public class CombatController : MonoBehaviour {
         DiscardHand();
         DrawCards(drawNum);
         shieldCount = 0;
-        
+
         //update the visuals
         ShowCardsInHand();
         ShowNumberInPile(discardPileGameObject, discardPile.Count);

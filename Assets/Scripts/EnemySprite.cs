@@ -11,6 +11,6 @@ public class EnemySprite : MonoBehaviour
     //a card in the game
 
     [HideInInspector]
-    public CardData associatedCard;
+    public EnemyData associatedEnemy;
 
 }

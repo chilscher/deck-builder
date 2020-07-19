@@ -27,7 +27,7 @@ public class TouchHandler : MonoBehaviour {
     private DisplayCard movingCard; //the card to be dragged
     private bool shouldMoveCard = false; //if the card should move to follow the player's touch
     private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
-    
+
 
 
     private void Start() {
@@ -63,10 +63,10 @@ public class TouchHandler : MonoBehaviour {
                 movingCard.ReleasedCard();
             }
         }
-        
+
     }
 
-    private List<GameObject> FindAllObjectCollisions(Vector2 pos) {
+    public List<GameObject> FindAllObjectCollisions(Vector2 pos) {
         //takes a screen touch position and returns all objects the touch collides with.
         List<GameObject> allTouchedObjects = new List<GameObject>(); //any object the player's touch collides with
 
@@ -88,7 +88,7 @@ public class TouchHandler : MonoBehaviour {
                 allTouchedObjects.Add(o.gameObject);
             }
         }
-        
+
         return allTouchedObjects;
 
     }
@@ -108,7 +108,7 @@ public class TouchHandler : MonoBehaviour {
         //is the object the Deck?
         if (obj.name == "Deck Display") {
             return "Deck";
-        }        
+        }
         //is the object the End Turn Button?
         if (obj.name == "End Turn Button") {
             return "End Turn";
@@ -121,10 +121,10 @@ public class TouchHandler : MonoBehaviour {
     private GameObject ChooseObjectToTouch(List<GameObject> gos) {
         //out of all of the objects the player touched, only one should have its "tapped" function called
         //this function determines which, if any, objects are to be tapped.
-        
+
         //we can define a priority for objects to be tapped in
         //this involves multiple iterations through all gameobjects, but we will never have many so that is not a problem
-        
+
 
         //first, look for a DisplayCard, and that has tap priority
         foreach(GameObject obj in gos) {
@@ -143,8 +143,8 @@ public class TouchHandler : MonoBehaviour {
             if (IdentifyObject(obj) == "Deck") {
                 return obj;
             }
-        }        
-        
+        }
+
         //then, look for the End Turn Button
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "End Turn") {
@@ -205,12 +205,12 @@ public class TouchHandler : MonoBehaviour {
         Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
         relativeCardPosition = worldPos2d - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
     }
-    
+
     private void DragCard() {
-        //drags the DisplayCard object around the screen while the player holds their finger down        
+        //drags the DisplayCard object around the screen while the player holds their finger down
         Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
         movingCard.transform.position = worldPos2d - relativeCardPosition; //takes the current touch position and subtracts the relative position of the touch to the card, to get the card's new position
     }
-     
+
 }
