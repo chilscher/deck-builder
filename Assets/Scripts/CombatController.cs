@@ -70,6 +70,7 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
+        // var anon = new [ new { attack = 3 } ]
         enemies.Add(new EnemyData("Katie", 12));
 
         //sets the player's mana to their max value

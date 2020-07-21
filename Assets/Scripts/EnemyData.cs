@@ -13,12 +13,16 @@ public class EnemyData
     public string enemyName;
     public int hitPoints;
     public int hitPointDamage;
+    public List<Dictionary<string, int>> enemyAttacks;
+    public int currentAttackIndex;
 
     public EnemyData(string name, int hp)
     {
         enemyName = name;
         hitPoints = hp;
         hitPointDamage = 0;
+        // enemyAttacks = attacks;
+        // currentAttackIndex = 0;
     }
 
 }
