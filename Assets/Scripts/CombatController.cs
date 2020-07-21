@@ -68,6 +68,8 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
         deck.Add(new CardData(catalog.GetCardWithName("blue")));
+        deck.Add(new CardData(catalog.GetCardWithName("purple")));
+        deck.Add(new CardData(catalog.GetCardWithName("purple")));
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
         // var anon = new [ new { attack = 3 } ]
@@ -205,6 +207,9 @@ public class CombatController : MonoBehaviour {
             newCardDisplay.transform.Find("Name").GetComponent<TextMesh>().text = hand[i].source.cardName.ToUpper();
             newCardDisplay.transform.Find("Text").GetComponent<TextMesh>().text = hand[i].source.text.ToUpper();
             newCardDisplay.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sprite = numbers[hand[i].source.manaCost];
+            //change the sorting layer of the name and text so they appear on top of the card background
+            newCardDisplay.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder = 2;
+            newCardDisplay.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder = 2;
         }
     }
 
@@ -344,24 +349,19 @@ public class CombatController : MonoBehaviour {
         DisplayShields();
     }
 
-    public void DealDamageToEnemy(CardData card, EnemyData enemy){
-      // print(enemy);
-      // print(card.source.cardName);
+    public void DealDamageToEnemy(int damage, EnemyData enemy){
 
-      // if card is red (temporary identity)
-      if (card.source.cardName == "red"){
-        // deal damage to enemy
-        enemy.hitPointDamage += 4;
+    // deal damage to enemy
+    enemy.hitPointDamage += damage;
 
-        // if the enemy data has more damage than it has hitpoints, remove it
-        if (enemy.hitPointDamage >= enemy.hitPoints){
-          enemies.Remove(enemy);
-          print($"{enemy.enemyName} defeated!");
-        }
-
-        // rerender enemies
-        DisplayEnemies();
-      }
+    // if the enemy data has more damage than it has hitpoints, remove it
+    if (enemy.hitPointDamage >= enemy.hitPoints){
+        enemies.Remove(enemy);
+        print($"{enemy.enemyName} defeated!");
     }
+
+    // rerender enemies
+    DisplayEnemies();
+      }
 
 }

@@ -10,8 +10,8 @@ public class Catalog : MonoBehaviour {
     //this script contains the entire collection of cards in the game. it is loaded in the main menu, and not destroyed during transition between scenes
 
     public PlatonicCard[] cards; //the collection of cards. cards are added and modified in the inspector
-
-    void Awake() {
+    
+    void Start() {
         DontDestroyOnLoad(gameObject); //retain the catalog in between scenes
     }
 
