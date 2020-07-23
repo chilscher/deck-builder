@@ -27,6 +27,7 @@ public class CombatController : MonoBehaviour {
 
     //the list of all possible cards
     public Catalog catalog; //currently assigned via the inspector, but will eventually be assigned in runtime, once the combat scene is loaded from another scene
+    public EnemyCatalog enemyCatalog;
 
     //dealing with holding and displaying enemies
     public GameObject enemiesGameObject;
@@ -72,8 +73,7 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData(catalog.GetCardWithName("purple")));
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
-        // var anon = new [ new { attack = 3 } ]
-        enemies.Add(new EnemyData("Katie", 12));
+        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(1)));
 
         //sets the player's mana to their max value
         mana = maxMana;
@@ -236,13 +236,18 @@ public class CombatController : MonoBehaviour {
             //render enemy name
             Transform enemyName = newEnemyDisplay.transform.GetChild(0);
 
-            enemyName.GetComponent<TextMesh>().text = enemies[i].enemyName;
+            enemyName.GetComponent<TextMesh>().text = enemies[i].source.enemyName;
 
 
             //render enemy hp
             Transform enemyHP = newEnemyDisplay.transform.GetChild(1);
 
-            enemyHP.GetComponent<TextMesh>().text = "HP:" + (enemies[i].hitPoints - enemies[i].hitPointDamage) + "/" + enemies[i].hitPoints;
+            enemyHP.GetComponent<TextMesh>().text = "HP:" + (enemies[i].source.hitPoints - enemies[i].hitPointDamage) + "/" + enemies[i].source.hitPoints;
+
+            // render enemy attack
+            Transform enemyAttack = newEnemyDisplay.transform.GetChild(2);
+
+            enemyAttack.GetComponent<TextMesh>().text = enemies[i].source.enemyAttacks[enemies[i].currentAttackIndex];
 
 
         }
@@ -319,6 +324,8 @@ public class CombatController : MonoBehaviour {
     public void EndTurn() {
         //ends the player's turn. discards their entire hand, draws a new hand, and rests their mana.
 
+        EnemiesAttacks();
+
         mana = maxMana;
         DiscardHand();
         DrawCards(drawNum);
@@ -330,6 +337,8 @@ public class CombatController : MonoBehaviour {
         ShowNumberInPile(deckGameObject, deck.Count);
         ShowMana();
         DisplayShields();
+        DisplayHealth();
+        DisplayEnemies();
     }
 
     private void DisplayHealth() {
@@ -355,13 +364,48 @@ public class CombatController : MonoBehaviour {
     enemy.hitPointDamage += damage;
 
     // if the enemy data has more damage than it has hitpoints, remove it
-    if (enemy.hitPointDamage >= enemy.hitPoints){
+    if (enemy.hitPointDamage >= enemy.source.hitPoints){
         enemies.Remove(enemy);
-        print($"{enemy.enemyName} defeated!");
+        print($"{enemy.source.enemyName} defeated!");
     }
 
-    // rerender enemies
-    DisplayEnemies();
+      // rerender enemies
+      DisplayEnemies();
+    }
+
+    public void EnemiesAttacks(){
+
+      // access each enemy
+
+      foreach(EnemyData el in enemies){
+        // access current attack
+        string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
+
+        string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
+
+        foreach(string atk in allCurrentAttacks){
+          string associatedEffect = atk.Split('-')[0];
+          int associatedValue = int.Parse(atk.Split('-')[1]);
+
+          if(associatedEffect == "Damage"){
+            int netDamage = 0;
+            if (associatedValue >= shieldCount){
+              netDamage = associatedValue - shieldCount;
+              shieldCount = 0;
+            } else {
+              shieldCount -= associatedValue;
+            }
+            healthRemaining -= netDamage;
+          }
+        }
+
+        if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length){
+          el.currentAttackIndex += 1;
+        } else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
+          el.currentAttackIndex = 0;
+        }
       }
+
+    }
 
 }

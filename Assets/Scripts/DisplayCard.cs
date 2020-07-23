@@ -42,6 +42,7 @@ public class DisplayCard: MonoBehaviour{
 
             //if an enemy was found, play the card targeting that enemy
             if (enemy != null) {
+              print("hit!");
                 PlayCard(enemy.GetComponent<EnemySprite>().associatedEnemy);
             }
 
@@ -64,16 +65,19 @@ public class DisplayCard: MonoBehaviour{
 
         //iterate through all the effects of the card, and do each one
         foreach(string effect in associatedCard.source.effects) {
-            
+
             //first, check if the effect has an associated value (ex, deal 4 damage has the associated value 4)
             //this assumes the associated value is separated from the rest of the effect by the character '='
             int associatedValue = 0;
-            if (effect.Split('=').Length > 1) {
-                associatedValue = int.Parse(effect.Split('=')[1]); //split the value from the end of the string, and cast it to an int
+            string associatedEffect = "";
+
+            if (effect.Split('-').Length > 1) {
+                associatedEffect = effect.Split('-')[0];
+                associatedValue = int.Parse(effect.Split('-')[1]); //split the value from the end of the string, and cast it to an int
             }
 
             //apply the card effect
-            DoCardEffect(effect, associatedValue, enemy);
+            DoCardEffect(associatedEffect, associatedValue, enemy);
         }
 
         //subtract the card's mana cost from the player's remaining mana
@@ -85,10 +89,10 @@ public class DisplayCard: MonoBehaviour{
 
     private void DoCardEffect(string effect, int value = 0, EnemyData enemy = null) {
         //executes the card effect
-        if (effect.Contains("do damage")) {
+        if (effect == "Damage") {
             combatController.DealDamageToEnemy(value, enemy);
         }
-        else if (effect.Contains("shield")) {
+        else if (effect == "Shield") {
             combatController.AddShields(value);
         }
     }

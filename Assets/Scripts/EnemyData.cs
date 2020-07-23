@@ -8,21 +8,16 @@ using UnityEngine.SceneManagement;
 [System.Serializable]
 public class EnemyData
 {
-    //a card in the game
+  //a card in the game, which inherits its data from a PlatonicCard within the Catalog
 
-    public string enemyName;
-    public int hitPoints;
-    public int hitPointDamage;
-    public List<Dictionary<string, int>> enemyAttacks;
-    public int currentAttackIndex;
+  public PlatonicEnemy source; //the PlatonicEnemy from which this EnemyData inherits
+  public int hitPointDamage;
+  public int currentAttackIndex;
 
-    public EnemyData(string name, int hp)
-    {
-        enemyName = name;
-        hitPoints = hp;
-        hitPointDamage = 0;
-        // enemyAttacks = attacks;
-        // currentAttackIndex = 0;
-    }
+  public EnemyData(PlatonicEnemy source) {
+      this.source = source;
+      hitPointDamage = 0;
+      currentAttackIndex = 0;
+  }
 
 }
