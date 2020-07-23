@@ -21,7 +21,6 @@ public class PlatonicCard {
 
     [Header("Visuals")]
     public Sprite cardArt;
-    public Sprite frameArt;
 
     [Header("Effect Data")]
     public bool requiresTarget;

@@ -28,6 +28,7 @@ public class TouchHandler : MonoBehaviour {
     private bool shouldMoveCard = false; //if the card should move to follow the player's touch
     private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
 
+    public int cardElevationAmount = 6; //the amount of sorting layers a card is bumped by while being dragged around
 
 
     private void Start() {
@@ -60,6 +61,7 @@ public class TouchHandler : MonoBehaviour {
             //for testing, when the player releases a card, run its click function
             if (shouldMoveCard) {
                 shouldMoveCard = false;
+                LowerCard(movingCard); //lowers the card, so other cards can be shown on top of it when it returns to the hand
                 movingCard.ReleasedCard();
             }
         }
@@ -204,6 +206,15 @@ public class TouchHandler : MonoBehaviour {
         Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
         relativeCardPosition = worldPos2d - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
+
+        //set the card's order in layer, and all of the order in layer values for its children, to be above the rest of the cards
+        dc.GetComponent<SpriteRenderer>().sortingOrder += 6;
+        dc.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder += 6;
+        dc.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder += 6;
+        dc.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sortingOrder += 6;
+        dc.transform.Find("Card Art").GetComponent<SpriteRenderer>().sortingOrder += 6;
+        dc.transform.Find("Mana Cost Background").GetComponent<SpriteRenderer>().sortingOrder += 6;
+
     }
 
     private void DragCard() {
@@ -211,6 +222,29 @@ public class TouchHandler : MonoBehaviour {
         Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
         movingCard.transform.position = worldPos2d - relativeCardPosition; //takes the current touch position and subtracts the relative position of the touch to the card, to get the card's new position
+    }
+
+    private void RaiseCard(DisplayCard card) {
+        //raises the sorting order of a DisplayCard and all of its children, so that it is shown above them
+        //called when the card is clicked, specifically so the card is elevated during the time it is dragged around the screen
+        card.GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
+        card.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder += cardElevationAmount;
+        card.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder += cardElevationAmount;
+        card.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
+        card.transform.Find("Card Art").GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
+        card.transform.Find("Mana Cost Background").GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
+    }
+
+    private void LowerCard(DisplayCard card) {
+        //lowers the sorting order of a DisplayCard and all of its children, so that it is no longer shown above them
+        //called when the card is released, specifically so other cards can be elevated above it while they are being dragged around
+        card.GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
+        card.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder -= cardElevationAmount;
+        card.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder -= cardElevationAmount;
+        card.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
+        card.transform.Find("Card Art").GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
+        card.transform.Find("Mana Cost Background").GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
+
     }
 
 }

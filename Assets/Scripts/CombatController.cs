@@ -192,9 +192,6 @@ public class CombatController : MonoBehaviour {
             //set the card art to match the provided card art sprite
             newCardDisplay.transform.Find("Card Art").GetComponent<SpriteRenderer>().sprite = hand[i].source.cardArt;
 
-            //set the card's frame art to match the provided frame art sprite
-            newCardDisplay.GetComponent<SpriteRenderer>().sprite = hand[i].source.frameArt;
-
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
             //set the DisplayCard's CombatController reference, so when you click the DisplayCard you can call some CombatController functions
@@ -207,8 +204,8 @@ public class CombatController : MonoBehaviour {
             newCardDisplay.transform.Find("Text").GetComponent<TextMesh>().text = hand[i].source.text.ToUpper();
             newCardDisplay.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sprite = numbers[hand[i].source.manaCost];
             //change the sorting layer of the name and text so they appear on top of the card background
-            newCardDisplay.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder = 2;
-            newCardDisplay.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder = 2;
+            newCardDisplay.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder = 3;
+            newCardDisplay.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder = 3;
         }
     }
 
