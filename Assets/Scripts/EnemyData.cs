@@ -13,6 +13,7 @@ public class EnemyData
   public PlatonicEnemy source; //the PlatonicEnemy from which this EnemyData inherits
   public int hitPointDamage;
   public int currentAttackIndex;
+  public EnemySprite enemySprite;
 
   public EnemyData(PlatonicEnemy source) {
       this.source = source;

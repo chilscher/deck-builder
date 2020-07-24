@@ -244,19 +244,15 @@ public class CombatController : MonoBehaviour {
 
             enemyName.GetComponent<TextMesh>().text = enemies[i].source.enemyName;
 
+            //set the EnemyData's enemySprite reference
+            enemies[i].enemySprite = newEnemyDisplay.GetComponent<EnemySprite>();
 
             //render enemy hp
-            Transform enemyHP = newEnemyDisplay.transform.GetChild(1);
-
-            enemyHP.GetComponent<TextMesh>().text = "HP:" + (enemies[i].source.hitPoints - enemies[i].hitPointDamage) + "/" + enemies[i].source.hitPoints;
-
-            // render enemy attack
-            Transform enemyAttack = newEnemyDisplay.transform.GetChild(2);
-
-            enemyAttack.GetComponent<TextMesh>().text = enemies[i].source.enemyAttacks[enemies[i].currentAttackIndex];
-
-
+            UpdateEnemyHP(enemies[i]);
         }
+
+        //render enemy attacks
+        UpdateEnemyAttacks();
 
     }
 
@@ -344,7 +340,8 @@ public class CombatController : MonoBehaviour {
         ShowMana();
         DisplayShields();
         DisplayHealth();
-        DisplayEnemies();
+
+        UpdateEnemyAttacks();
     }
 
     private void DisplayHealth() {
@@ -365,53 +362,68 @@ public class CombatController : MonoBehaviour {
     }
 
     public void DealDamageToEnemy(int damage, EnemyData enemy){
+        // deal damage to enemy
+        enemy.hitPointDamage += damage;
 
-    // deal damage to enemy
-    enemy.hitPointDamage += damage;
+        //updates the current health of the enemy
+        UpdateEnemyHP(enemy);
 
-    // if the enemy data has more damage than it has hitpoints, remove it
-    if (enemy.hitPointDamage >= enemy.source.hitPoints){
-        enemies.Remove(enemy);
-        print($"{enemy.source.enemyName} defeated!");
-    }
+        // if the enemy data has more damage than it has hitpoints, remove it
+        if (enemy.hitPointDamage >= enemy.source.hitPoints){
+            enemies.Remove(enemy);
+            GameObject.Destroy(enemy.enemySprite.gameObject);
+            print($"{enemy.source.enemyName} defeated!");
 
-      // rerender enemies
-      DisplayEnemies();
+        }
+        
     }
 
     public void EnemiesAttacks(){
+        //makes each enemy attack in sequence
 
-      // access each enemy
+         foreach(EnemyData el in enemies){
+            // access current attack
+            string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
 
-      foreach(EnemyData el in enemies){
-        // access current attack
-        string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
+            string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
 
-        string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
+            foreach(string atk in allCurrentAttacks){
+                string associatedEffect = atk.Split('-')[0];
+                int associatedValue = int.Parse(atk.Split('-')[1]);
 
-        foreach(string atk in allCurrentAttacks){
-          string associatedEffect = atk.Split('-')[0];
-          int associatedValue = int.Parse(atk.Split('-')[1]);
-
-          if(associatedEffect == "Damage"){
-            int netDamage = 0;
-            if (associatedValue >= shieldCount){
-              netDamage = associatedValue - shieldCount;
-              shieldCount = 0;
-            } else {
-              shieldCount -= associatedValue;
+                if(associatedEffect == "Damage"){
+                    int netDamage = 0;
+                    if (associatedValue >= shieldCount){
+                        netDamage = associatedValue - shieldCount;
+                        shieldCount = 0;
+                    } else {
+                        shieldCount -= associatedValue;
+                    }
+                        healthRemaining -= netDamage;
+                }
             }
-            healthRemaining -= netDamage;
-          }
-        }
 
-        if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length){
-          el.currentAttackIndex += 1;
-        } else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
-          el.currentAttackIndex = 0;
-        }
-      }
+             if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length){
+                el.currentAttackIndex += 1;
+             } else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
+                el.currentAttackIndex = 0;
+             }
+         }
+    }
 
+    private void UpdateEnemyHP(EnemyData enemy) {
+        //updates the health display for one single enemy, called after the player attacks an enemy
+        EnemySprite sprite = enemy.enemySprite;
+        sprite.transform.Find("HP").GetComponent<TextMesh>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
+    }
+
+    private void UpdateEnemyAttacks() {
+        //updates the attack text for all enemies that are still alive, called at the end of the turn
+        foreach(EnemyData enemy in enemies) {
+            Transform enemyAttack = enemy.enemySprite.transform.GetChild(2);
+
+            enemyAttack.GetComponent<TextMesh>().text = enemy.source.enemyAttacks[enemy.currentAttackIndex];
+        }
     }
 
 }

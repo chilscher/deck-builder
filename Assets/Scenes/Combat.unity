@@ -1702,6 +1702,7 @@ MonoBehaviour:
       - Damage-3
     hitPointDamage: 0
     currentAttackIndex: 0
+    enemySprite: {fileID: 0}
 --- !u!61 &403814761
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3166,6 +3167,7 @@ MonoBehaviour:
       - Damage-3
     hitPointDamage: 0
     currentAttackIndex: 0
+    enemySprite: {fileID: 0}
 --- !u!61 &747073090
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3899,6 +3901,7 @@ MonoBehaviour:
       - Damage-3
     hitPointDamage: 0
     currentAttackIndex: 0
+    enemySprite: {fileID: 0}
 --- !u!61 &912100236
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5940,13 +5943,13 @@ MonoBehaviour:
   allEnemies:
   - id: 1
     enemyName: Katie
-    hitPoints: 20
+    hitPoints: 5
     enemyAttacks:
     - Damage-4
     - Damage-3
   - id: 2
     enemyName: Lauren
-    hitPoints: 15
+    hitPoints: 6
     enemyAttacks:
     - Damage-1
     - Damage-2
@@ -7042,6 +7045,7 @@ MonoBehaviour:
       - Damage-3
     hitPointDamage: 0
     currentAttackIndex: 0
+    enemySprite: {fileID: 0}
 --- !u!61 &1729800121
 BoxCollider2D:
   m_ObjectHideFlags: 0
