@@ -54,7 +54,7 @@ public class CombatController : MonoBehaviour {
     public GameObject shieldDisplayGameObject;
     private int shieldCount = 0;
 
-
+    private Vector2[] enemyPositions = new Vector2[4];
 
 
     private void Start() {
@@ -72,8 +72,17 @@ public class CombatController : MonoBehaviour {
         deck.Add(new CardData(catalog.GetCardWithName("purple")));
         deck.Add(new CardData(catalog.GetCardWithName("purple")));
 
+        //define the positions that the enemies will get added in
+        enemyPositions[0] = enemiesGameObject.transform.Find("Enemy 1").position;
+        enemyPositions[1] = enemiesGameObject.transform.Find("Enemy 2").position;
+        enemyPositions[2] = enemiesGameObject.transform.Find("Enemy 3").position;
+        enemyPositions[3] = enemiesGameObject.transform.Find("Enemy 4").position;
+
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
         enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(1)));
+        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(1)));
+        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(2)));
+        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(2)));
 
         //sets the player's mana to their max value
         mana = maxMana;
@@ -224,9 +233,9 @@ public class CombatController : MonoBehaviour {
             GameObject newEnemyDisplay = Instantiate(enemySpritePrefab);
             newEnemyDisplay.transform.parent = enemiesGameObject.transform;
 
-            Vector2 enemyPos = enemiesGameObject.transform.position;
-
-            newEnemyDisplay.transform.position = enemyPos;
+            //set the enemy's position. enemies fill the enemy1-enemy4 slots as defined by the enemy positions in the combat scene
+            //this system is probably definitely going to change at some point
+            newEnemyDisplay.transform.position = enemyPositions[i];
 
             newEnemyDisplay.GetComponent<EnemySprite>().associatedEnemy = enemies[i];
 
