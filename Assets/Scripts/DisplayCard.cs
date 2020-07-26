@@ -43,7 +43,7 @@ public class DisplayCard: MonoBehaviour{
 
             //if an enemy was found, play the card targeting that enemy
             if (enemy != null) {
-              print("hit!");
+                //print("hit!");
                 //PlayCard(enemy.GetComponent<EnemySprite>().associatedEnemy);
                 PlayCard(enemy.GetComponent<Enemy>());
             }

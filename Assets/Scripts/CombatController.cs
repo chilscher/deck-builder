@@ -61,6 +61,9 @@ public class CombatController : MonoBehaviour {
     public List<string> startingDeck = new List<string>();
     public List<int> startingEnemies = new List<int>();
 
+    public GameObject winPopup;
+    public GameObject losePopup;
+
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
         foreach (string cardName in startingDeck) {
@@ -287,13 +290,18 @@ public class CombatController : MonoBehaviour {
     public void EndTurn() {
         //ends the player's turn. discards their entire hand, draws a new hand, and rests their mana.
 
-        EnemiesAttacks();
+        EnemiesAttack();
+
+        if (healthRemaining <= 0) {
+            healthRemaining = 0;
+            Lose();
+        }
 
         mana = maxMana;
         DiscardHand();
         DrawCards(drawNum);
         shieldCount = 0;
-
+        
         //update the visuals
         ShowCardsInHand();
         ShowNumberInPile(discardPileGameObject, discardPile.Count);
@@ -301,8 +309,14 @@ public class CombatController : MonoBehaviour {
         ShowMana();
         DisplayShields();
         DisplayHealth();
-
+        
         UpdateEnemyAttacks();
+    }
+
+    private void Lose() {
+        //stuff that happens when the player loses all their health
+        //more functions to be added later
+        losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
 
     private void DisplayHealth() {
@@ -331,15 +345,33 @@ public class CombatController : MonoBehaviour {
 
         // if the enemy data has more damage than it has hitpoints, remove it
         if (enemy.hitPointDamage >= enemy.source.hitPoints){
-            enemies.Remove(enemy);
-            GameObject.Destroy(enemy.gameObject);
-            print($"{enemy.source.enemyName} defeated!");
+            DefeatEnemy(enemy);
 
+            //check to see if you win!
+            if (enemies.Count == 0) {
+                Win();
+            }
+            //print($"{enemy.source.enemyName} defeated!");
         }
         
     }
 
-    public void EnemiesAttacks(){
+    private void DefeatEnemy(Enemy enemy) {
+        //stuff that happens when an enemy drops to 0 HP
+        //more functions to be added here later
+        enemies.Remove(enemy);
+        GameObject.Destroy(enemy.gameObject);
+    }
+
+    private void Win() {
+        //stuff that happens after all enemies are defeated!
+        //more functions to be added here later
+        winPopup.GetComponent<WinPopup>().PlayerWins();
+        //print("you win!");
+
+    }
+
+    public void EnemiesAttack(){
         //makes each enemy attack in sequence
         
         foreach(Enemy el in enemies) { 
