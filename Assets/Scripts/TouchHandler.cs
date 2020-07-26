@@ -173,7 +173,6 @@ public class TouchHandler : MonoBehaviour {
         //if the object is a DisplayCard, click it
         if (type == "Display Card") {
             SetCardToDrag(obj.GetComponent<DisplayCard>());
-            //obj.GetComponent<DisplayCard>().ClickedCard();
         }
 
         //if the object is the Discard Pile

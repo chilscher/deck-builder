@@ -284,9 +284,9 @@ GameObject:
   - component: {fileID: 4229436681840539237}
   - component: {fileID: 8911493191085747596}
   - component: {fileID: 5760637560942864689}
-  - component: {fileID: 114360251578533412}
+  - component: {fileID: 114376612065318614}
   m_Layer: 0
-  m_Name: Enemy Sprite
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -384,7 +384,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114360251578533412
+--- !u!114 &114376612065318614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -393,17 +393,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7002800415312843669}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036d32205aa20014585d734aae75c036, type: 3}
+  m_Script: {fileID: 11500000, guid: 961e51919ed3f37428d8c5085e70d7af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedEnemy:
-    source:
-      id: 0
-      enemyName: 
-      hitPoints: 0
-      enemyAttacks: []
-    hitPointDamage: 0
-    currentAttackIndex: 0
+  source:
+    id: 0
+    enemyName: 
+    hitPoints: 0
+    enemyAttacks: []
+  hitPointDamage: 0
+  currentAttackIndex: 0
 --- !u!1 &8211336637841760592
 GameObject:
   m_ObjectHideFlags: 0

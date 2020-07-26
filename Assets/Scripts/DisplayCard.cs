@@ -35,7 +35,8 @@ public class DisplayCard: MonoBehaviour{
             List<GameObject> possibleEnemies = touchHandler.FindAllObjectCollisions(Input.mousePosition);
             GameObject enemy = null;
             foreach(GameObject element in possibleEnemies) {
-                if (element.GetComponent<EnemySprite>() != null) {
+                //if (element.GetComponent<EnemySprite>() != null) {
+                if (element.GetComponent<Enemy>() != null) {
                     enemy = element;
                 }
             }
@@ -43,7 +44,8 @@ public class DisplayCard: MonoBehaviour{
             //if an enemy was found, play the card targeting that enemy
             if (enemy != null) {
               print("hit!");
-                PlayCard(enemy.GetComponent<EnemySprite>().associatedEnemy);
+                //PlayCard(enemy.GetComponent<EnemySprite>().associatedEnemy);
+                PlayCard(enemy.GetComponent<Enemy>());
             }
 
             //if no enemy was found, return the card to where it was in the hand
@@ -59,12 +61,12 @@ public class DisplayCard: MonoBehaviour{
 
 
     }
-
-    private void PlayCard(EnemyData enemy = null) {
+    
+    private void PlayCard(Enemy enemy = null) {
         //plays the associated card. if a target enemy is required for the effect, it can be provided
 
         //iterate through all the effects of the card, and do each one
-        foreach(string effect in associatedCard.source.effects) {
+        foreach (string effect in associatedCard.source.effects) {
 
             //first, check if the effect has an associated value (ex, deal 4 damage has the associated value 4)
             //this assumes the associated value is separated from the rest of the effect by the character '='
@@ -86,8 +88,8 @@ public class DisplayCard: MonoBehaviour{
         //discard the card
         combatController.MoveCardFromHandToDiscard(associatedCard);
     }
-
-    private void DoCardEffect(string effect, int value = 0, EnemyData enemy = null) {
+    
+    private void DoCardEffect(string effect, int value = 0, Enemy enemy = null) {
         //executes the card effect
         if (effect == "Damage") {
             combatController.DealDamageToEnemy(value, enemy);

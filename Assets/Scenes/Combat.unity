@@ -1654,7 +1654,6 @@ GameObject:
   - component: {fileID: 403814759}
   - component: {fileID: 403814762}
   - component: {fileID: 403814761}
-  - component: {fileID: 403814760}
   m_Layer: 0
   m_Name: Enemy 4
   m_TagString: Untagged
@@ -1680,29 +1679,6 @@ Transform:
   m_Father: {fileID: 953934556}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &403814760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 403814758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036d32205aa20014585d734aae75c036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedEnemy:
-    source:
-      id: 1
-      enemyName: Katie
-      hitPoints: 20
-      enemyAttacks:
-      - Damage-4
-      - Damage-3
-    hitPointDamage: 0
-    currentAttackIndex: 0
-    enemySprite: {fileID: 0}
 --- !u!61 &403814761
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2101,7 +2077,7 @@ MonoBehaviour:
   catalog: {fileID: 1906865166}
   enemyCatalog: {fileID: 1488707294}
   enemiesGameObject: {fileID: 953934554}
-  enemySpritePrefab: {fileID: 7002800415312843669, guid: a43a60da270c5a34ab9fd3d85cf7e9a3,
+  enemyPrefab: {fileID: 7002800415312843669, guid: 8cd7df3570da693448f52cb56ae7931f,
     type: 3}
   displayCardPrefab: {fileID: 4870686121329278908, guid: f14510db93af35b4397e5096435a7c8a,
     type: 3}
@@ -2122,6 +2098,20 @@ MonoBehaviour:
   maxHealthGameObject: {fileID: 910381796}
   startingHealth: 50
   shieldDisplayGameObject: {fileID: 666761754}
+  startingDeck:
+  - red
+  - red
+  - red
+  - red
+  - red
+  - blue
+  - blue
+  - blue
+  - blue
+  - blue
+  - purple
+  - purple
+  startingEnemies: 0100000001000000
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -3119,7 +3109,6 @@ GameObject:
   - component: {fileID: 747073088}
   - component: {fileID: 747073091}
   - component: {fileID: 747073090}
-  - component: {fileID: 747073089}
   m_Layer: 0
   m_Name: Enemy 3
   m_TagString: Untagged
@@ -3145,29 +3134,6 @@ Transform:
   m_Father: {fileID: 953934556}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &747073089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 747073087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036d32205aa20014585d734aae75c036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedEnemy:
-    source:
-      id: 1
-      enemyName: Katie
-      hitPoints: 20
-      enemyAttacks:
-      - Damage-4
-      - Damage-3
-    hitPointDamage: 0
-    currentAttackIndex: 0
-    enemySprite: {fileID: 0}
 --- !u!61 &747073090
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3853,7 +3819,6 @@ GameObject:
   - component: {fileID: 912100234}
   - component: {fileID: 912100237}
   - component: {fileID: 912100236}
-  - component: {fileID: 912100235}
   m_Layer: 0
   m_Name: Enemy 2
   m_TagString: Untagged
@@ -3879,29 +3844,6 @@ Transform:
   m_Father: {fileID: 953934556}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &912100235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912100233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036d32205aa20014585d734aae75c036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedEnemy:
-    source:
-      id: 1
-      enemyName: Katie
-      hitPoints: 20
-      enemyAttacks:
-      - Damage-4
-      - Damage-3
-    hitPointDamage: 0
-    currentAttackIndex: 0
-    enemySprite: {fileID: 0}
 --- !u!61 &912100236
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5246,7 +5188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 310183670}
   m_Layer: 0
-  m_Name: Recovery GameObject (310183670)
+  m_Name: Allies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6997,7 +6939,6 @@ GameObject:
   - component: {fileID: 1729800119}
   - component: {fileID: 1729800122}
   - component: {fileID: 1729800121}
-  - component: {fileID: 1729800120}
   m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Untagged
@@ -7023,29 +6964,6 @@ Transform:
   m_Father: {fileID: 953934556}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1729800120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729800118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036d32205aa20014585d734aae75c036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedEnemy:
-    source:
-      id: 1
-      enemyName: Katie
-      hitPoints: 20
-      enemyAttacks:
-      - Damage-4
-      - Damage-3
-    hitPointDamage: 0
-    currentAttackIndex: 0
-    enemySprite: {fileID: 0}
 --- !u!61 &1729800121
 BoxCollider2D:
   m_ObjectHideFlags: 0

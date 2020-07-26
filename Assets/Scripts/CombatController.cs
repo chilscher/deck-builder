@@ -31,8 +31,10 @@ public class CombatController : MonoBehaviour {
 
     //dealing with holding and displaying enemies
     public GameObject enemiesGameObject;
-    public GameObject enemySpritePrefab;
-    private List<EnemyData> enemies = new List<EnemyData>();
+    //public GameObject enemySpritePrefab;
+    public GameObject enemyPrefab;
+    private List<Enemy> enemies = new List<Enemy>();
+    //private List<EnemyData> enemies = new List<EnemyData>();
 
     //the DisplayCard's prefab, which is instantiated to create a visual display of a card
     public GameObject displayCardPrefab;
@@ -56,33 +58,28 @@ public class CombatController : MonoBehaviour {
 
     private Vector2[] enemyPositions = new Vector2[4];
 
+    public List<string> startingDeck = new List<string>();
+    public List<int> startingEnemies = new List<int>();
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
-        deck.Add(new CardData(catalog.GetCardWithName("red")));
-        deck.Add(new CardData(catalog.GetCardWithName("red")));
-        deck.Add(new CardData(catalog.GetCardWithName("red")));
-        deck.Add(new CardData(catalog.GetCardWithName("red")));
-        deck.Add(new CardData(catalog.GetCardWithName("red")));
-        deck.Add(new CardData(catalog.GetCardWithName("blue")));
-        deck.Add(new CardData(catalog.GetCardWithName("blue")));
-        deck.Add(new CardData(catalog.GetCardWithName("blue")));
-        deck.Add(new CardData(catalog.GetCardWithName("blue")));
-        deck.Add(new CardData(catalog.GetCardWithName("blue")));
-        deck.Add(new CardData(catalog.GetCardWithName("purple")));
-        deck.Add(new CardData(catalog.GetCardWithName("purple")));
+        foreach (string cardName in startingDeck) {
+            deck.Add(new CardData(catalog.GetCardWithName(cardName)));
+        }
 
         //define the positions that the enemies will get added in
         enemyPositions[0] = enemiesGameObject.transform.Find("Enemy 1").position;
         enemyPositions[1] = enemiesGameObject.transform.Find("Enemy 2").position;
         enemyPositions[2] = enemiesGameObject.transform.Find("Enemy 3").position;
         enemyPositions[3] = enemiesGameObject.transform.Find("Enemy 4").position;
+        //remove the old enemy display gameObjects so ours can be added in
+        foreach (Transform t in enemiesGameObject.transform) { GameObject.Destroy(t.gameObject); }
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
-        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(1)));
-        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(1)));
-        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(2)));
-        enemies.Add(new EnemyData(enemyCatalog.GetEnemyWithID(2)));
+        //this function also displays the enemies on screen
+        for (int i = 0; i<startingEnemies.Count; i++) {
+            enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
+        }
 
         //sets the player's mana to their max value
         mana = maxMana;
@@ -91,15 +88,16 @@ public class CombatController : MonoBehaviour {
         healthRemaining = startingHealth;
 
         //basic display functions
+        //enemy display function is bundled in AddNewEnemy above
         ShuffleDeck();
         DrawCards(drawNum);
         ShowCardsInHand();
         ShowNumberInPile(deckGameObject, deck.Count);
         ShowNumberInPile(discardPileGameObject, discardPile.Count);
         ShowMana();
-        DisplayEnemies();
         DisplayHealth();
         DisplayShields();
+        UpdateEnemyAttacks();
     }
 
     private void Update() {
@@ -127,7 +125,7 @@ public class CombatController : MonoBehaviour {
 
     private void DrawCards(int num) {
         //draws num cards from the deck and adds them to the hand. shuffles the discard pile into the deck if more cards need to be drawn
-
+        //recursively calls itself if the deck needs to be shuffled
         if (deck.Count == 0 && discardPile.Count == 0) { //if the deck and discard pile are empty, do nothing
             return;
         }
@@ -217,43 +215,6 @@ public class CombatController : MonoBehaviour {
             newCardDisplay.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder = 3;
             newCardDisplay.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder = 3;
         }
-    }
-
-    private void DisplayEnemies() {
-
-        foreach (Transform t in enemiesGameObject.transform) {
-            GameObject.Destroy(t.gameObject);
-        }
-
-        float cardDisplayWidth = enemySpritePrefab.transform.localScale.x * enemySpritePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-        float cardDisplayHeight = enemySpritePrefab.transform.localScale.y * enemySpritePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
-
-        for (int i = 0; i < enemies.Count; i++) {
-            // render enemy
-            GameObject newEnemyDisplay = Instantiate(enemySpritePrefab);
-            newEnemyDisplay.transform.parent = enemiesGameObject.transform;
-
-            //set the enemy's position. enemies fill the enemy1-enemy4 slots as defined by the enemy positions in the combat scene
-            //this system is probably definitely going to change at some point
-            newEnemyDisplay.transform.position = enemyPositions[i];
-
-            newEnemyDisplay.GetComponent<EnemySprite>().associatedEnemy = enemies[i];
-
-            //render enemy name
-            Transform enemyName = newEnemyDisplay.transform.GetChild(0);
-
-            enemyName.GetComponent<TextMesh>().text = enemies[i].source.enemyName;
-
-            //set the EnemyData's enemySprite reference
-            enemies[i].enemySprite = newEnemyDisplay.GetComponent<EnemySprite>();
-
-            //render enemy hp
-            UpdateEnemyHP(enemies[i]);
-        }
-
-        //render enemy attacks
-        UpdateEnemyAttacks();
-
     }
 
     private void PrintCards(string introText, List<CardData> cards) {
@@ -360,8 +321,8 @@ public class CombatController : MonoBehaviour {
         shieldCount += count;
         DisplayShields();
     }
-
-    public void DealDamageToEnemy(int damage, EnemyData enemy){
+    
+    public void DealDamageToEnemy(int damage, Enemy enemy) {
         // deal damage to enemy
         enemy.hitPointDamage += damage;
 
@@ -371,7 +332,7 @@ public class CombatController : MonoBehaviour {
         // if the enemy data has more damage than it has hitpoints, remove it
         if (enemy.hitPointDamage >= enemy.source.hitPoints){
             enemies.Remove(enemy);
-            GameObject.Destroy(enemy.enemySprite.gameObject);
+            GameObject.Destroy(enemy.gameObject);
             print($"{enemy.source.enemyName} defeated!");
 
         }
@@ -380,8 +341,8 @@ public class CombatController : MonoBehaviour {
 
     public void EnemiesAttacks(){
         //makes each enemy attack in sequence
-
-         foreach(EnemyData el in enemies){
+        
+        foreach(Enemy el in enemies) { 
             // access current attack
             string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
 
@@ -411,19 +372,44 @@ public class CombatController : MonoBehaviour {
          }
     }
 
-    private void UpdateEnemyHP(EnemyData enemy) {
+    private void UpdateEnemyHP(Enemy enemy) {
         //updates the health display for one single enemy, called after the player attacks an enemy
-        EnemySprite sprite = enemy.enemySprite;
-        sprite.transform.Find("HP").GetComponent<TextMesh>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
+        enemy.transform.Find("HP").GetComponent<TextMesh>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
     }
 
     private void UpdateEnemyAttacks() {
         //updates the attack text for all enemies that are still alive, called at the end of the turn
-        foreach(EnemyData enemy in enemies) {
-            Transform enemyAttack = enemy.enemySprite.transform.GetChild(2);
-
-            enemyAttack.GetComponent<TextMesh>().text = enemy.source.enemyAttacks[enemy.currentAttackIndex];
+        foreach (Enemy enemy in enemies) {
+            enemy.transform.GetChild(2).GetComponent<TextMesh>().text = enemy.source.enemyAttacks[enemy.currentAttackIndex];
         }
+    }
+
+    private Enemy AddNewEnemy(PlatonicEnemy p, int enemyNum) {
+        //creates a new enemy from the provided PlatonicEnemy, and sets its position based on which enemyNum it is
+        //the Enemy data creation and the visual prefab's instantiation both go in this function
+        //this is because we never need a visual display for an Enemy without also having the Enemy's data, and vice-versa
+        GameObject go = Instantiate(enemyPrefab);
+        Enemy enemy = go.GetComponent<Enemy>();
+        enemy.source = p;
+        enemy.hitPointDamage = 0;
+        enemy.currentAttackIndex = 0;
+
+        // render enemy
+        enemy.transform.parent = enemiesGameObject.transform;
+
+        //set the enemy's position. enemies fill the enemy1-enemy4 slots as defined by the enemy positions in the combat scene
+        //this system is probably definitely going to change at some point
+        enemy.transform.position = enemyPositions[enemyNum];
+
+        //render enemy name
+        Transform enemyName = enemy.transform.GetChild(0);
+
+        enemyName.GetComponent<TextMesh>().text = enemy.source.enemyName;
+
+        //render enemy hp
+        UpdateEnemyHP(enemy);
+
+        return enemy;
     }
 
 }

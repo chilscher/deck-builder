@@ -9,9 +9,9 @@ using UnityEngine.SceneManagement;
 [System.Serializable] //you can create new copies of this from a list in the inspector
 public class PlatonicEnemy {
 
-    //contains the data for one kind of card. these are created in the inspector within the Catalog script
-    //an individual copy of a card used in the game uses the CardData script
-    //the CardData script points towards this script as the source for the card's actual information, like name, text, image, etc
+    //contains the data for one kind of enemy. these are created in the inspector within the EnemyCatalog script
+    //an individual copy of a enemy used in the game uses the Enemy script
+    //the Enemy script points towards this script as the source for the card's actual information, like name, text, image, etc
 
     [Header("Displayed Info")]
     public int id;
