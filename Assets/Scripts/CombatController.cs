@@ -63,6 +63,10 @@ public class CombatController : MonoBehaviour {
 
     public GameObject winPopup;
     public GameObject losePopup;
+    [HideInInspector]
+    public bool hasWon;
+    [HideInInspector]
+    public bool hasLost;
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
@@ -316,6 +320,7 @@ public class CombatController : MonoBehaviour {
     private void Lose() {
         //stuff that happens when the player loses all their health
         //more functions to be added later
+        hasLost = true;
         losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
 
@@ -366,8 +371,8 @@ public class CombatController : MonoBehaviour {
     private void Win() {
         //stuff that happens after all enemies are defeated!
         //more functions to be added here later
+        hasWon = true;
         winPopup.GetComponent<WinPopup>().PlayerWins();
-        //print("you win!");
 
     }
 

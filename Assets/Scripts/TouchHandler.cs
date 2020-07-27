@@ -131,26 +131,34 @@ public class TouchHandler : MonoBehaviour {
         //first, look for a DisplayCard, and that has tap priority
         foreach(GameObject obj in gos) {
             if (IdentifyObject(obj) == "Display Card") {
-                return obj;
+                if (!combatController.hasWon && !combatController.hasLost) { //you cant click a displaycard if you won or lost the combat
+                    return obj;
+                }
             }
         }
 
         //next, look for a Discard Pile or Deck
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Discard Pile") {
-                return obj;
+                if (!combatController.hasWon && !combatController.hasLost) { //you cant click the discard pile if you won or lost the combat
+                    return obj;
+                }
             }
         }
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Deck") {
-                return obj;
+                if (!combatController.hasWon && !combatController.hasLost) { //you cant click the deck if you won or lost the combat
+                    return obj;
+                }
             }
         }
 
         //then, look for the End Turn Button
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "End Turn") {
-                return obj;
+                if (!combatController.hasWon && !combatController.hasLost) { //you cant click the end turn button if you won or lost the combat
+                    return obj;
+                }
             }
         }
 
