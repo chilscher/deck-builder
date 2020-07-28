@@ -49,8 +49,6 @@ public class CombatController : MonoBehaviour {
 
 
 
-    public GameObject currentHealthGameObject; //displays the current hp
-    public GameObject maxHealthGameObject; //displays the max hp
     private int healthRemaining;
     public int startingHealth;
     public GameObject shieldDisplayGameObject;
@@ -67,6 +65,7 @@ public class CombatController : MonoBehaviour {
     public bool hasWon;
     [HideInInspector]
     public bool hasLost;
+    public GameObject mainCanvas;
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
@@ -85,7 +84,10 @@ public class CombatController : MonoBehaviour {
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
         //this function also displays the enemies on screen
         for (int i = 0; i<startingEnemies.Count; i++) {
-            enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
+            if (startingEnemies[i] != 0) { //inputting an enemy id of 0 will leave that space blank
+                enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
+            }
+            
         }
 
         //sets the player's mana to their max value
@@ -325,9 +327,7 @@ public class CombatController : MonoBehaviour {
     }
 
     private void DisplayHealth() {
-        //shows the player's current health and max health
-        ShowNumberInPile(currentHealthGameObject, healthRemaining);
-        ShowNumberInPile(maxHealthGameObject, startingHealth);
+        mainCanvas.GetComponent<MainCanvas>().DisplayHealth(healthRemaining, startingHealth);
     }
 
     private void DisplayShields() {
@@ -471,6 +471,9 @@ public class CombatController : MonoBehaviour {
         Vector2 hpPos = enemy.transform.Find("HP").position;
         hpPos.y -= displacement;
         enemy.transform.Find("HP").position = hpPos;
+
+        //resize the boxcollider to match the new enemy sprite size
+        enemy.GetComponent<BoxCollider2D>().size = enemyArt.GetComponent<SpriteRenderer>().bounds.size / 2;
 
         //return the new enemy object
         return enemy;
