@@ -31,4 +31,11 @@ public class MainCanvas : MonoBehaviour {
 
     }
 
+    public void DisplayShields(int shieldCount) {
+        int tens = shieldCount / 10;
+        int ones = shieldCount - (tens * 10);
+        transform.Find("Shield Display").Find("Tens").GetComponent<Image>().sprite = numbers[tens];
+        transform.Find("Shield Display").Find("Ones").GetComponent<Image>().sprite = numbers[ones];
+    }
+
 }

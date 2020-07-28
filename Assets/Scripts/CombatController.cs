@@ -51,7 +51,6 @@ public class CombatController : MonoBehaviour {
 
     private int healthRemaining;
     public int startingHealth;
-    public GameObject shieldDisplayGameObject;
     private int shieldCount = 0;
 
     private Vector2[] enemyPositions = new Vector2[4];
@@ -332,7 +331,7 @@ public class CombatController : MonoBehaviour {
 
     private void DisplayShields() {
         //shows the player's current number of shields
-        ShowNumberInPile(shieldDisplayGameObject, shieldCount);
+        mainCanvas.GetComponent<MainCanvas>().DisplayShields(shieldCount);
     }
 
     public void AddShields(int count) {
