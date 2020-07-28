@@ -446,6 +446,33 @@ public class CombatController : MonoBehaviour {
         //render enemy hp
         UpdateEnemyHP(enemy);
 
+        //set the enemy art to match the provided enemy art sprite
+        enemy.transform.Find("Enemy Art").GetComponent<SpriteRenderer>().sprite = enemy.source.enemyArt;
+
+        //move the next-attack, hp, and name text objects to be on top of/below the enemy sprite art
+        //first, grab the Enemy Art gameobject for both the prefab and the instance
+        GameObject prefabArt = enemyPrefab.transform.Find("Enemy Art").gameObject;
+        GameObject enemyArt = enemy.transform.Find("Enemy Art").gameObject;
+        //calculate the height of each sprite
+        float prefabArtHeight = prefabArt.GetComponent<SpriteRenderer>().bounds.size.y;
+        float enemyArtHeight = enemyArt.GetComponent<SpriteRenderer>().bounds.size.y;
+        //calculate the difference in height between the two sprites, and halve it to get the depth/height from the y=0 local position
+        float diff = prefabArtHeight - enemyArtHeight;
+        float displacement = diff / 2; //half the difference in height between the sprites. this is how far the text needs to move up/down
+        //move the attack text by the displacement amount
+        Vector2 attackPos = enemy.transform.Find("Next Attack").position;
+        attackPos.y += displacement;
+        enemy.transform.Find("Next Attack").position = attackPos;
+        //move the name text by the displacement amount
+        Vector2 namePos = enemy.transform.Find("Name").position;
+        namePos.y -= displacement;
+        enemy.transform.Find("Name").position = namePos;
+        //move the hp text by the displacement amount
+        Vector2 hpPos = enemy.transform.Find("HP").position;
+        hpPos.y -= displacement;
+        enemy.transform.Find("HP").position = hpPos;
+
+        //return the new enemy object
         return enemy;
     }
 

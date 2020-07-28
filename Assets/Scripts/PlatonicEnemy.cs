@@ -18,6 +18,9 @@ public class PlatonicEnemy {
     public string enemyName;
     public int hitPoints;
 
+    [Header("Visuals")]
+    public Sprite enemyArt;
+
     [Header("Attacks")]
     public string[] enemyAttacks;
 
