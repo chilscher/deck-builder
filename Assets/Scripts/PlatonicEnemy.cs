@@ -20,6 +20,7 @@ public class PlatonicEnemy {
 
     [Header("Visuals")]
     public Sprite enemyArt;
+    public bool isLargeEnemy;
 
     [Header("Attacks")]
     public string[] enemyAttacks;

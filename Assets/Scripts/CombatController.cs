@@ -27,8 +27,10 @@ public class CombatController : MonoBehaviour {
     public EnemyCatalog enemyCatalog;
 
     //dealing with holding and displaying enemies
-    public GameObject enemiesGameObject;
-    public GameObject enemyPrefab;
+    public GameObject smallEnemiesGameObject;
+    public GameObject largeEnemiesGameObject;
+    public GameObject mixedEnemiesGameObject;
+    private GameObject enemiesGameObject;
     private List<Enemy> enemies = new List<Enemy>();
 
     //the DisplayCard's prefab, which is instantiated to create a visual display of a card
@@ -48,8 +50,6 @@ public class CombatController : MonoBehaviour {
     public int startingHealth;
     private int shieldCount = 0;
 
-    private Vector2[] enemyPositions = new Vector2[4];
-
     public List<string> startingDeck = new List<string>();
     public List<int> startingEnemies = new List<int>();
 
@@ -67,13 +67,30 @@ public class CombatController : MonoBehaviour {
             deck.Add(new CardData(catalog.GetCardWithName(cardName)));
         }
 
-        //define the positions that the enemies will get added in
-        enemyPositions[0] = enemiesGameObject.transform.Find("Enemy 1").position;
-        enemyPositions[1] = enemiesGameObject.transform.Find("Enemy 2").position;
-        enemyPositions[2] = enemiesGameObject.transform.Find("Enemy 3").position;
-        enemyPositions[3] = enemiesGameObject.transform.Find("Enemy 4").position;
-        //remove the old enemy display gameObjects so ours can be added in
-        foreach (Transform t in enemiesGameObject.transform) { GameObject.Destroy(t.gameObject); }
+        //figure out which enemy group we need to use: small, large, or mixed
+        //important to note, for a mixed group, the large enemy goes in the 3rd position
+
+        //first, hide all enemy group gameobjects
+        smallEnemiesGameObject.SetActive(false);
+        largeEnemiesGameObject.SetActive(false);
+        mixedEnemiesGameObject.SetActive(false);
+
+        //count up the number of large enemies
+        int numLarge = 0;
+        foreach(int id in startingEnemies) {
+            PlatonicEnemy e = enemyCatalog.GetEnemyWithID(id);
+            if (e != null && e.isLargeEnemy) { numLarge++; }
+        }
+
+        //choose which group to use based on the number of large enemies
+        //this group is saved to enemiesGameObject, which is then accessed in AddNewEnemy
+        if (numLarge == 2) { enemiesGameObject = largeEnemiesGameObject; }
+        else if (numLarge == 1) { enemiesGameObject = mixedEnemiesGameObject; }
+        else if (numLarge == 0) { enemiesGameObject = smallEnemiesGameObject; }
+        else { print("you have too many large enemies!"); }
+        //set the chosen group as active
+        enemiesGameObject.SetActive(true);
+
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
         //this function also displays the enemies on screen
@@ -408,26 +425,19 @@ public class CombatController : MonoBehaviour {
     }
 
     private Enemy AddNewEnemy(PlatonicEnemy p, int enemyNum) {
-        //creates a new enemy from the provided PlatonicEnemy, and sets its position based on which enemyNum it is
-        //the Enemy data creation and the visual prefab's instantiation both go in this function
-        //this is because we never need a visual display for an Enemy without also having the Enemy's data, and vice-versa
-        GameObject go = Instantiate(enemyPrefab);
-        Enemy enemy = go.GetComponent<Enemy>();
+        //takes the pre-existing enemy object in enemiesGameObject and changes its data to match the provided enemy data
+        //this data is derived from PlatonicEnemy, and is implemented with the Enemy script
+
+        //grab the Enemy script from the appropriate enemy game object
+        Enemy enemy = enemiesGameObject.transform.GetChild(enemyNum).GetComponent<Enemy>();
+
+        //fill in some of its data
         enemy.source = p;
         enemy.hitPointDamage = 0;
         enemy.currentAttackIndex = 0;
-
-        // render enemy
-        enemy.transform.SetParent(enemiesGameObject.transform);
-
-        //set the enemy's position. enemies fill the enemy1-enemy4 slots as defined by the enemy positions in the combat scene
-        //this system is probably definitely going to change at some point
-        enemy.transform.position = enemyPositions[enemyNum];
-
+        
         //render enemy name
         Transform enemyName = enemy.transform.Find("Name");
-
-        //enemyName.GetComponent<TextMesh>().text = enemy.source.enemyName;
         enemyName.GetComponent<Text>().text = enemy.source.enemyName;
 
         //render enemy hp
@@ -435,34 +445,6 @@ public class CombatController : MonoBehaviour {
 
         //set the enemy art to match the provided enemy art sprite
         enemy.transform.Find("Enemy Art").GetComponent<Image>().sprite = enemy.source.enemyArt;
-
-        /*
-        //move the next-attack, hp, and name text objects to be on top of/below the enemy sprite art
-        //first, grab the Enemy Art gameobject for both the prefab and the instance
-        GameObject prefabArt = enemyPrefab.transform.Find("Enemy Art").gameObject;
-        GameObject enemyArt = enemy.transform.Find("Enemy Art").gameObject;
-        //calculate the height of each sprite
-        float prefabArtHeight = prefabArt.GetComponent<SpriteRenderer>().bounds.size.y;
-        float enemyArtHeight = enemyArt.GetComponent<SpriteRenderer>().bounds.size.y;
-        //calculate the difference in height between the two sprites, and halve it to get the depth/height from the y=0 local position
-        float diff = prefabArtHeight - enemyArtHeight;
-        float displacement = diff / 2; //half the difference in height between the sprites. this is how far the text needs to move up/down
-        //move the attack text by the displacement amount
-        Vector2 attackPos = enemy.transform.Find("Next Attack").position;
-        attackPos.y += displacement;
-        enemy.transform.Find("Next Attack").position = attackPos;
-        //move the name text by the displacement amount
-        Vector2 namePos = enemy.transform.Find("Name").position;
-        namePos.y -= displacement;
-        enemy.transform.Find("Name").position = namePos;
-        //move the hp text by the displacement amount
-        Vector2 hpPos = enemy.transform.Find("HP").position;
-        hpPos.y -= displacement;
-        enemy.transform.Find("HP").position = hpPos;
-
-        //resize the boxcollider to match the new enemy sprite size
-        enemy.GetComponent<BoxCollider2D>().size = enemyArt.GetComponent<SpriteRenderer>().bounds.size / 2;
-        */
 
         //return the new enemy object
         return enemy;
