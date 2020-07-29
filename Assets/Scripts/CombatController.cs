@@ -397,13 +397,13 @@ public class CombatController : MonoBehaviour {
 
     private void UpdateEnemyHP(Enemy enemy) {
         //updates the health display for one single enemy, called after the player attacks an enemy
-        enemy.transform.Find("HP").GetComponent<TextMesh>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
+        enemy.transform.Find("HP").GetComponent<Text>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
     }
 
     private void UpdateEnemyAttacks() {
         //updates the attack text for all enemies that are still alive, called at the end of the turn
         foreach (Enemy enemy in enemies) {
-            enemy.transform.GetChild(2).GetComponent<TextMesh>().text = enemy.source.enemyAttacks[enemy.currentAttackIndex];
+            enemy.transform.Find("Next Attack").GetComponent<Text>().text = enemy.source.enemyAttacks[enemy.currentAttackIndex];
         }
     }
 
@@ -418,23 +418,25 @@ public class CombatController : MonoBehaviour {
         enemy.currentAttackIndex = 0;
 
         // render enemy
-        enemy.transform.parent = enemiesGameObject.transform;
+        enemy.transform.SetParent(enemiesGameObject.transform);
 
         //set the enemy's position. enemies fill the enemy1-enemy4 slots as defined by the enemy positions in the combat scene
         //this system is probably definitely going to change at some point
         enemy.transform.position = enemyPositions[enemyNum];
 
         //render enemy name
-        Transform enemyName = enemy.transform.GetChild(0);
+        Transform enemyName = enemy.transform.Find("Name");
 
-        enemyName.GetComponent<TextMesh>().text = enemy.source.enemyName;
+        //enemyName.GetComponent<TextMesh>().text = enemy.source.enemyName;
+        enemyName.GetComponent<Text>().text = enemy.source.enemyName;
 
         //render enemy hp
         UpdateEnemyHP(enemy);
 
         //set the enemy art to match the provided enemy art sprite
-        enemy.transform.Find("Enemy Art").GetComponent<SpriteRenderer>().sprite = enemy.source.enemyArt;
+        enemy.transform.Find("Enemy Art").GetComponent<Image>().sprite = enemy.source.enemyArt;
 
+        /*
         //move the next-attack, hp, and name text objects to be on top of/below the enemy sprite art
         //first, grab the Enemy Art gameobject for both the prefab and the instance
         GameObject prefabArt = enemyPrefab.transform.Find("Enemy Art").gameObject;
@@ -460,6 +462,7 @@ public class CombatController : MonoBehaviour {
 
         //resize the boxcollider to match the new enemy sprite size
         enemy.GetComponent<BoxCollider2D>().size = enemyArt.GetComponent<SpriteRenderer>().bounds.size / 2;
+        */
 
         //return the new enemy object
         return enemy;

@@ -35,16 +35,13 @@ public class DisplayCard: MonoBehaviour{
             List<GameObject> possibleEnemies = touchHandler.FindAllObjectCollisions(Input.mousePosition);
             GameObject enemy = null;
             foreach(GameObject element in possibleEnemies) {
-                //if (element.GetComponent<EnemySprite>() != null) {
-                if (element.GetComponent<Enemy>() != null) {
-                    enemy = element;
+                if (element.name == "Enemy Art") {
+                    enemy = element.transform.parent.gameObject;
                 }
             }
 
             //if an enemy was found, play the card targeting that enemy
             if (enemy != null) {
-                //print("hit!");
-                //PlayCard(enemy.GetComponent<EnemySprite>().associatedEnemy);
                 PlayCard(enemy.GetComponent<Enemy>());
             }
 
