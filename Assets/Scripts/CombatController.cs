@@ -15,13 +15,10 @@ public class CombatController : MonoBehaviour {
     private List<CardData> discardPile = new List<CardData>();
 
     //the gameobjects that show where the player's cards are
-    public GameObject deckGameObject;
-    public GameObject discardPileGameObject;
     public GameObject handGameObject; //card display objects will get added to this dynamically
     public float gapBetweenCardsInHand = 0.2f; //the space between cards in the hand is this number * the width of a card
 
     //dealing with counting and displaying the player's mana
-    public GameObject manaGameObject;
     [HideInInspector]
     public int mana;
 
@@ -31,10 +28,8 @@ public class CombatController : MonoBehaviour {
 
     //dealing with holding and displaying enemies
     public GameObject enemiesGameObject;
-    //public GameObject enemySpritePrefab;
     public GameObject enemyPrefab;
     private List<Enemy> enemies = new List<Enemy>();
-    //private List<EnemyData> enemies = new List<EnemyData>();
 
     //the DisplayCard's prefab, which is instantiated to create a visual display of a card
     public GameObject displayCardPrefab;
@@ -64,7 +59,7 @@ public class CombatController : MonoBehaviour {
     public bool hasWon;
     [HideInInspector]
     public bool hasLost;
-    public GameObject mainCanvas;
+    public MainCanvas mainCanvas;
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
@@ -100,9 +95,9 @@ public class CombatController : MonoBehaviour {
         ShuffleDeck();
         DrawCards(drawNum);
         ShowCardsInHand();
-        ShowNumberInPile(deckGameObject, deck.Count);
-        ShowNumberInPile(discardPileGameObject, discardPile.Count);
-        ShowMana();
+        DisplayDeckCount();
+        DisplayDiscardCount();
+        DisplayMana();
         DisplayHealth();
         DisplayShields();
         UpdateEnemyAttacks();
@@ -245,15 +240,6 @@ public class CombatController : MonoBehaviour {
         pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sortingOrder = 1;
     }
 
-    private void ShowMana() {
-        //shows the amount of mana the player has left. does not show if the player has more than 9 mana
-        if (mana > 9) {
-            print("lots of mana!");
-            return;
-        }
-        manaGameObject.transform.Find("Ones").GetComponent<SpriteRenderer>().sprite = numbers[mana];
-    }
-
     public void PrintDeck() {
         //prints the cards in the deck
         //a temporary function used by TouchHandler, until proper Deck-tapping functionality is added
@@ -277,11 +263,11 @@ public class CombatController : MonoBehaviour {
 
         //display the cards in the hand, deck, and discard pile
         ShowCardsInHand();
-        ShowNumberInPile(discardPileGameObject, discardPile.Count);
-        ShowNumberInPile(deckGameObject, deck.Count);
+        DisplayDiscardCount();
+        DisplayDeckCount();
 
         //show the amount of mana the player has left. temporarily here, until it has a better spot
-        ShowMana();
+        DisplayMana();
     }
 
     public void DiscardHand() {
@@ -309,9 +295,9 @@ public class CombatController : MonoBehaviour {
         
         //update the visuals
         ShowCardsInHand();
-        ShowNumberInPile(discardPileGameObject, discardPile.Count);
-        ShowNumberInPile(deckGameObject, deck.Count);
-        ShowMana();
+        DisplayDiscardCount();
+        DisplayDeckCount();
+        DisplayMana();
         DisplayShields();
         DisplayHealth();
         
@@ -325,14 +311,15 @@ public class CombatController : MonoBehaviour {
         losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
 
-    private void DisplayHealth() {
-        mainCanvas.GetComponent<MainCanvas>().DisplayHealth(healthRemaining, startingHealth);
-    }
+    private void DisplayHealth() { mainCanvas.DisplayHealth(healthRemaining, startingHealth); }
 
-    private void DisplayShields() {
-        //shows the player's current number of shields
-        mainCanvas.GetComponent<MainCanvas>().DisplayShields(shieldCount);
-    }
+    private void DisplayShields() { mainCanvas.DisplayShields(shieldCount); }
+
+    private void DisplayDeckCount() { mainCanvas.DisplayDeckCount(deck.Count); }
+
+    private void DisplayDiscardCount() { mainCanvas.DisplayDiscardCount(discardPile.Count);}
+
+    private void DisplayMana() { mainCanvas.DisplayMana(mana); }
 
     public void AddShields(int count) {
         //adds count to the player's shield total
