@@ -193,7 +193,7 @@ public class CombatController : MonoBehaviour {
             //the function to calculate the card's x-position goes below.
             //currently, the x-position is evenly spaced based on the card's index and the total number of cards
             Vector2 cardPos = Vector2.zero;
-            cardPos.x += ((1 + gapBetweenCardsInHand) * displayCardPrefab.gameObject.transform.GetComponent<RectTransform>().rect.width) * (i - ((hand.Count - 1f) / 2f));
+            cardPos.x += ((1 + gapBetweenCardsInHand) * displayCardPrefab.gameObject.transform.GetComponent<RectTransform>().rect.width * displayCardPrefab.transform.localScale.x) * (i - ((hand.Count - 1f) / 2f));
 
             //instantiate the prefab and set its position and parent
             GameObject c = Instantiate(displayCardPrefab);
@@ -207,6 +207,10 @@ public class CombatController : MonoBehaviour {
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             c.GetComponent<DisplayCard>().associatedCard = hand[i];
+
+
+
+
             //set the DisplayCard's CombatController and TouchHandler references
             c.GetComponent<DisplayCard>().combatController = this;
             c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
