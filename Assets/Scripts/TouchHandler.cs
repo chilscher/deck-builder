@@ -8,9 +8,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 //IMPORTANT: To add touch support for a new object type, follow these 4 steps:
-//first, add a BoxCollider2D (or some other 2D collider) component to the object you want to touch
-//second, add a conditional check in IdentifyObject, returning a unique string for that object type
-//third, add a new loop into ChooseObjectToTouch, checking that string that you returned in IdentifyObject
+//first, add a conditional check in IdentifyObject, returning a unique string for that object type
+//second, add a new loop into ChooseObjectToTouch, checking that string that you returned in IdentifyObject
 //you can determine the object's touch priority (if several objects are touched simultaneously, which one is interacted with?) by placing its loop at different points within ChooseObjectToTouch
 //finally, add a block to InteractWithObject to call some external function that will respond to the touch
 //only the order matters in ChooseObjectToTouch. In IdentifyObject and InteractWithObject, the order of the conditional blocks does not matter!
@@ -61,7 +60,6 @@ public class TouchHandler : MonoBehaviour {
             //for testing, when the player releases a card, run its click function
             if (shouldMoveCard) {
                 shouldMoveCard = false;
-                LowerCard(movingCard); //lowers the card, so other cards can be shown on top of it when it returns to the hand
                 movingCard.ReleasedCard();
             }
         }
@@ -80,17 +78,6 @@ public class TouchHandler : MonoBehaviour {
         for (int i = 0; i < raycastResultList.Count; i++) {
             allTouchedObjects.Add(raycastResultList[i].gameObject);
         }
-
-        //find touched objects in world space
-        Vector3 wp = Camera.main.ScreenToWorldPoint(pos);
-        Vector2 touchPos = new Vector2(wp.x, wp.y);
-        if (Physics2D.OverlapPoint(touchPos) != null) {
-            Collider2D[] overlaps = Physics2D.OverlapPointAll(touchPos);
-            foreach (Collider2D o in overlaps) {
-                allTouchedObjects.Add(o.gameObject);
-            }
-        }
-
         return allTouchedObjects;
 
     }
@@ -98,9 +85,8 @@ public class TouchHandler : MonoBehaviour {
     private string IdentifyObject(GameObject obj) {
         //returns a string that identifies which type of touchable object the provided gameobject is
         //this string identifier is used when deciding which object to touch, and also when deciding how to interact with that object once it has been chosen
-
         //is the object a Display Card?
-        if (obj.GetComponent<DisplayCard>() != null) {
+        if (obj.name == "Card Template") {
             return "Display Card";
         }
         //is the object the Discard Pile?
@@ -180,7 +166,7 @@ public class TouchHandler : MonoBehaviour {
 
         //if the object is a DisplayCard, click it
         if (type == "Display Card") {
-            SetCardToDrag(obj.GetComponent<DisplayCard>());
+            SetCardToDrag(obj.transform.parent.GetComponent<DisplayCard>());
         }
 
         //if the object is the Discard Pile
@@ -203,55 +189,23 @@ public class TouchHandler : MonoBehaviour {
     private void SetCardToDrag(DisplayCard dc) {
         //sets the designated DisplayCard to follow the player's finger across the screen
         //called when a DisplayCard is tapped
-
+        
         //set the touchHandler to drag the card
         movingCard = dc;
         shouldMoveCard = true;
 
         //define the touch's position relative to the card's position.
         //ex: if the player taps a card in the top-left of the boxcollider, and the player drags the card, the card will be moved so that the top-left of the boxcollider remains under their finger
-        Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
-        relativeCardPosition = worldPos2d - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
-
-        //set the card's order in layer, and all of the order in layer values for its children, to be above the rest of the cards
-        dc.GetComponent<SpriteRenderer>().sortingOrder += 6;
-        dc.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder += 6;
-        dc.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder += 6;
-        dc.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sortingOrder += 6;
-        dc.transform.Find("Card Art").GetComponent<SpriteRenderer>().sortingOrder += 6;
-        dc.transform.Find("Mana Cost Background").GetComponent<SpriteRenderer>().sortingOrder += 6;
-
+        Vector2 pos = Input.mousePosition;
+        relativeCardPosition = pos - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
+        //move the card to be above all other cards
+        dc.transform.SetSiblingIndex(dc.transform.parent.childCount + 1);
     }
 
     private void DragCard() {
         //drags the DisplayCard object around the screen while the player holds their finger down
-        Vector3 worldPos3d = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 worldPos2d = new Vector2(worldPos3d.x, worldPos3d.y);
-        movingCard.transform.position = worldPos2d - relativeCardPosition; //takes the current touch position and subtracts the relative position of the touch to the card, to get the card's new position
-    }
-
-    private void RaiseCard(DisplayCard card) {
-        //raises the sorting order of a DisplayCard and all of its children, so that it is shown above them
-        //called when the card is clicked, specifically so the card is elevated during the time it is dragged around the screen
-        card.GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
-        card.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder += cardElevationAmount;
-        card.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder += cardElevationAmount;
-        card.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
-        card.transform.Find("Card Art").GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
-        card.transform.Find("Mana Cost Background").GetComponent<SpriteRenderer>().sortingOrder += cardElevationAmount;
-    }
-
-    private void LowerCard(DisplayCard card) {
-        //lowers the sorting order of a DisplayCard and all of its children, so that it is no longer shown above them
-        //called when the card is released, specifically so other cards can be elevated above it while they are being dragged around
-        card.GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
-        card.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder -= cardElevationAmount;
-        card.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder -= cardElevationAmount;
-        card.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
-        card.transform.Find("Card Art").GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
-        card.transform.Find("Mana Cost Background").GetComponent<SpriteRenderer>().sortingOrder -= cardElevationAmount;
-
+        Vector2 pos = Input.mousePosition;
+        movingCard.transform.position = pos - relativeCardPosition;
     }
 
 }

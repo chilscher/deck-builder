@@ -24,7 +24,7 @@ public class DisplayCard: MonoBehaviour{
         //if the player does not have enough mana left, do nothing and return the card to where it was before being dragged
         if (combatController.mana < associatedCard.source.manaCost) {
             print("not enough mana");
-            transform.position = startingPosition;
+            GetComponent<RectTransform>().anchoredPosition = startingPosition;
             return;
         }
 
@@ -47,7 +47,7 @@ public class DisplayCard: MonoBehaviour{
 
             //if no enemy was found, return the card to where it was in the hand
             else {
-                transform.position = startingPosition;
+                GetComponent<RectTransform>().anchoredPosition = startingPosition;
             }
         }
 

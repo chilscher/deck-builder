@@ -179,8 +179,8 @@ public class CombatController : MonoBehaviour {
 
     }
 
-    private void ShowCardsInHand() {
-        //creates handDisplayPrefab instances for each card currently in the hand
+    private void ShowCardsInHand() {        
+        //creates DisplayCard instances for each card currently in the hand
         //changes the color of those instances to match the cards in the hand
 
         //first, delete all the cards in the current hand
@@ -188,52 +188,34 @@ public class CombatController : MonoBehaviour {
             GameObject.Destroy(t.gameObject);
         }
 
-        //set the width of a single cardDisplay object
-        float cardDisplayWidth = displayCardPrefab.transform.localScale.x * displayCardPrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        for (int i = 0; i<hand.Count; i++) {
+            
+            //the function to calculate the card's x-position goes below.
+            //currently, the x-position is evenly spaced based on the card's index and the total number of cards
+            Vector2 cardPos = Vector2.zero;
+            cardPos.x += ((1 + gapBetweenCardsInHand) * displayCardPrefab.gameObject.transform.GetComponent<RectTransform>().rect.width) * (i - ((hand.Count - 1f) / 2f));
 
-        for (int i = 0; i < hand.Count; i++) {
-            //for each card, create a card display object, and set it as a child of the hand gameobject
-            GameObject newCardDisplay = Instantiate(displayCardPrefab);
-            newCardDisplay.transform.parent = handGameObject.transform;
-
-            //setting the position in world space
-
-            //start with the position of the handGameObject
-            Vector2 cardPos = handGameObject.transform.position;
-
-            //then move each card horizontally dependent upon its place in the hand
-            //the fist card is moved over by 0, the second is moved by the width of a card, plus some pre-defined gap distance
-            //the third is moved by the width of 2 cards, plus twice the pre-defined gap distance
-            cardPos.x += i * cardDisplayWidth * (1 + gapBetweenCardsInHand);
-
-            //then, move every card horizontally by half of the total width of the hand
-            //without this line, a 5-card hand has the 1st card in the center of the screen
-            //with this line, a 5-card hand has the 3rd card in the center of the screen
-            cardPos.x -= (hand.Count -1) * cardDisplayWidth * (1 + gapBetweenCardsInHand) /2;
-
-            //apply the calculated position to the card's transform
-            newCardDisplay.transform.position = cardPos;
-
-            //set the card's starting position here
-            newCardDisplay.GetComponent<DisplayCard>().startingPosition = cardPos;
-
+            //instantiate the prefab and set its position and parent
+            GameObject c = Instantiate(displayCardPrefab);
+            c.transform.SetParent(handGameObject.transform, false);
+            RectTransform rt = c.GetComponent<RectTransform>();
+            rt.anchoredPosition = cardPos;
+            c.GetComponent<DisplayCard>().startingPosition = cardPos;
+            
             //set the card art to match the provided card art sprite
-            newCardDisplay.transform.Find("Card Art").GetComponent<SpriteRenderer>().sprite = hand[i].source.cardArt;
+            c.transform.Find("Card Art").GetComponent<Image>().sprite = hand[i].source.cardArt;
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
-            newCardDisplay.GetComponent<DisplayCard>().associatedCard = hand[i];
-            //set the DisplayCard's CombatController reference, so when you click the DisplayCard you can call some CombatController functions
-            newCardDisplay.GetComponent<DisplayCard>().combatController = this;
-            newCardDisplay.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
+            c.GetComponent<DisplayCard>().associatedCard = hand[i];
+            //set the DisplayCard's CombatController and TouchHandler references
+            c.GetComponent<DisplayCard>().combatController = this;
+            c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
 
 
             //set the visual's text, name, and mana cost from the card data
-            newCardDisplay.transform.Find("Name").GetComponent<TextMesh>().text = hand[i].source.cardName.ToUpper();
-            newCardDisplay.transform.Find("Text").GetComponent<TextMesh>().text = hand[i].source.text.ToUpper();
-            newCardDisplay.transform.Find("Mana Cost").GetComponent<SpriteRenderer>().sprite = numbers[hand[i].source.manaCost];
-            //change the sorting layer of the name and text so they appear on top of the card background
-            newCardDisplay.transform.Find("Name").GetComponent<MeshRenderer>().sortingOrder = 3;
-            newCardDisplay.transform.Find("Text").GetComponent<MeshRenderer>().sortingOrder = 3;
+            c.transform.Find("Name").GetComponent<Text>().text = hand[i].source.cardName.ToUpper();
+            c.transform.Find("Text").GetComponent<Text>().text = hand[i].source.text.ToUpper();
+            c.transform.Find("Mana Cost").GetComponent<Image>().sprite = numbers[hand[i].source.manaCost];
         }
     }
 
