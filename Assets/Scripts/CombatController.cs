@@ -120,9 +120,6 @@ public class CombatController : MonoBehaviour {
         UpdateEnemyAttacks();
     }
 
-    private void Update() {
-    }
-
     private void ShuffleDeck() {
         //shuffles the order of the cards in the deck
         List<CardData> newDeck = new List<CardData>();
@@ -175,8 +172,6 @@ public class CombatController : MonoBehaviour {
             //draw the remaining cards
             DrawCards(num - alreadyDrawn);
         }
-
-
     }
 
     private void ShowCardsInHand() {        
@@ -207,10 +202,7 @@ public class CombatController : MonoBehaviour {
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             c.GetComponent<DisplayCard>().associatedCard = hand[i];
-
-
-
-
+            
             //set the DisplayCard's CombatController and TouchHandler references
             c.GetComponent<DisplayCard>().combatController = this;
             c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
@@ -231,16 +223,6 @@ public class CombatController : MonoBehaviour {
             output += " - ";
         }
         print(output);
-    }
-
-    private void ShowNumberInPile(GameObject pile, int num) {
-        //shows the number of cards left in the deck or discard pile
-        int tens = num / 10;
-        int ones = num - (tens * 10);
-        pile.transform.Find("Tens").GetComponent<SpriteRenderer>().sprite = numbers[tens];
-        pile.transform.Find("Tens").GetComponent<SpriteRenderer>().sortingOrder = 1;
-        pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sprite = numbers[ones];
-        pile.transform.Find("Ones").GetComponent<SpriteRenderer>().sortingOrder = 1;
     }
 
     public void PrintDeck() {
@@ -347,7 +329,6 @@ public class CombatController : MonoBehaviour {
             }
             //print($"{enemy.source.enemyName} defeated!");
         }
-        
     }
 
     private void DefeatEnemy(Enemy enemy) {
