@@ -98,6 +98,7 @@ public class CombatController : MonoBehaviour {
             if (startingEnemies[i] != 0) { //inputting an enemy id of 0 will leave that space blank
                 enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
             }
+            else { enemiesGameObject.transform.GetChild(i).gameObject.SetActive(false); }
             
         }
 
