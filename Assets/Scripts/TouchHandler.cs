@@ -27,6 +27,10 @@ public class TouchHandler : MonoBehaviour {
     private bool shouldMoveCard = false; //if the card should move to follow the player's touch
     private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
 
+    private Vector2 startingFingerPlacement;
+    private Vector2 currentFingerPlacement;
+    private bool activeCardDetails = false;
+
     public int cardElevationAmount = 6; //the amount of sorting layers a card is bumped by while being dragged around
 
 
@@ -43,19 +47,48 @@ public class TouchHandler : MonoBehaviour {
             List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
             GameObject o = ChooseObjectToTouch(objs);
             InteractWithObject(o);
+            startingFingerPlacement = Input.mousePosition;
         }
 
 
         //process the mouse being held down
         if (Input.GetMouseButton(0)) {
+            currentFingerPlacement = Input.mousePosition ;
+
+            // print(currentFingerPlacement);
+            // print(startingFingerPlacement);
+            // print("--------------------");
+            if (currentFingerPlacement == startingFingerPlacement){
+              print("made contact!");
+            }
+
             //if the player is dragging a card, move the card to match the current mouse position
-            if (shouldMoveCard) {
+            else if (shouldMoveCard) {
+              print("helloooooo");
                 DragCard();
             }
         }
 
         //process the mouse being released
         if (Input.GetMouseButtonUp(0)) {
+            if (currentFingerPlacement == startingFingerPlacement && !activeCardDetails){
+              print("finished!");
+
+              currentFingerPlacement = new Vector2(0, 0);
+              startingFingerPlacement = new Vector2(0, 0);
+
+              combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
+
+              activeCardDetails = true;
+            } else if (activeCardDetails){
+              currentFingerPlacement = new Vector2(0, 0);
+              startingFingerPlacement = new Vector2(0, 0);
+
+              combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
+
+              activeCardDetails = false;
+            }
+
             //if the player is moving a card, stop moving it
             //for testing, when the player releases a card, run its click function
             if (shouldMoveCard) {
@@ -189,7 +222,7 @@ public class TouchHandler : MonoBehaviour {
     private void SetCardToDrag(DisplayCard dc) {
         //sets the designated DisplayCard to follow the player's finger across the screen
         //called when a DisplayCard is tapped
-        
+
         //set the touchHandler to drag the card
         movingCard = dc;
         shouldMoveCard = true;

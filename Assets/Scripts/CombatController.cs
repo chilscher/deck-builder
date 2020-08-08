@@ -60,6 +60,7 @@ public class CombatController : MonoBehaviour {
     [HideInInspector]
     public bool hasLost;
     public MainCanvas mainCanvas;
+    public DetailsPopup detailsPopup;
 
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
@@ -99,7 +100,7 @@ public class CombatController : MonoBehaviour {
                 enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
             }
             else { enemiesGameObject.transform.GetChild(i).gameObject.SetActive(false); }
-            
+
         }
 
         //sets the player's mana to their max value
@@ -175,7 +176,7 @@ public class CombatController : MonoBehaviour {
         }
     }
 
-    private void ShowCardsInHand() {        
+    private void ShowCardsInHand() {
         //creates DisplayCard instances for each card currently in the hand
         //changes the color of those instances to match the cards in the hand
 
@@ -185,7 +186,7 @@ public class CombatController : MonoBehaviour {
         }
 
         for (int i = 0; i<hand.Count; i++) {
-            
+
             //the function to calculate the card's x-position goes below.
             //currently, the x-position is evenly spaced based on the card's index and the total number of cards
             Vector2 cardPos = Vector2.zero;
@@ -197,13 +198,13 @@ public class CombatController : MonoBehaviour {
             RectTransform rt = c.GetComponent<RectTransform>();
             rt.anchoredPosition = cardPos;
             c.GetComponent<DisplayCard>().startingPosition = cardPos;
-            
+
             //set the card art to match the provided card art sprite
             c.transform.Find("Card Art").GetComponent<Image>().sprite = hand[i].source.cardArt;
 
             //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
             c.GetComponent<DisplayCard>().associatedCard = hand[i];
-            
+
             //set the DisplayCard's CombatController and TouchHandler references
             c.GetComponent<DisplayCard>().combatController = this;
             c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
@@ -278,7 +279,7 @@ public class CombatController : MonoBehaviour {
         DiscardHand();
         DrawCards(drawNum);
         shieldCount = 0;
-        
+
         //update the visuals
         ShowCardsInHand();
         DisplayDiscardCount();
@@ -286,7 +287,7 @@ public class CombatController : MonoBehaviour {
         DisplayMana();
         DisplayShields();
         DisplayHealth();
-        
+
         UpdateEnemyAttacks();
     }
 
@@ -312,7 +313,7 @@ public class CombatController : MonoBehaviour {
         shieldCount += count;
         DisplayShields();
     }
-    
+
     public void DealDamageToEnemy(int damage, Enemy enemy) {
         // deal damage to enemy
         enemy.hitPointDamage += damage;
@@ -349,8 +350,8 @@ public class CombatController : MonoBehaviour {
 
     public void EnemiesAttack(){
         //makes each enemy attack in sequence
-        
-        foreach(Enemy el in enemies) { 
+
+        foreach(Enemy el in enemies) {
             // access current attack
             string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
 
@@ -403,7 +404,7 @@ public class CombatController : MonoBehaviour {
         enemy.source = p;
         enemy.hitPointDamage = 0;
         enemy.currentAttackIndex = 0;
-        
+
         //render enemy name
         Transform enemyName = enemy.transform.Find("Name");
         enemyName.GetComponent<Text>().text = enemy.source.enemyName;
