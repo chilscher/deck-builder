@@ -73,6 +73,11 @@ public class CombatController : MonoBehaviour {
 
         //figure out which enemy group we need to use: small, large, or mixed
         //important to note, for a mixed group, the large enemy goes in the 3rd position
+        
+        //temp here to set starting enemies dynamically from the overworld
+        //definitely temporary, just here for testing
+        startingEnemies = StaticVariables.enemyIds;
+
 
         //first, hide all enemy group gameobjects
         smallEnemiesGameObject.SetActive(false);
@@ -94,15 +99,19 @@ public class CombatController : MonoBehaviour {
         else { print("you have too many large enemies!"); }
         //set the chosen group as active
         enemiesGameObject.SetActive(true);
-
+        
+        foreach(Transform t in enemiesGameObject.transform) {
+            t.gameObject.SetActive(false);
+        }
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
         //this function also displays the enemies on screen
         for (int i = 0; i<startingEnemies.Count; i++) {
             if (startingEnemies[i] != 0) { //inputting an enemy id of 0 will leave that space blank
                 enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
+                enemiesGameObject.transform.GetChild(i).gameObject.SetActive(true);
             }
-            else { enemiesGameObject.transform.GetChild(i).gameObject.SetActive(false); }
+            //else { enemiesGameObject.transform.GetChild(i).gameObject.SetActive(false); }
 
         }
 
