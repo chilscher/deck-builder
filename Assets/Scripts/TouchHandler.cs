@@ -59,12 +59,12 @@ public class TouchHandler : MonoBehaviour {
             // print(startingFingerPlacement);
             // print("--------------------");
             if (currentFingerPlacement == startingFingerPlacement){
-              print("made contact!");
+              //print("made contact!");
             }
 
             //if the player is dragging a card, move the card to match the current mouse position
             else if (shouldMoveCard) {
-              print("helloooooo");
+              //print("helloooooo");
                 DragCard();
             }
         }
@@ -72,7 +72,7 @@ public class TouchHandler : MonoBehaviour {
         //process the mouse being released
         if (Input.GetMouseButtonUp(0)) {
             if (currentFingerPlacement == startingFingerPlacement && !activeCardDetails){
-              print("finished!");
+              //print("finished!");
 
               currentFingerPlacement = new Vector2(0, 0);
               startingFingerPlacement = new Vector2(0, 0);

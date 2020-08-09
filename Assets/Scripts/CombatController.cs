@@ -62,6 +62,9 @@ public class CombatController : MonoBehaviour {
     public MainCanvas mainCanvas;
     public DetailsPopup detailsPopup;
 
+    public int idealHandSize = 5; //if there are fewer than this many cards in the hand, they are spaced evenly as if there were this many. a little confusing to explain, see PositionCardsInHand
+    private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
+
     private void Start() {
         //set up the player's deck. temporarily here until the deck is passed in from another scene
         foreach (string cardName in startingDeck) {
@@ -111,9 +114,10 @@ public class CombatController : MonoBehaviour {
 
         //basic display functions
         //enemy display function is bundled in AddNewEnemy above
+        foreach(Transform t in handGameObject.transform) { t.gameObject.SetActive(false); } //hide all pre-existing gameobjects in the hand
         ShuffleDeck();
         DrawCards(drawNum);
-        ShowCardsInHand();
+        PositionCardsInHand();
         DisplayDeckCount();
         DisplayDiscardCount();
         DisplayMana();
@@ -153,6 +157,7 @@ public class CombatController : MonoBehaviour {
             for (int i = 0; i < num; i++) {
                 CardData card = deck[i];
                 hand.Add(card);
+                CreateDisplayCard(card);
             }
             //remove the top "num" cards from the deck
             for (int i = 0; i < num; i++) {
@@ -176,44 +181,65 @@ public class CombatController : MonoBehaviour {
         }
     }
 
-    private void ShowCardsInHand() {
-        //creates DisplayCard instances for each card currently in the hand
-        //changes the color of those instances to match the cards in the hand
+    private void CreateDisplayCard(CardData cardData) {
+        //creates a DisplayCard for the provided CardData. Sets the visuals and references for the DisplayCard, but does not set its position
 
-        //first, delete all the cards in the current hand
-        foreach (Transform t in handGameObject.transform) {
-            GameObject.Destroy(t.gameObject);
-        }
+        //instantiate the prefab and set its position and parent
+        GameObject c = Instantiate(displayCardPrefab);
+        c.transform.SetParent(handGameObject.transform, false);
 
-        for (int i = 0; i<hand.Count; i++) {
+        //set the card art to match the provided card art sprite
+        c.transform.Find("Card Art").GetComponent<Image>().sprite = cardData.source.cardArt;
 
-            //the function to calculate the card's x-position goes below.
-            //currently, the x-position is evenly spaced based on the card's index and the total number of cards
+        //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
+        c.GetComponent<DisplayCard>().associatedCard = cardData;
+
+        //set the DisplayCard's CombatController and TouchHandler references
+        c.GetComponent<DisplayCard>().combatController = this;
+        c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
+
+
+        //set the visual's text, name, and mana cost from the card data
+        c.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
+        c.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
+        c.transform.Find("Mana Cost").GetComponent<Image>().sprite = numbers[cardData.source.manaCost];
+
+        //add the new DisplayCard to the list of cards displayed in the hand
+        displayCardsInHand.Add(c.GetComponent<DisplayCard>());
+    }
+
+    private void PositionCardsInHand() {
+        //takes all of the DisplayCards in the hand and sets their positions
+        //evenly spaces all cards to fill the HandSize width, which is a child of the Hand gameobject in the inspector
+
+        //find the total width that the hand can take up
+        float totalHandSize = handGameObject.transform.Find("Hand Size").GetComponent<RectTransform>().sizeDelta.x;
+
+        //set the distance between each card in the hand. If there are 5 cards, there are 4 gaps, so we use handSize - 1
+        float distBetweenCards = totalHandSize / (hand.Count - 1);
+
+        //if there are fewer than the ideal number of cards in hand, don't space the cards out further.
+        //instead, determine the spacing based on the ideal hand size, and apply that spacing to all cards
+        if (hand.Count <= idealHandSize) { distBetweenCards = totalHandSize / (idealHandSize - 1); }
+
+        //set the card's position based on the predetermined distance between all cards, and the card's index in the hand
+        for (int i = 0; i < hand.Count; i++) {
             Vector2 cardPos = Vector2.zero;
-            cardPos.x += ((1 + gapBetweenCardsInHand) * displayCardPrefab.gameObject.transform.GetComponent<RectTransform>().rect.width * displayCardPrefab.transform.localScale.x) * (i - ((hand.Count - 1f) / 2f));
+            cardPos.x -= totalHandSize / 2; //move all cards left by half the available space
+            cardPos.x += distBetweenCards * i; //move each card right by its index and the predetermined distance
 
-            //instantiate the prefab and set its position and parent
-            GameObject c = Instantiate(displayCardPrefab);
-            c.transform.SetParent(handGameObject.transform, false);
-            RectTransform rt = c.GetComponent<RectTransform>();
+            //if there are fewer than the ideal number of cards in hand, move all of them to the right by the number of cards missing
+            if (hand.Count < idealHandSize) {
+                int diff = idealHandSize - hand.Count;
+                cardPos.x += diff * distBetweenCards / 2;
+            }
+
+            //set the DisplayCard's references
+            DisplayCard dc = displayCardsInHand[i];
+            RectTransform rt = dc.GetComponent<RectTransform>();
             rt.anchoredPosition = cardPos;
-            c.GetComponent<DisplayCard>().startingPosition = cardPos;
+            dc.startingPosition = cardPos;
 
-            //set the card art to match the provided card art sprite
-            c.transform.Find("Card Art").GetComponent<Image>().sprite = hand[i].source.cardArt;
-
-            //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
-            c.GetComponent<DisplayCard>().associatedCard = hand[i];
-
-            //set the DisplayCard's CombatController and TouchHandler references
-            c.GetComponent<DisplayCard>().combatController = this;
-            c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
-
-
-            //set the visual's text, name, and mana cost from the card data
-            c.transform.Find("Name").GetComponent<Text>().text = hand[i].source.cardName.ToUpper();
-            c.transform.Find("Text").GetComponent<Text>().text = hand[i].source.text.ToUpper();
-            c.transform.Find("Mana Cost").GetComponent<Image>().sprite = numbers[hand[i].source.manaCost];
         }
     }
 
@@ -241,6 +267,15 @@ public class CombatController : MonoBehaviour {
     public void MoveCardFromHandToDiscard(CardData card) {
         //takes card from hand and moves it to the discard pile, then re-displays the hand, deck, and discard pile
 
+        //remove the DisplayCard
+        List<DisplayCard> temp = new List<DisplayCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
+        foreach (DisplayCard dc in displayCardsInHand) {
+            if (dc.associatedCard == card) { GameObject.Destroy(dc.gameObject); } //if we want to remove the card, delete the gameobject
+            else { temp.Add(dc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
+        }
+
+        displayCardsInHand = temp; //all the cards that haven't just been removed
+
         //move the card from the hand to the discard pile
         hand.Remove(card);
         discardPile.Add(card);
@@ -249,7 +284,7 @@ public class CombatController : MonoBehaviour {
         if (hand.Count == 0) { DrawCards(drawNum); }
 
         //display the cards in the hand, deck, and discard pile
-        ShowCardsInHand();
+        PositionCardsInHand();
         DisplayDiscardCount();
         DisplayDeckCount();
 
@@ -259,8 +294,16 @@ public class CombatController : MonoBehaviour {
 
     public void DiscardHand() {
         //discards all cards in the player's hand
-        foreach(CardData card in hand) {
+
+        //remove each DisplayCard
+        foreach (DisplayCard dc in displayCardsInHand) { GameObject.Destroy(dc.gameObject); }
+
+        //empty the DisplayCard list
+        displayCardsInHand = new List<DisplayCard>();
+
+        foreach (CardData card in hand) {
             discardPile.Add(card);
+
         }
         hand = new List<CardData>();
     }
@@ -281,7 +324,7 @@ public class CombatController : MonoBehaviour {
         shieldCount = 0;
 
         //update the visuals
-        ShowCardsInHand();
+        PositionCardsInHand();
         DisplayDiscardCount();
         DisplayDeckCount();
         DisplayMana();
