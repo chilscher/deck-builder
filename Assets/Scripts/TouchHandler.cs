@@ -118,6 +118,11 @@ public class TouchHandler : MonoBehaviour {
     private string IdentifyObject(GameObject obj) {
         //returns a string that identifies which type of touchable object the provided gameobject is
         //this string identifier is used when deciding which object to touch, and also when deciding how to interact with that object once it has been chosen
+
+        //is the object a card on the win screen?
+        if (obj.name == "Win Card Choice") {
+            return "Win Card";
+        }
         //is the object a Display Card?
         if (obj.name == "Card Template") {
             return "Display Card";
@@ -181,6 +186,15 @@ public class TouchHandler : MonoBehaviour {
             }
         }
 
+        //then, a card that you can claim after you have won an encounter
+        foreach (GameObject obj in gos) {
+            if (IdentifyObject(obj) == "Win Card") {
+                if (combatController.hasWon) { //you cant claim the card if you have not won the combat
+                    return obj;
+                }
+            }
+        }
+
         //if no gameobject to touch is found, return null
         return null;
 
@@ -215,6 +229,12 @@ public class TouchHandler : MonoBehaviour {
         //if the object is the End Turn Button
         if (type == "End Turn") {
             combatController.EndTurn();
+        }
+
+        if (type == "Win Card") {
+            string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
+            combatController.AddCardToPlayerDeck(cardName);
+            SceneManager.LoadScene("Overworld");
         }
 
     }

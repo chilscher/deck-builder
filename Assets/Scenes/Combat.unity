@@ -686,7 +686,7 @@ GameObject:
   - component: {fileID: 136395591}
   - component: {fileID: 136395590}
   m_Layer: 0
-  m_Name: Card Template
+  m_Name: Win Card Choice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -982,14 +982,13 @@ GameObject:
   m_Component:
   - component: {fileID: 177567395}
   - component: {fileID: 177567397}
-  - component: {fileID: 177567396}
   m_Layer: 0
-  m_Name: Display Card(Clone) (2)
+  m_Name: Option 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &177567395
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1015,30 +1014,6 @@ RectTransform:
   m_AnchoredPosition: {x: 201.59369, y: -197}
   m_SizeDelta: {x: 165, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &177567396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 177567394}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3454f2f53aa2b47967e7616ffab160, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedCard:
-    source:
-      cardName: blue
-      text: apply 3 shield
-      manaCost: 1
-      cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
-      requiresTarget: 0
-      effects:
-      - Shield-3
-  combatController: {fileID: 519420030}
-  touchHandler: {fileID: 519420033}
-  startingPosition: {x: 0, y: 0}
 --- !u!222 &177567397
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1057,14 +1032,13 @@ GameObject:
   m_Component:
   - component: {fileID: 194185371}
   - component: {fileID: 194185373}
-  - component: {fileID: 194185372}
   m_Layer: 0
-  m_Name: Display Card(Clone)
+  m_Name: Option 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &194185371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1083,37 +1057,13 @@ RectTransform:
   - {fileID: 10578410}
   - {fileID: 423886940}
   m_Father: {fileID: 552724293}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -676, y: -197}
   m_SizeDelta: {x: 165, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &194185372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 194185370}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3454f2f53aa2b47967e7616ffab160, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedCard:
-    source:
-      cardName: red
-      text: deal 4 damage
-      manaCost: 1
-      cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
-      requiresTarget: 1
-      effects:
-      - Damage-4
-  combatController: {fileID: 519420030}
-  touchHandler: {fileID: 519420033}
-  startingPosition: {x: -303.6, y: 0}
 --- !u!222 &194185373
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1578,7 +1528,7 @@ GameObject:
   - component: {fileID: 283883333}
   - component: {fileID: 283883332}
   m_Layer: 0
-  m_Name: Card Template
+  m_Name: Win Card Choice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2837,7 +2787,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &478862230
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3130,7 +3080,7 @@ GameObject:
   - component: {fileID: 500038228}
   - component: {fileID: 500038227}
   m_Layer: 0
-  m_Name: Card Template
+  m_Name: Win Card Choice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3233,40 +3183,14 @@ MonoBehaviour:
   handGameObject: {fileID: 1930545194}
   gapBetweenCardsInHand: 0.15
   mana: 3
-  catalog: {fileID: 1906865166}
-  enemyCatalog: {fileID: 1488707294}
   smallEnemiesGameObject: {fileID: 1168890968}
   largeEnemiesGameObject: {fileID: 604143515}
   mixedEnemiesGameObject: {fileID: 71640958}
   displayCardPrefab: {fileID: 3806193581650125391, guid: 03b9c367324e9bd4bbbbe4661b27c0d1,
     type: 3}
-  numbers:
-  - {fileID: 21300000, guid: 684d518044768a544a9e28e2c3b49ef1, type: 3}
-  - {fileID: 21300000, guid: 8ed85043c0e0f234fad58d9cd06d1b26, type: 3}
-  - {fileID: 21300000, guid: 859e062ce8502b5478db05770f8c148b, type: 3}
-  - {fileID: 21300000, guid: 9159f4bc5279ea549ae829afcaab7631, type: 3}
-  - {fileID: 21300000, guid: c6c7f32f9ed0d6d4785f82539970312d, type: 3}
-  - {fileID: 21300000, guid: 54971abece9a4ab4d8d2a8f81b1938ab, type: 3}
-  - {fileID: 21300000, guid: 57062969b6880c842b8e13c86d37512a, type: 3}
-  - {fileID: 21300000, guid: 14427ec75f0db1e42ad442c8bfe5cbe2, type: 3}
-  - {fileID: 21300000, guid: 6380e61a9bc0ae642a65059ac155e4b6, type: 3}
-  - {fileID: 21300000, guid: 82e037d6bfd47874d9068c4a50732883, type: 3}
   drawNum: 6
   maxMana: 3
   startingHealth: 185
-  startingDeck:
-  - red
-  - red
-  - red
-  - red
-  - red
-  - blue
-  - blue
-  - blue
-  - blue
-  - blue
-  - purple
-  - purple
   startingEnemies: 00000000000000000100000000000000
   winPopup: {fileID: 552724289}
   losePopup: {fileID: 1772871624}
@@ -3439,12 +3363,12 @@ RectTransform:
   - {fileID: 1978526570}
   - {fileID: 767946480}
   - {fileID: 1331459998}
-  - {fileID: 2007453424}
   - {fileID: 194185371}
+  - {fileID: 2007453424}
   - {fileID: 177567395}
   - {fileID: 599168264}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3463,6 +3387,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff5359d5306363240932c4a9d4ca7b93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  winOptions:
+  - {fileID: 194185370}
+  - {fileID: 2007453423}
+  - {fileID: 177567394}
+  - {fileID: 599168263}
 --- !u!1 &555478916
 GameObject:
   m_ObjectHideFlags: 0
@@ -4064,14 +3993,13 @@ GameObject:
   m_Component:
   - component: {fileID: 599168264}
   - component: {fileID: 599168266}
-  - component: {fileID: 599168265}
   m_Layer: 0
-  m_Name: Display Card(Clone) (3)
+  m_Name: Option 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &599168264
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4097,30 +4025,6 @@ RectTransform:
   m_AnchoredPosition: {x: 640.39056, y: -197}
   m_SizeDelta: {x: 165, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &599168265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 599168263}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3454f2f53aa2b47967e7616ffab160, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedCard:
-    source:
-      cardName: red
-      text: deal 4 damage
-      manaCost: 1
-      cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
-      requiresTarget: 1
-      effects:
-      - Damage-4
-  combatController: {fileID: 519420030}
-  touchHandler: {fileID: 519420033}
-  startingPosition: {x: 151.8, y: 0}
 --- !u!222 &599168266
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4841,7 +4745,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &767946480
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5169,7 +5073,7 @@ RectTransform:
   - {fileID: 2018387293}
   - {fileID: 1930545195}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5558,7 +5462,7 @@ GameObject:
   - component: {fileID: 914848294}
   - component: {fileID: 914848293}
   m_Layer: 0
-  m_Name: Card Template
+  m_Name: Win Card Choice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7491,7 +7395,7 @@ RectTransform:
   - {fileID: 165731304}
   - {fileID: 2097484590}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7515,7 +7419,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1331459998
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7532,8 +7436,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 190}
-  m_SizeDelta: {x: 1200, y: 120}
+  m_AnchoredPosition: {x: 0, y: 226.3}
+  m_SizeDelta: {x: 1200, y: 192.64844}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1331459999
 MonoBehaviour:
@@ -7566,7 +7470,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: CHOOSE A CARD HERE?
+  m_Text: 'CHOOSE A CARD TO
+
+    ADD TO YOUR DECK'
 --- !u!222 &1331460000
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8246,75 +8152,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1485101824}
   m_CullTransparentMesh: 0
---- !u!1 &1488707293
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1488707295}
-  - component: {fileID: 1488707294}
-  m_Layer: 0
-  m_Name: EnemyCatalog
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1488707294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1488707293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b17cec0f15d4ab5439547d43d2e49ec4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  allEnemies:
-  - id: 1
-    enemyName: Katie
-    hitPoints: 5
-    enemyArt: {fileID: 21300000, guid: f6d91bd115346084fb737a93bc9f28d3, type: 3}
-    isLargeEnemy: 0
-    enemyAttacks:
-    - Damage-4
-    - Damage-3
-  - id: 2
-    enemyName: Lauren
-    hitPoints: 6
-    enemyArt: {fileID: 21300000, guid: 34799b0322647304eb617c44db2274ce, type: 3}
-    isLargeEnemy: 0
-    enemyAttacks:
-    - Damage-1
-    - Damage-2
-    - Damage-5
-  - id: 3
-    enemyName: Nancy
-    hitPoints: 8
-    enemyArt: {fileID: 21300000, guid: e24d2175ac07231488d4faeeef6e34d6, type: 3}
-    isLargeEnemy: 1
-    enemyAttacks:
-    - Damage-0
-    - Damage-10
---- !u!4 &1488707295
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1488707293}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1753117, y: 2.7716458, z: 0.01926564}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1522054661
 GameObject:
   m_ObjectHideFlags: 0
@@ -9392,7 +9229,7 @@ RectTransform:
   - {fileID: 198893193}
   - {fileID: 1245485182}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9923,74 +9760,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826839044}
   m_CullTransparentMesh: 0
---- !u!1 &1906865165
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1906865167}
-  - component: {fileID: 1906865166}
-  m_Layer: 0
-  m_Name: Catalog
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1906865166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1906865165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85a715b2b8bc84246acdef2d62e2f332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cards:
-  - cardName: red
-    text: deal 4 damage
-    manaCost: 1
-    cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
-    requiresTarget: 1
-    effects:
-    - Damage-4
-  - cardName: blue
-    text: apply 3 shield
-    manaCost: 1
-    cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
-    requiresTarget: 0
-    effects:
-    - Shield-3
-  - cardName: purple
-    text: 'deal 2 damage
-
-      apply 2 shield'
-    manaCost: 1
-    cardArt: {fileID: 21300000, guid: 354da493c16a1974ba673639346d9eac, type: 3}
-    requiresTarget: 1
-    effects:
-    - Damage-2
-    - Shield-2
---- !u!4 &1906865167
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1906865165}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18409449, y: -3.0711193, z: -0.13330267}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1930545194
 GameObject:
   m_ObjectHideFlags: 0
@@ -10309,7 +10078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1978526570
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10451,14 +10220,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2007453424}
   - component: {fileID: 2007453426}
-  - component: {fileID: 2007453425}
   m_Layer: 0
-  m_Name: Display Card(Clone) (1)
+  m_Name: Option 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2007453424
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10477,37 +10245,13 @@ RectTransform:
   - {fileID: 870079293}
   - {fileID: 421228391}
   m_Father: {fileID: 552724293}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -237.20319, y: -197}
   m_SizeDelta: {x: 165, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2007453425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2007453423}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3454f2f53aa2b47967e7616ffab160, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  associatedCard:
-    source:
-      cardName: blue
-      text: apply 3 shield
-      manaCost: 1
-      cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
-      requiresTarget: 0
-      effects:
-      - Shield-3
-  combatController: {fileID: 519420030}
-  touchHandler: {fileID: 519420033}
-  startingPosition: {x: -151.8, y: 0}
 --- !u!222 &2007453426
 CanvasRenderer:
   m_ObjectHideFlags: 0

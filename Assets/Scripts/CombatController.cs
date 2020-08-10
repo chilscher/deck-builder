@@ -22,10 +22,6 @@ public class CombatController : MonoBehaviour {
     [HideInInspector]
     public int mana;
 
-    //the list of all possible cards
-    public Catalog catalog; //currently assigned via the inspector, but will eventually be assigned in runtime, once the combat scene is loaded from another scene
-    public EnemyCatalog enemyCatalog;
-
     //dealing with holding and displaying enemies
     public GameObject smallEnemiesGameObject;
     public GameObject largeEnemiesGameObject;
@@ -38,7 +34,6 @@ public class CombatController : MonoBehaviour {
 
     //general utility
     private System.Random rand = new System.Random();
-    public List<Sprite> numbers; //assumed to be exactly 10 numbers
 
     //the variables that are edited for game balance
     public int drawNum; //the number of cards the player draws at the start of their turn
@@ -49,8 +44,7 @@ public class CombatController : MonoBehaviour {
     private int healthRemaining;
     public int startingHealth;
     private int shieldCount = 0;
-
-    public List<string> startingDeck = new List<string>();
+    
     public List<int> startingEnemies = new List<int>();
 
     public GameObject winPopup;
@@ -66,17 +60,12 @@ public class CombatController : MonoBehaviour {
     private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
 
     private void Start() {
-        //set up the player's deck. temporarily here until the deck is passed in from another scene
-        foreach (string cardName in startingDeck) {
-            deck.Add(new CardData(catalog.GetCardWithName(cardName)));
-        }
+        //draw level data from StaticVariables
+        deck = new List<CardData>(StaticVariables.playerDeck); //the player's cards that they will start each encounter with
+        startingEnemies = StaticVariables.encounterDetails.enemyIds; //the enemy ids, passed into StaticVariables from Overworld. For now, the enemy ids are passed as parameters to a button click function in OverworldThingy
 
         //figure out which enemy group we need to use: small, large, or mixed
         //important to note, for a mixed group, the large enemy goes in the 3rd position
-        
-        //temp here to set starting enemies dynamically from the overworld
-        //definitely temporary, just here for testing
-        startingEnemies = StaticVariables.enemyIds;
         
         //first, hide all enemy group gameobjects
         smallEnemiesGameObject.SetActive(false);
@@ -86,7 +75,7 @@ public class CombatController : MonoBehaviour {
         //count up the number of large enemies
         int numLarge = 0;
         foreach(int id in startingEnemies) {
-            PlatonicEnemy e = enemyCatalog.GetEnemyWithID(id);
+            PlatonicEnemy e = StaticVariables.enemyCatalog.GetEnemyWithID(id);
             if (e != null && e.isLargeEnemy) { numLarge++; }
         }
 
@@ -107,11 +96,9 @@ public class CombatController : MonoBehaviour {
         //this function also displays the enemies on screen
         for (int i = 0; i<startingEnemies.Count; i++) {
             if (startingEnemies[i] != 0) { //inputting an enemy id of 0 will leave that space blank
-                enemies.Add(AddNewEnemy(enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
+                enemies.Add(AddNewEnemy(StaticVariables.enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
                 enemiesGameObject.transform.GetChild(i).gameObject.SetActive(true);
             }
-            //else { enemiesGameObject.transform.GetChild(i).gameObject.SetActive(false); }
-
         }
 
         //sets the player's mana to their max value
@@ -210,7 +197,7 @@ public class CombatController : MonoBehaviour {
         //set the visual's text, name, and mana cost from the card data
         c.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
         c.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
-        c.transform.Find("Mana Cost").GetComponent<Image>().sprite = numbers[cardData.source.manaCost];
+        c.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardData.source.manaCost];
 
         //add the new DisplayCard to the list of cards displayed in the hand
         displayCardsInHand.Add(c.GetComponent<DisplayCard>());
@@ -397,6 +384,13 @@ public class CombatController : MonoBehaviour {
         hasWon = true;
         winPopup.GetComponent<WinPopup>().PlayerWins();
 
+        //temp for testing
+        //AddCardToPlayerDeck("purple");
+        //SceneManager.LoadScene("Overworld");
+    }
+
+    public void AddCardToPlayerDeck(string cardName) {
+        StaticVariables.playerDeck.Add(new CardData(StaticVariables.catalog.GetCardWithName(cardName)));
     }
 
     public void EnemiesAttack(){

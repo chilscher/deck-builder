@@ -9,22 +9,35 @@ using System;
 public class OverworldThingy : MonoBehaviour {
     //temporary name for a script that manages the overworld scene
 
-    public void GoToLevel(string ids) {
-        //attached to a temporary button that, when clicked, takes the player to a combat scene with the provided list of enemies
-        //the enemies are listed in a string, with the format 0-0-0-0
-        //for all small enemies, the 4 spaces can be filled in any manner. unused spaces will be blank
-        //for 2 small 1 large enemies, the first 2 spaces must be for small enemies and the third for a large enemy. the last space should be a 0
-        //for 2 large enemies, the first 2 spaces must be for the large enemies. the last 2 spaces must be 0s
+    public List<string> startingDeck = new List<string>();
+    public Catalog catalog; //all cards in the game
+    public EnemyCatalog enemyCatalog; //all enemies in the game
+    public List<Sprite> numbers; //assumed to be exactly 10 numbers
 
-        //parse the input string into a list of ints
-        string[] s = ids.Split('-');
-        List<int> l = new List<int>();
-        foreach(string str in s) {
-            l.Add(Int32.Parse(str));
+
+    public void Start() {
+        if (StaticVariables.firstTimeInOverworld) { //if this is the player's first time in the overworld scene, load the starting deck
+            //assign some variables from OverworldThingy to StaticVariables
+            StaticVariables.numbers = numbers;
+            StaticVariables.catalog = catalog;
+            StaticVariables.enemyCatalog = enemyCatalog;
+
+            //set up the player's starting deck. The starting cards are based off of the card names provided to this script in the inspector, for now
+            StaticVariables.playerDeck = new List<CardData>();
+            foreach (string cardName in startingDeck) {
+                StaticVariables.playerDeck.Add(new CardData(catalog.GetCardWithName(cardName)));
+            }
+
+            //tell StaticVariables that the overworld has been run once already this play session
+            StaticVariables.firstTimeInOverworld = false;
         }
+    }
 
-        //pass the enemy id ints to the StaticVariables script
-        StaticVariables.enemyIds = l;
+    public void GoToCombat(EncounterDetails details) {
+        //attached to a temporary button that, when clicked, takes the player to a combat scene with the provided list of enemies and reward cards
+
+        //pass the details for the encounter to StaticVariables
+        StaticVariables.encounterDetails = details;
 
         //load the combat scene
         SceneManager.LoadScene("Combat");
