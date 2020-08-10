@@ -77,8 +77,7 @@ public class CombatController : MonoBehaviour {
         //temp here to set starting enemies dynamically from the overworld
         //definitely temporary, just here for testing
         startingEnemies = StaticVariables.enemyIds;
-
-
+        
         //first, hide all enemy group gameobjects
         smallEnemiesGameObject.SetActive(false);
         largeEnemiesGameObject.SetActive(false);
