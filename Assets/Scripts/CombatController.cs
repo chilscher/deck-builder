@@ -109,7 +109,13 @@ public class CombatController : MonoBehaviour {
 
         //basic display functions
         //enemy display function is bundled in AddNewEnemy above
-        foreach(Transform t in handGameObject.transform) { t.gameObject.SetActive(false); } //hide all pre-existing gameobjects in the hand
+
+        //hide all pre-existing gameobjects in the hand, except the card dead zone
+        //card dead zone detects if the player moved a non-targeting card enough to play it
+        //card dead zone needs to be active, because otherwise TouchController won't find it with a collision
+        foreach (Transform t in handGameObject.transform) {
+            if (t.gameObject.name != "Card Dead Zone") { t.gameObject.SetActive(false); } 
+        } 
         ShuffleDeck();
         DrawCards(drawNum);
         PositionCardsInHand();
@@ -217,6 +223,12 @@ public class CombatController : MonoBehaviour {
         //instead, determine the spacing based on the ideal hand size, and apply that spacing to all cards
         if (hand.Count <= idealHandSize) { distBetweenCards = totalHandSize / (idealHandSize - 1); }
 
+        int nonCardsInHierarchy = 0; //the number of children of the hand gameobject that are not DisplayCards. Used in determining the sorting order for each DisplayCard
+        foreach(Transform t in handGameObject.transform) {
+            if (t.gameObject.GetComponent<DisplayCard>() == null) { nonCardsInHierarchy++; }
+        }
+
+
         //set the card's position based on the predetermined distance between all cards, and the card's index in the hand
         for (int i = 0; i < hand.Count; i++) {
             Vector2 cardPos = Vector2.zero;
@@ -235,6 +247,9 @@ public class CombatController : MonoBehaviour {
             rt.anchoredPosition = cardPos;
             dc.startingPosition = cardPos;
 
+            //also set the card's sorting order in the hierarchy, based on the number of non-DisplayCards in the hierarchy and this card's place in the hand
+            dc.placeInHierarchy = nonCardsInHierarchy + i;
+            dc.transform.SetSiblingIndex(dc.placeInHierarchy);
         }
     }
 

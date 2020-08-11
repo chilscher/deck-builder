@@ -31,8 +31,6 @@ public class TouchHandler : MonoBehaviour {
     private Vector2 currentFingerPlacement;
     private bool activeCardDetails = false;
 
-    public int cardElevationAmount = 6; //the amount of sorting layers a card is bumped by while being dragged around
-
 
     private void Start() {
         //define variables that are used to call functions

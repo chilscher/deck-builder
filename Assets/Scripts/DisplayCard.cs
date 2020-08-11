@@ -17,6 +17,9 @@ public class DisplayCard: MonoBehaviour{
     public TouchHandler touchHandler;
     [HideInInspector]
     public Vector2 startingPosition; //the position in the hand that the card was at before being dragged around. if the player can't play the card, return it to this specified position
+    [HideInInspector]
+    public int placeInHierarchy; //the card's number in the list of children of the Hand gameobject
+
 
     public void ReleasedCard() {
         //what happens when the player is dragging this card around and then releases it
@@ -46,17 +49,23 @@ public class DisplayCard: MonoBehaviour{
             }
 
             //if no enemy was found, return the card to where it was in the hand
-            else {
-                GetComponent<RectTransform>().anchoredPosition = startingPosition;
-            }
+            else { ReturnToStartingPos(); }
         }
 
-        //if the card does not require a target to be played, just play the card
+        //if the card does not require a target to be played, check to see if the card's midpoint is above the Hand Size gameobject
         else {
-            PlayCard();
+            bool cardOutOfHand = true; //if the card is out of the bounds of the card dead zone
+
+            List<GameObject> objs = touchHandler.FindAllObjectCollisions(transform.position);
+            foreach (GameObject element in objs) {
+                if (element.name == "Card Dead Zone") {
+                    cardOutOfHand = false;
+                }
+            }
+            //if the card it out of the hand's dead zone, play it. else, return it to the hand
+            if (cardOutOfHand) { PlayCard(); }
+            else { ReturnToStartingPos(); }            
         }
-
-
     }
     
     private void PlayCard(Enemy enemy = null) {
@@ -94,5 +103,12 @@ public class DisplayCard: MonoBehaviour{
         else if (effect == "Shield") {
             combatController.AddShields(value);
         }
+    }
+
+    private void ReturnToStartingPos() {
+        //returns the DisplayCard to the position it was at in the hand previously
+        //also returns it to its rightful place in the hierarchy, so it is on top of earlier cards, and later cards are on top of it
+        GetComponent<RectTransform>().anchoredPosition = startingPosition;
+        transform.SetSiblingIndex(placeInHierarchy);
     }
 }
