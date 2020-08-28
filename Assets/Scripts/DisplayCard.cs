@@ -72,22 +72,9 @@ public class DisplayCard: MonoBehaviour{
         //plays the associated card. if a target enemy is required for the effect, it can be provided
 
         //iterate through all the effects of the card, and do each one
-        foreach (string effect in associatedCard.source.effects) {
-
-            //first, check if the effect has an associated value (ex, deal 4 damage has the associated value 4)
-            //this assumes the associated value is separated from the rest of the effect by the character '='
-            int associatedValue = 0;
-            string associatedEffect = "";
-
-            if (effect.Split('-').Length > 1) {
-                associatedEffect = effect.Split('-')[0];
-                associatedValue = int.Parse(effect.Split('-')[1]); //split the value from the end of the string, and cast it to an int
-            }
-
-            //apply the card effect
-            DoCardEffect(associatedEffect, associatedValue, enemy);
+        foreach (EffectBit effect in associatedCard.source.effects) {
+            DoCardEffect(effect, enemy);
         }
-
         //subtract the card's mana cost from the player's remaining mana
         combatController.mana -= associatedCard.source.manaCost;
 
@@ -95,13 +82,16 @@ public class DisplayCard: MonoBehaviour{
         combatController.MoveCardFromHandToDiscard(associatedCard);
     }
     
-    private void DoCardEffect(string effect, int value = 0, Enemy enemy = null) {
-        //executes the card effect
-        if (effect == "Damage") {
-            combatController.DealDamageToEnemy(value, enemy);
-        }
-        else if (effect == "Shield") {
-            combatController.AddShields(value);
+    private void DoCardEffect(EffectBit effect, Enemy enemy) {
+        //does a single segment of a card effect
+        int p = effect.parameter;
+        switch (effect.effectType) {
+            case Catalog.EffectTypes.Damage:
+                combatController.DealDamageToEnemy(p, enemy);
+                break;
+            case Catalog.EffectTypes.Shield:
+                combatController.AddShields(p);
+                break;
         }
     }
 
