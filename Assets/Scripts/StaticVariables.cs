@@ -1,5 +1,6 @@
 ﻿//for deck-builder, copyright Cole Hilscher & Jack Hilscher 2020
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,4 +14,6 @@ public class StaticVariables {
     static public EnemyCatalog enemyCatalog; //catalog of all enemies in the game
     static public List<Sprite> numbers; //assumed to be exactly 10 numbers
     static public EncounterDetails encounterDetails; //the enemy ids and card rewards for the next encounter. Set in OverworldThingy before transitioning to the Combat scene
+    static public System.Random random = new System.Random();
+
 }

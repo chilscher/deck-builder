@@ -39,6 +39,9 @@ public class OverworldThingy : MonoBehaviour {
         //pass the details for the encounter to StaticVariables
         StaticVariables.encounterDetails = details;
 
+        //generate the card rewards for the encounter
+        StaticVariables.encounterDetails.cardRewards = catalog.GetRandomCards(4);
+
         //load the combat scene
         SceneManager.LoadScene("Combat");
     }
