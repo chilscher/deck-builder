@@ -93,11 +93,12 @@ public class CombatController : MonoBehaviour {
         }
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
-        //this function also displays the enemies on screen
+        //this loop also displays the enemies on screen, and hides their status conditions
         for (int i = 0; i<startingEnemies.Count; i++) {
             if (startingEnemies[i] != 0) { //inputting an enemy id of 0 will leave that space blank
                 enemies.Add(AddNewEnemy(StaticVariables.enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
                 enemiesGameObject.transform.GetChild(i).gameObject.SetActive(true);
+                enemiesGameObject.transform.GetChild(i).GetComponent<Enemy>().ShowStatuses();
             }
         }
 
@@ -368,8 +369,15 @@ public class CombatController : MonoBehaviour {
     }
 
     public void DealDamageToEnemy(int damage, Enemy enemy) {
+        //deals damage to the enemy. if the enemy dies from the damage, then defeats the enemy
+        //enemy vulnerability is taken into account
+
+        float d = damage;
+        if (enemy.statuses.Contains(EnemyCatalog.StatusEffects.Vulnerable)) { d *= 1.5f; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
+        int totalDamage = (int) d; //after applying vulnerability, rounds the number down to find the total damage the attack did
+        
         // deal damage to enemy
-        enemy.hitPointDamage += damage;
+        enemy.hitPointDamage += totalDamage;
 
         //updates the current health of the enemy
         UpdateEnemyHP(enemy);
@@ -382,7 +390,6 @@ public class CombatController : MonoBehaviour {
             if (enemies.Count == 0) {
                 Win();
             }
-            //print($"{enemy.source.enemyName} defeated!");
         }
     }
 

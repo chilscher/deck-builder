@@ -15,5 +15,35 @@ public class Enemy : MonoBehaviour {
     public int hitPointDamage;
     [HideInInspector]
     public int currentAttackIndex;
+
+    [HideInInspector]
+    public List<EnemyCatalog.StatusEffects> statuses = new List<EnemyCatalog.StatusEffects>();
+
+
+    public void AddStatus(EnemyCatalog.StatusEffects status) {
+        if (status == EnemyCatalog.StatusEffects.Vulnerable) {
+            if (!statuses.Contains(EnemyCatalog.StatusEffects.Vulnerable)) {
+                statuses.Add(EnemyCatalog.StatusEffects.Vulnerable);
+                ShowStatuses();
+            }
+            else {
+                print("enemy already vulnerable!");
+            }
+        }
+    }
+
+    public void ShowStatuses() {
+        int statusNum = 0;
+        foreach(Transform t in transform.Find("Status")) {
+            t.gameObject.SetActive(false);
+            if (statusNum < statuses.Count) {
+                t.gameObject.SetActive(true);
+                t.GetComponent<Image>().color = Color.red;
+            }
+            statusNum++;
+        }
+    }
+
+
     
 }

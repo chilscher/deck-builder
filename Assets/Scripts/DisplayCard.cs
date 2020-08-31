@@ -92,6 +92,9 @@ public class DisplayCard: MonoBehaviour{
             case Catalog.EffectTypes.Shield:
                 combatController.AddShields(p);
                 break;
+            case Catalog.EffectTypes.Vulnerable:
+                enemy.AddStatus(EnemyCatalog.StatusEffects.Vulnerable);
+                break;
         }
     }
 
