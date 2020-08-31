@@ -95,6 +95,9 @@ public class DisplayCard: MonoBehaviour{
             case Catalog.EffectTypes.Vulnerable:
                 enemy.AddStatus(EnemyCatalog.StatusEffects.Vulnerable, p);
                 break;
+            case Catalog.EffectTypes.Weak:
+                enemy.AddStatus(EnemyCatalog.StatusEffects.Weak, p);
+                break;
         }
     }
 

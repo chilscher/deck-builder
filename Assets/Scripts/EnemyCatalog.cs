@@ -11,7 +11,7 @@ public class EnemyCatalog : MonoBehaviour {
 
     public PlatonicEnemy[] allEnemies; //the collection of enemies. enemies are added and modified in the inspector
 
-    public enum StatusEffects { Vulnerable }; //to add new enemy status effects, add a new element in this StatusEffects list
+    public enum StatusEffects { Vulnerable, Weak }; //to add new enemy status effects, add a new element in this StatusEffects list
 
 
 

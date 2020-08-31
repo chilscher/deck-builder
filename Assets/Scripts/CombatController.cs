@@ -431,12 +431,18 @@ public class CombatController : MonoBehaviour {
                 int associatedValue = int.Parse(atk.Split('-')[1]);
 
                 if(associatedEffect == "Damage"){
+
+                    //take the weak status into account here
+                    float temp = associatedValue;
+                    if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= 0.5f; }
+                    int totalDamage = (int) temp;
+
                     int netDamage = 0;
-                    if (associatedValue >= shieldCount){
-                        netDamage = associatedValue - shieldCount;
+                    if (totalDamage >= shieldCount){
+                        netDamage = totalDamage - shieldCount;
                         shieldCount = 0;
                     } else {
-                        shieldCount -= associatedValue;
+                        shieldCount -= totalDamage;
                     }
                         healthRemaining -= netDamage;
                 }

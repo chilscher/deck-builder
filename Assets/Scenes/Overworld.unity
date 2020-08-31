@@ -1529,8 +1529,8 @@ MonoBehaviour:
   - red
   - red
   - red
-  - blue
-  - blue
+  - green
+  - green
   - blue
   - blue
   - blue
@@ -1866,13 +1866,13 @@ MonoBehaviour:
     - effectType: 1
       parameter: 8
   - cardName: green
-    text: apply 16 shield
-    manaCost: 3
+    text: apply 3 weak
+    manaCost: 1
     cardArt: {fileID: 21300000, guid: 350e654a701e7e643b6379811445b9ca, type: 3}
-    requiresTarget: 0
+    requiresTarget: 1
     effects:
-    - effectType: 1
-      parameter: 16
+    - effectType: 3
+      parameter: 3
   - cardName: orange
     text: 'deal 1 damage
 
