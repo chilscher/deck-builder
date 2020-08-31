@@ -1086,7 +1086,7 @@ MonoBehaviour:
   allEnemies:
   - id: 1
     enemyName: Katie
-    hitPoints: 5
+    hitPoints: 10
     enemyArt: {fileID: 21300000, guid: f6d91bd115346084fb737a93bc9f28d3, type: 3}
     isLargeEnemy: 0
     enemyAttacks:
@@ -1094,7 +1094,7 @@ MonoBehaviour:
     - Damage-3
   - id: 2
     enemyName: Lauren
-    hitPoints: 6
+    hitPoints: 8
     enemyArt: {fileID: 21300000, guid: 34799b0322647304eb617c44db2274ce, type: 3}
     isLargeEnemy: 0
     enemyAttacks:

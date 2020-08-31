@@ -17,19 +17,18 @@ public class Enemy : MonoBehaviour {
     public int currentAttackIndex;
 
     [HideInInspector]
-    public List<EnemyCatalog.StatusEffects> statuses = new List<EnemyCatalog.StatusEffects>();
+    public List<EnemyStatus> statuses = new List<EnemyStatus>();
 
 
-    public void AddStatus(EnemyCatalog.StatusEffects status) {
-        if (status == EnemyCatalog.StatusEffects.Vulnerable) {
-            if (!statuses.Contains(EnemyCatalog.StatusEffects.Vulnerable)) {
-                statuses.Add(EnemyCatalog.StatusEffects.Vulnerable);
-                ShowStatuses();
-            }
-            else {
-                print("enemy already vulnerable!");
-            }
+    public void AddStatus(EnemyCatalog.StatusEffects status, int duration) {
+        if (!DoesEnemyHaveStatus(status)) {
+            statuses.Add(new EnemyStatus(status, duration));
         }
+        else {
+            AddDurationToStatus(status, duration);
+        }
+
+        ShowStatuses();
     }
 
     public void ShowStatuses() {
@@ -39,11 +38,39 @@ public class Enemy : MonoBehaviour {
             if (statusNum < statuses.Count) {
                 t.gameObject.SetActive(true);
                 t.GetComponent<Image>().color = Color.red;
+                t.Find("Text").GetComponent<Text>().text = statuses[0].turnsRemaining + "";
             }
             statusNum++;
         }
     }
 
+    public bool DoesEnemyHaveStatus(EnemyCatalog.StatusEffects s) {
+        foreach (EnemyStatus status in statuses) {
+            if (status.statusType == s) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void AddDurationToStatus(EnemyCatalog.StatusEffects s, int duration) {
+        foreach (EnemyStatus status in statuses) {
+            if (status.statusType == s) {
+                status.AddDuration(duration);
+            }
+        }
+    }
+    
+    public void RemoveStatusesWithNoTurnsRemaining() {
+        List<EnemyStatus> newList = new List<EnemyStatus>();
+        foreach(EnemyStatus status in statuses) {
+            if (status.turnsRemaining != 0) {
+                newList.Add(status);
+            }
+        }
+        statuses = newList;
+
+    }
 
     
 }

@@ -323,6 +323,8 @@ public class CombatController : MonoBehaviour {
         //ends the player's turn. discards their entire hand, draws a new hand, and rests their mana.
 
         EnemiesAttack();
+        CountDownEnemyStatuses();
+
 
         if (healthRemaining <= 0) {
             healthRemaining = 0;
@@ -373,7 +375,7 @@ public class CombatController : MonoBehaviour {
         //enemy vulnerability is taken into account
 
         float d = damage;
-        if (enemy.statuses.Contains(EnemyCatalog.StatusEffects.Vulnerable)) { d *= 1.5f; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
+        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= 1.5f; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
         int totalDamage = (int) d; //after applying vulnerability, rounds the number down to find the total damage the attack did
         
         // deal damage to enemy
@@ -484,6 +486,20 @@ public class CombatController : MonoBehaviour {
 
         //return the new enemy object
         return enemy;
+    }
+
+
+    private void CountDownEnemyStatuses() {
+        //takes one turn off of all ongoing enemy statuses. If a status drops to 0 turns left, remove it
+        foreach (Enemy enemy in enemies) {
+            foreach (EnemyStatus status in enemy.statuses) {
+                status.turnsRemaining -= 1;
+            }
+            enemy.RemoveStatusesWithNoTurnsRemaining();
+            enemy.ShowStatuses();
+        }
+
+
     }
 
 }
