@@ -1,15 +1,18 @@
-﻿using System.Collections;
+﻿//for deck-builder, copyright Cole Hilscher & Jack Hilscher 2020
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStatus{
 
-    public EnemyCatalog.StatusEffects statusType;
+    //public EnemyCatalog.StatusEffects statusType;
+    public PlatonicStatus source;
     public int turnsRemaining;
 
     public EnemyStatus(EnemyCatalog.StatusEffects s, int duration) {
         //creates a new EnemyStatus with a specified duration
-        statusType = s;
+        source = StaticVariables.enemyCatalog.GetStatusWithType(s);
         turnsRemaining = duration;
     }
 

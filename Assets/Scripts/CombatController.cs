@@ -407,10 +407,6 @@ public class CombatController : MonoBehaviour {
         //more functions to be added here later
         hasWon = true;
         winPopup.GetComponent<WinPopup>().PlayerWins();
-
-        //temp for testing
-        //AddCardToPlayerDeck("purple");
-        //SceneManager.LoadScene("Overworld");
     }
 
     public void AddCardToPlayerDeck(string cardName) {

@@ -1109,6 +1109,13 @@ MonoBehaviour:
     enemyAttacks:
     - Damage-0
     - Damage-10
+  enemyStatuses:
+  - statusType: 0
+    icon: {fileID: 21300000, guid: 380316c747c9298429161b580a35f0ae, type: 3}
+    description: oof ouch my bones
+  - statusType: 1
+    icon: {fileID: 21300000, guid: 9658aa69e4ac0484a840de12ae3189eb, type: 3}
+    description: ow ow my willpower
 --- !u!4 &770692637
 Transform:
   m_ObjectHideFlags: 0

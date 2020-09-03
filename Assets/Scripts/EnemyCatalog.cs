@@ -11,9 +11,12 @@ public class EnemyCatalog : MonoBehaviour {
 
     public PlatonicEnemy[] allEnemies; //the collection of enemies. enemies are added and modified in the inspector
 
-    public enum StatusEffects { Vulnerable, Weak }; //to add new enemy status effects, add a new element in this StatusEffects list
+    public enum StatusEffects { Vulnerable, Weak };
+    //to add new enemy status effects, add a new element in this StatusEffects list
+    //then, go to the EnemyCatalog script in the inspector, and add a new element to the enemyStatuses list
+    //each status effect type defined in the StatusEffects enumerator should correspond to exactly one element in the enemyStatuses list.
 
-
+    public PlatonicStatus[] enemyStatuses;
 
     void Awake() {
         DontDestroyOnLoad(gameObject); //retain the catalog in between scenes
@@ -28,5 +31,15 @@ public class EnemyCatalog : MonoBehaviour {
         }
         return null;
     }
+
+    public PlatonicStatus GetStatusWithType(StatusEffects s) {
+        foreach(PlatonicStatus ps in enemyStatuses) {
+            if (ps.statusType == s) {
+                return ps;
+            }
+        }
+        return null;
+    }
+
 
 }
