@@ -29,6 +29,13 @@ public class TouchHandler : MonoBehaviour {
 
     private Vector2 startingFingerPlacement;
     private bool activeCardDetails = false;
+    private bool tapping = false; //set to true when the player taps the screen. changed to false when the player moves their finger more than the tap radius
+
+    //the following declarations let us choose the size of the tap radius from the inspector. It is a percentage of either screen width or screen height
+    public enum wh { Width, Height};
+    [Header("Tap Radius in terms of screen dimensions")]
+    public wh widthOrHeight;
+    public float percent = 5f; //% of the width/height of screen that the player can move their finger by to register as a tap
 
 
     private void Start() {
@@ -39,7 +46,7 @@ public class TouchHandler : MonoBehaviour {
     private void Update() {
         //every frame, check for any touch inputs
 
-        //process a click with the mouse
+        //process a tap with the finger
         if (Input.GetMouseButtonDown(0)) {
             //look for all game objects that the player touched, and interact with one of them
             List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
@@ -48,12 +55,10 @@ public class TouchHandler : MonoBehaviour {
 
             //register the current finger position for the purpose of detecting a tap
             startingFingerPlacement = Input.mousePosition;
+            tapping = true;
 
             //if a card's info is shown on screen, touching the screen again should hide that info
             if (activeCardDetails) {
-                //reset the tap registration data
-                startingFingerPlacement = new Vector2(0, 0);
-
                 //hide the card info popup
                 combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
                 activeCardDetails = false;
@@ -61,22 +66,25 @@ public class TouchHandler : MonoBehaviour {
         }
 
 
-        //process the mouse being held down
+        //process the finger being held down
         if (Input.GetMouseButton(0)) {
+            if (tapping) {
+                tapping = StillTapping();
+            }
+
+
             //if the player is dragging a card, move the card to match the current mouse position
-            if (shouldMoveCard) {
+            //only move the card if the player's finger has left the tap-range
+            if (shouldMoveCard && !tapping) {
                 DragCard();
             }
         }
 
-        //process the mouse being released
+        //process the finger being released
         if (Input.GetMouseButtonUp(0)) {
 
             //if the player has not moved their finger, register it as a tap
-            if (DidPlayerTap() && !activeCardDetails){
-                //reset the tap registration data
-                startingFingerPlacement = new Vector2(0, 0);
-                
+            if (tapping){
                 //if you just tapped over a card, then show the card info pop-up
                 GameObject o = ChooseObjectToTouch(FindAllObjectCollisions(Input.mousePosition));
                 if (o != null && o.name == "Card Template"){
@@ -87,7 +95,7 @@ public class TouchHandler : MonoBehaviour {
 
             //if the player is moving a card, stop moving it
             //for testing, when the player releases a card, run its click function
-            if (shouldMoveCard) {
+            else if (shouldMoveCard) {
                 shouldMoveCard = false;
                 movingCard.ReleasedCard();
             }
@@ -257,18 +265,19 @@ public class TouchHandler : MonoBehaviour {
         movingCard.transform.position = pos - relativeCardPosition;
     }
 
-    private bool DidPlayerTap() {
+    private bool StillTapping() {
         //returns true if the touch start position and current touch position are identical, or very close
-
         float dist = Vector2.Distance(Input.mousePosition, startingFingerPlacement);
-        float tapRadius = 100f; //the max distance the start and release positions can be for the touch to register as a tap
-        tapRadius = Screen.width * 0.05f;
-        if (dist < tapRadius) {
-            return true;
-        }
+
+        //set the tap radius based on values provided in the inspector
+        float tapRadius; //the max distance the start and release positions can be for the touch to register as a tap
+        tapRadius = percent * 0.01f; //start with the provided percentage scalar
+        //then multiply it by either the screen width or screen height
+        if (widthOrHeight == wh.Width) { tapRadius *= Screen.width; }
+        else { tapRadius *= Screen.height; }
+
+        //check if the touch position is smaller than the tap radius
+        if (dist <= tapRadius) { return true; }
         return false;
     }
-
-
-
 }
