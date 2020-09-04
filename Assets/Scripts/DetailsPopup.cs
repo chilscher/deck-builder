@@ -35,7 +35,6 @@ public class DetailsPopup : MonoBehaviour {
         if (visibility == false){
           visibility = true;
           SetVisibility(true);
-          print("butts");
           cardData = dc;
           GameObject details = transform.Find("Details Card").gameObject;
           details.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();

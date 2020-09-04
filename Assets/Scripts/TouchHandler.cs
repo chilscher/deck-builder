@@ -28,7 +28,6 @@ public class TouchHandler : MonoBehaviour {
     private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
 
     private Vector2 startingFingerPlacement;
-    private Vector2 currentFingerPlacement;
     private bool activeCardDetails = false;
 
 
@@ -42,49 +41,48 @@ public class TouchHandler : MonoBehaviour {
 
         //process a click with the mouse
         if (Input.GetMouseButtonDown(0)) {
+            //look for all game objects that the player touched, and interact with one of them
             List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
             GameObject o = ChooseObjectToTouch(objs);
             InteractWithObject(o);
+
+            //register the current finger position for the purpose of detecting a tap
             startingFingerPlacement = Input.mousePosition;
+
+            //if a card's info is shown on screen, touching the screen again should hide that info
+            if (activeCardDetails) {
+                //reset the tap registration data
+                startingFingerPlacement = new Vector2(0, 0);
+
+                //hide the card info popup
+                combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
+                activeCardDetails = false;
+            }
         }
 
 
         //process the mouse being held down
         if (Input.GetMouseButton(0)) {
-            currentFingerPlacement = Input.mousePosition ;
-
-            // print(currentFingerPlacement);
-            // print(startingFingerPlacement);
-            // print("--------------------");
-            if (currentFingerPlacement == startingFingerPlacement){
-              //print("made contact!");
-            }
-
             //if the player is dragging a card, move the card to match the current mouse position
-            else if (shouldMoveCard) {
-              //print("helloooooo");
+            if (shouldMoveCard) {
                 DragCard();
             }
         }
 
         //process the mouse being released
         if (Input.GetMouseButtonUp(0)) {
-            if (currentFingerPlacement == startingFingerPlacement && !activeCardDetails){
-              //print("finished!");
 
-              currentFingerPlacement = new Vector2(0, 0);
-              startingFingerPlacement = new Vector2(0, 0);
-
-              combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
-
-              activeCardDetails = true;
-            } else if (activeCardDetails){
-              currentFingerPlacement = new Vector2(0, 0);
-              startingFingerPlacement = new Vector2(0, 0);
-
-              combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
-
-              activeCardDetails = false;
+            //if the player has not moved their finger, register it as a tap
+            if (DidPlayerTap() && !activeCardDetails){
+                //reset the tap registration data
+                startingFingerPlacement = new Vector2(0, 0);
+                
+                //if you just tapped over a card, then show the card info pop-up
+                GameObject o = ChooseObjectToTouch(FindAllObjectCollisions(Input.mousePosition));
+                if (o != null && o.name == "Card Template"){
+                    combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
+                    activeCardDetails = true;
+                }
             }
 
             //if the player is moving a card, stop moving it
@@ -258,5 +256,19 @@ public class TouchHandler : MonoBehaviour {
         Vector2 pos = Input.mousePosition;
         movingCard.transform.position = pos - relativeCardPosition;
     }
+
+    private bool DidPlayerTap() {
+        //returns true if the touch start position and current touch position are identical, or very close
+
+        float dist = Vector2.Distance(Input.mousePosition, startingFingerPlacement);
+        float tapRadius = 100f; //the max distance the start and release positions can be for the touch to register as a tap
+        tapRadius = Screen.width * 0.05f;
+        if (dist < tapRadius) {
+            return true;
+        }
+        return false;
+    }
+
+
 
 }
