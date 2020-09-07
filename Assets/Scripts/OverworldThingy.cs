@@ -13,7 +13,7 @@ public class OverworldThingy : MonoBehaviour {
     public Catalog catalog; //all cards in the game
     public EnemyCatalog enemyCatalog; //all enemies in the game
     public List<Sprite> numbers; //assumed to be exactly 10 numbers
-
+    public int startingHealth; //the player's starting health, probably should be less than 1000.
 
     public void Start() {
         if (StaticVariables.firstTimeInOverworld) { //if this is the player's first time in the overworld scene, load the starting deck
@@ -21,6 +21,8 @@ public class OverworldThingy : MonoBehaviour {
             StaticVariables.numbers = numbers;
             StaticVariables.catalog = catalog;
             StaticVariables.enemyCatalog = enemyCatalog;
+            StaticVariables.health = startingHealth;
+            StaticVariables.maxHealth = startingHealth;
 
             //set up the player's starting deck. The starting cards are based off of the card names provided to this script in the inspector, for now
             StaticVariables.playerDeck = new List<CardData>();

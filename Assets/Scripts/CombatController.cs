@@ -38,11 +38,11 @@ public class CombatController : MonoBehaviour {
     //the variables that are edited for game balance
     public int drawNum; //the number of cards the player draws at the start of their turn
     public int maxMana; //the mana that the player starts each turn with
+    [Header("Status Effect Power")]
+    public float weakScalar = 0.5f;
+    public float vulnerableScalar = 1.5f;
 
-
-
-    private int healthRemaining;
-    public int startingHealth;
+    
     private int shieldCount = 0;
     
     public List<int> startingEnemies = new List<int>();
@@ -55,9 +55,11 @@ public class CombatController : MonoBehaviour {
     public bool hasLost;
     public MainCanvas mainCanvas;
     public DetailsPopup detailsPopup;
-
+    
     public int idealHandSize = 5; //if there are fewer than this many cards in the hand, they are spaced evenly as if there were this many. a little confusing to explain, see PositionCardsInHand
     private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
+
+
 
     private void Start() {
         //draw level data from StaticVariables
@@ -104,9 +106,6 @@ public class CombatController : MonoBehaviour {
 
         //sets the player's mana to their max value
         mana = maxMana;
-
-        //sets the player's health to its max value
-        healthRemaining = startingHealth;
 
         //basic display functions
         //enemy display function is bundled in AddNewEnemy above
@@ -326,8 +325,8 @@ public class CombatController : MonoBehaviour {
         CountDownEnemyStatuses();
 
 
-        if (healthRemaining <= 0) {
-            healthRemaining = 0;
+        if (StaticVariables.health <= 0) {
+            StaticVariables.health = 0;
             Lose();
         }
 
@@ -354,7 +353,7 @@ public class CombatController : MonoBehaviour {
         losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
 
-    private void DisplayHealth() { mainCanvas.DisplayHealth(healthRemaining, startingHealth); }
+    private void DisplayHealth() { mainCanvas.DisplayHealth(StaticVariables.health, StaticVariables.maxHealth); }
 
     private void DisplayShields() { mainCanvas.DisplayShields(shieldCount); }
 
@@ -375,7 +374,7 @@ public class CombatController : MonoBehaviour {
         //enemy vulnerability is taken into account
 
         float d = damage;
-        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= 1.5f; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
+        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= vulnerableScalar; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
         int totalDamage = (int) d; //after applying vulnerability, rounds the number down to find the total damage the attack did
         
         // deal damage to enemy
@@ -430,7 +429,7 @@ public class CombatController : MonoBehaviour {
 
                     //take the weak status into account here
                     float temp = associatedValue;
-                    if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= 0.5f; }
+                    if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= weakScalar; }
                     int totalDamage = (int) temp;
 
                     int netDamage = 0;
@@ -440,7 +439,7 @@ public class CombatController : MonoBehaviour {
                     } else {
                         shieldCount -= totalDamage;
                     }
-                        healthRemaining -= netDamage;
+                        StaticVariables.health -= netDamage;
                 }
             }
 
