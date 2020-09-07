@@ -1531,13 +1531,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingDeck:
-  - orange
-  - orange
   - red
   - red
   - red
-  - green
-  - green
+  - red
+  - red
+  - blue
+  - blue
   - blue
   - blue
   - blue
@@ -1554,6 +1554,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 14427ec75f0db1e42ad442c8bfe5cbe2, type: 3}
   - {fileID: 21300000, guid: 6380e61a9bc0ae642a65059ac155e4b6, type: 3}
   - {fileID: 21300000, guid: 82e037d6bfd47874d9068c4a50732883, type: 3}
+  startingHealth: 50
 --- !u!1 &1325090787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,7 +1879,7 @@ MonoBehaviour:
     cardArt: {fileID: 21300000, guid: 350e654a701e7e643b6379811445b9ca, type: 3}
     requiresTarget: 1
     effects:
-    - effectType: 3
+    - effectType: 4
       parameter: 3
   - cardName: orange
     text: 'deal 1 damage
@@ -1890,7 +1891,7 @@ MonoBehaviour:
     effects:
     - effectType: 0
       parameter: 1
-    - effectType: 2
+    - effectType: 3
       parameter: 2
   - cardName: yellow
     text: deal 20 damage
@@ -1900,6 +1901,34 @@ MonoBehaviour:
     effects:
     - effectType: 0
       parameter: 20
+  - cardName: pink
+    text: Heal 2 damage
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: f5d283aae31c8184da209d333bfe9730, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 2
+      parameter: 2
+  - cardName: brown
+    text: 'deal 6 damage
+
+      take 1 damage'
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: 55dbce8f9493a9f45988d8da84117459, type: 3}
+    requiresTarget: 1
+    effects:
+    - effectType: 0
+      parameter: 6
+    - effectType: 5
+      parameter: 1
+  - cardName: grey
+    text: draw 2 cards
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: 5bbd90977628db94ea19446a6ec17086, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 6
+      parameter: 2
 --- !u!4 &1356205481
 Transform:
   m_ObjectHideFlags: 0

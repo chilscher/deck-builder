@@ -325,10 +325,7 @@ public class CombatController : MonoBehaviour {
         CountDownEnemyStatuses();
 
 
-        if (StaticVariables.health <= 0) {
-            StaticVariables.health = 0;
-            Lose();
-        }
+
 
         mana = maxMana;
         DiscardHand();
@@ -345,6 +342,14 @@ public class CombatController : MonoBehaviour {
 
         UpdateEnemyAttacks();
     }
+
+    private void CheckForLoss() {
+        if (StaticVariables.health <= 0) {
+            StaticVariables.health = 0;
+            Lose();
+        }
+    }
+
 
     private void Lose() {
         //stuff that happens when the player loses all their health
@@ -449,6 +454,9 @@ public class CombatController : MonoBehaviour {
                 el.currentAttackIndex = 0;
              }
          }
+
+        CheckForLoss();
+
     }
 
     private void UpdateEnemyHP(Enemy enemy) {
@@ -501,6 +509,26 @@ public class CombatController : MonoBehaviour {
         }
 
 
+    }
+
+    public void HealPlayer(int amount) {
+        //does the "Heal" card effect. heals the player's missing health by amount, but not above their max health
+        StaticVariables.health += amount;
+        if (StaticVariables.health >= StaticVariables.maxHealth) { StaticVariables.health = StaticVariables.maxHealth; }
+        DisplayHealth();
+    }
+
+    public void HurtPlayer(int amount) {
+        //does the "SelfDamage" card effect. damages the player's health, and if their health goes too low they lose
+        StaticVariables.health -= amount;
+        CheckForLoss();
+        DisplayHealth();
+    }
+
+    public void Draw(int amount) {
+        //does the "Draw" card effect. draws amount of cards and displays them in the player's hand
+        DrawCards(amount);
+        PositionCardsInHand();
     }
 
 }

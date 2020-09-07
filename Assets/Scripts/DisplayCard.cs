@@ -92,11 +92,20 @@ public class DisplayCard: MonoBehaviour{
             case Catalog.EffectTypes.Shield:
                 combatController.AddShields(p);
                 break;
+            case Catalog.EffectTypes.Heal:
+                combatController.HealPlayer(p);
+                break;
             case Catalog.EffectTypes.Vulnerable:
                 enemy.AddStatus(EnemyCatalog.StatusEffects.Vulnerable, p);
                 break;
             case Catalog.EffectTypes.Weak:
                 enemy.AddStatus(EnemyCatalog.StatusEffects.Weak, p);
+                break;
+            case Catalog.EffectTypes.SelfDamage:
+                combatController.HurtPlayer(p);
+                break;
+            case Catalog.EffectTypes.Draw:
+                combatController.Draw(p);
                 break;
         }
     }
