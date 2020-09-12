@@ -126,6 +126,10 @@ public class TouchHandler : MonoBehaviour {
         //is the object a card on the win screen?
         if (obj.name == "Win Card Choice") {
             return "Win Card";
+        }        
+        //is the object the treasure button on the win screen?
+        if (obj.name == "Take Treasure") {
+            return "Take Treasure";
         }
         //is the object a Display Card?
         if (obj.name == "Card Template") {
@@ -199,6 +203,15 @@ public class TouchHandler : MonoBehaviour {
             }
         }
 
+        //then, the treasure that you can claim instead of a card after you have won an encounter
+        foreach (GameObject obj in gos) {
+            if (IdentifyObject(obj) == "Take Treasure") {
+                if (combatController.hasWon) { //you cant claim take the treasure if you have not won the combat
+                    return obj;
+                }
+            }
+        }
+
         //if no gameobject to touch is found, return null
         return null;
 
@@ -235,9 +248,15 @@ public class TouchHandler : MonoBehaviour {
             combatController.EndTurn();
         }
 
+        //if the object is a card you can claim after winning an encounter
         if (type == "Win Card") {
             string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
             combatController.AddCardToPlayerDeck(cardName);
+            SceneManager.LoadScene("Overworld");
+        }
+
+        //if the object is the treasure you can claim after winning an encounter
+        if (type == "Take Treasure") {
             SceneManager.LoadScene("Overworld");
         }
 
