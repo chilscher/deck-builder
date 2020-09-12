@@ -107,6 +107,12 @@ public class DisplayCard: MonoBehaviour{
             case Catalog.EffectTypes.Draw:
                 combatController.Draw(p);
                 break;
+            case Catalog.EffectTypes.AddMana:
+                combatController.AddMana(p);
+                break;
+            case Catalog.EffectTypes.Stun:
+                enemy.AddStatus(EnemyCatalog.StatusEffects.Stun, p);
+                break;
         }
     }
 

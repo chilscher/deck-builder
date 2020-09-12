@@ -421,38 +421,49 @@ public class CombatController : MonoBehaviour {
         //makes each enemy attack in sequence
 
         foreach(Enemy el in enemies) {
-            // access current attack
-            string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
 
-            string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
+            //if the enemy is stunned, skip their attack
+            if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Stun)) {
+                //do nothing here
+            }
 
-            foreach(string atk in allCurrentAttacks){
-                string associatedEffect = atk.Split('-')[0];
-                int associatedValue = int.Parse(atk.Split('-')[1]);
+            else {
+                // access current attack
+                string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
 
-                if(associatedEffect == "Damage"){
+                string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
 
-                    //take the weak status into account here
-                    float temp = associatedValue;
-                    if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= weakScalar; }
-                    int totalDamage = (int) temp;
+                foreach (string atk in allCurrentAttacks) {
+                    string associatedEffect = atk.Split('-')[0];
+                    int associatedValue = int.Parse(atk.Split('-')[1]);
 
-                    int netDamage = 0;
-                    if (totalDamage >= shieldCount){
-                        netDamage = totalDamage - shieldCount;
-                        shieldCount = 0;
-                    } else {
-                        shieldCount -= totalDamage;
-                    }
+                    if (associatedEffect == "Damage") {
+
+                        //take the weak status into account here
+                        float temp = associatedValue;
+                        if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= weakScalar; }
+                        int totalDamage = (int)temp;
+
+                        int netDamage = 0;
+                        if (totalDamage >= shieldCount) {
+                            netDamage = totalDamage - shieldCount;
+                            shieldCount = 0;
+                        }
+                        else {
+                            shieldCount -= totalDamage;
+                        }
                         StaticVariables.health -= netDamage;
+                    }
                 }
             }
 
-             if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length){
-                el.currentAttackIndex += 1;
-             } else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
-                el.currentAttackIndex = 0;
-             }
+            if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length) {
+                    el.currentAttackIndex += 1;
+                }
+                else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
+                    el.currentAttackIndex = 0;
+                }
+
          }
 
         CheckForLoss();
@@ -529,6 +540,12 @@ public class CombatController : MonoBehaviour {
         //does the "Draw" card effect. draws amount of cards and displays them in the player's hand
         DrawCards(amount);
         PositionCardsInHand();
+    }
+
+    public void AddMana(int amount) {
+        //does the "AddMana" card effect. Adds amount of mana to the player's current amount
+        mana += amount;
+        DisplayMana();
     }
 
 }

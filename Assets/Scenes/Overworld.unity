@@ -1116,6 +1116,9 @@ MonoBehaviour:
   - statusType: 1
     icon: {fileID: 21300000, guid: 9658aa69e4ac0484a840de12ae3189eb, type: 3}
     description: ow ow my willpower
+  - statusType: 2
+    icon: {fileID: 21300000, guid: ac2d65f1f97effb4c9c4892b09c8b17f, type: 3}
+    description: oh boy im stunned
 --- !u!4 &770692637
 Transform:
   m_ObjectHideFlags: 0
@@ -1929,6 +1932,26 @@ MonoBehaviour:
     effects:
     - effectType: 6
       parameter: 2
+  - cardName: baby blue
+    text: gain 1 mana
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: 010e49c81144f1e43a927921cd261b91, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 7
+      parameter: 1
+  - cardName: maroon
+    text: 'stun an enemy
+
+      lose 4 hp'
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 1
+    effects:
+    - effectType: 8
+      parameter: 1
+    - effectType: 5
+      parameter: 4
 --- !u!4 &1356205481
 Transform:
   m_ObjectHideFlags: 0
