@@ -321,12 +321,14 @@ public class CombatController : MonoBehaviour {
     public void EndTurn() {
         //ends the player's turn. discards their entire hand, draws a new hand, and rests their mana.
 
+
+        //damage the enemy from their bleed effects
+        HurtEnemiesFromBleed();
+
+
         EnemiesAttack();
         CountDownEnemyStatuses();
-
-
-
-
+        
         mana = maxMana;
         DiscardHand();
         DrawCards(drawNum);
@@ -513,7 +515,10 @@ public class CombatController : MonoBehaviour {
         //takes one turn off of all ongoing enemy statuses. If a status drops to 0 turns left, remove it
         foreach (Enemy enemy in enemies) {
             foreach (EnemyStatus status in enemy.statuses) {
-                status.turnsRemaining -= 1;
+                if (status.source.statusType != EnemyCatalog.StatusEffects.ConstantBleed) { //the constant bleed status does not go down every turn
+                    status.turnsRemaining -= 1;
+                }
+ 
             }
             enemy.RemoveStatusesWithNoTurnsRemaining();
             enemy.ShowStatuses();
@@ -546,6 +551,43 @@ public class CombatController : MonoBehaviour {
         //does the "AddMana" card effect. Adds amount of mana to the player's current amount
         mana += amount;
         DisplayMana();
+    }
+
+    public void DamageAllEnemies(int amount) {
+        //does the "DamageAll" card effect. Deals amount damage to each enemy
+
+        //create an array of all enemies
+        Enemy[] array = new Enemy[enemies.Count];
+        for (int i=0; i<array.Length; i++) { array[i] = enemies[i]; }
+
+        //iterate through each enemy in the new array
+        //we can't just iterate through the enemies themselves, because the length of the enemy list changes if one of them dies
+        for (int i =0; i<array.Length; i++) { DealDamageToEnemy(amount, array[i]); }
+    }
+
+    public void HurtEnemiesFromBleed() {
+        //applies bleed damage to all enemies that have a bleed status
+        //this can be either the constantbleed or the diminishingbleed status
+
+        //create an array of all enemies
+        Enemy[] array = new Enemy[enemies.Count];
+        for (int i = 0; i < array.Length; i++) { array[i] = enemies[i]; }
+
+        //iterate through each enemy in the new array
+        //we can't just iterate through the enemies themselves, because the length of the enemy list changes if one of them dies
+        for (int i = 0; i < array.Length; i++) {
+            Enemy e = array[i];
+            int constantBleedDmg = e.GetDurationOfStatus(EnemyCatalog.StatusEffects.ConstantBleed);
+            int diminishingBleedDmg = e.GetDurationOfStatus(EnemyCatalog.StatusEffects.DiminishingBleed);
+
+            int hpLeft = e.source.hitPoints - e.hitPointDamage;
+            DealDamageToEnemy(constantBleedDmg, e);
+            if (constantBleedDmg < hpLeft) {
+                DealDamageToEnemy(diminishingBleedDmg, e);
+            }
+        }
+
+
     }
 
 }

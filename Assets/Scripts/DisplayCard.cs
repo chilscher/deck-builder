@@ -113,6 +113,15 @@ public class DisplayCard: MonoBehaviour{
             case Catalog.EffectTypes.Stun:
                 enemy.AddStatus(EnemyCatalog.StatusEffects.Stun, p);
                 break;
+            case Catalog.EffectTypes.DamageAll:
+                combatController.DamageAllEnemies(p);
+                break;
+            case Catalog.EffectTypes.ConstantBleed:
+                enemy.AddStatus(EnemyCatalog.StatusEffects.ConstantBleed, p);
+                break;
+            case Catalog.EffectTypes.DiminishingBleed:
+                enemy.AddStatus(EnemyCatalog.StatusEffects.DiminishingBleed, p);
+                break;
         }
     }
 

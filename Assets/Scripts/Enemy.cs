@@ -72,5 +72,16 @@ public class Enemy : MonoBehaviour {
         }
         statuses = newList;
     }
+
+    public int GetDurationOfStatus(EnemyCatalog.StatusEffects s) {
+        //returns the number of turns remaining on a specified status
+        //if the enemy does not have the status, returns 0
+        foreach(EnemyStatus status in statuses) {
+            if (status.source.statusType == s) {
+                return status.turnsRemaining;
+            }
+        }
+        return 0;
+    }
     
 }

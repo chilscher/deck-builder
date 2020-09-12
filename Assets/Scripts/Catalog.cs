@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class Catalog : MonoBehaviour {
     //this script contains the entire collection of cards in the game. it is loaded in the main menu, and not destroyed during transition between scenes
 
-    public enum EffectTypes { Damage, Shield, Heal, Vulnerable, Weak, SelfDamage, Draw, AddMana, Stun }; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
+    public enum EffectTypes { Damage, Shield, Heal, Vulnerable, Weak, SelfDamage, Draw, AddMana, Stun, DamageAll, ConstantBleed, DiminishingBleed }; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
 
 
     public PlatonicCard[] cards; //the collection of cards. cards are added and modified in the inspector
