@@ -58,7 +58,7 @@ public class CombatController : MonoBehaviour {
     
     public int idealHandSize = 5; //if there are fewer than this many cards in the hand, they are spaced evenly as if there were this many. a little confusing to explain, see PositionCardsInHand
     private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
-
+    public GameObject allies;
 
 
     private void Start() {
@@ -125,6 +125,13 @@ public class CombatController : MonoBehaviour {
         DisplayHealth();
         DisplayShields();
         UpdateEnemyAttacks();
+
+        for (int i=0; i < StaticVariables.allies.Count; i++) {
+            GameObject imageGO = allies.transform.GetChild(i).gameObject;
+            GameObject textGO = imageGO.transform.Find("Text").gameObject;
+            imageGO.GetComponent<Image>().sprite = StaticVariables.allies[i].source.allyArt;
+            textGO.GetComponent<Text>().text = StaticVariables.allies[i].source.name;
+        }
     }
 
     private void ShuffleDeck() {

@@ -1211,6 +1211,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807544529}
   m_CullTransparentMesh: 0
+--- !u!1 &836529857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 836529859}
+  - component: {fileID: 836529858}
+  m_Layer: 0
+  m_Name: AllyCatalog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &836529858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836529857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a99bc1fd50919a4e8f7bb52d817e6d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allAllies:
+  - name: Civillian
+    allyArt: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
+    startingCards:
+    - hit
+    - hit
+    - block
+    - block
+  - name: Rogue
+    allyArt: {fileID: 21300000, guid: 9b092cc2b15b3cf42a031fcfb066db6d, type: 3}
+    startingCards:
+    - backstab
+    - shiv
+    - shiv
+    - hide
+  - name: Medic
+    allyArt: {fileID: 21300000, guid: ddfa96053ed13ad48bc46e6bc17c8a6d, type: 3}
+    startingCards:
+    - aura
+    - aura
+    - draw life
+    - draw life
+--- !u!4 &836529859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836529857}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1419.513, y: 841.23645, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &854070731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1539,19 +1604,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fedc6dce1c8497f4ebdb49e512bbc7d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingDeck:
-  - red
-  - red
-  - red
-  - red
-  - red
-  - blue
-  - blue
-  - blue
-  - blue
-  - blue
   catalog: {fileID: 1356205480}
   enemyCatalog: {fileID: 770692636}
+  allyCatalog: {fileID: 836529858}
   numbers:
   - {fileID: 21300000, guid: 684d518044768a544a9e28e2c3b49ef1, type: 3}
   - {fileID: 21300000, guid: 8ed85043c0e0f234fad58d9cd06d1b26, type: 3}
@@ -1564,6 +1619,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6380e61a9bc0ae642a65059ac155e4b6, type: 3}
   - {fileID: 21300000, guid: 82e037d6bfd47874d9068c4a50732883, type: 3}
   startingHealth: 50
+  startingAllies:
+  - Civillian
+  - Rogue
+  - Medic
 --- !u!1 &1325090787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1986,6 +2045,74 @@ MonoBehaviour:
     effects:
     - effectType: 11
       parameter: 3
+  - cardName: aura
+    text: 'heal 1
+
+      apply 2 shield'
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: f5d283aae31c8184da209d333bfe9730, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 2
+      parameter: 1
+    - effectType: 1
+      parameter: 1
+  - cardName: draw life
+    text: 'heal 1
+
+      deal 1 damage'
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: 350e654a701e7e643b6379811445b9ca, type: 3}
+    requiresTarget: 1
+    effects:
+    - effectType: 2
+      parameter: 1
+    - effectType: 0
+      parameter: 1
+  - cardName: backstab
+    text: deal 8 damage
+    manaCost: 2
+    cardArt: {fileID: 21300000, guid: 5bbd90977628db94ea19446a6ec17086, type: 3}
+    requiresTarget: 1
+    effects:
+    - effectType: 0
+      parameter: 8
+  - cardName: hide
+    text: apply 50 shield
+    manaCost: 3
+    cardArt: {fileID: 21300000, guid: e38d7ca58c23eb845bd69db30ca5d474, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 1
+      parameter: 50
+  - cardName: shiv
+    text: 'deal 1 damage
+
+      draw 1 card'
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 1
+    effects:
+    - effectType: 0
+      parameter: 1
+    - effectType: 6
+      parameter: 1
+  - cardName: hit
+    text: deal 3 damage
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
+    requiresTarget: 1
+    effects:
+    - effectType: 0
+      parameter: 3
+  - cardName: block
+    text: apply 4 shield
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 1
+      parameter: 4
 --- !u!4 &1356205481
 Transform:
   m_ObjectHideFlags: 0

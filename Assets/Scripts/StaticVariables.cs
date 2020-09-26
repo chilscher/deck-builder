@@ -12,9 +12,11 @@ public class StaticVariables {
     static public bool firstTimeInOverworld = true; //used by OverworldThingy to see if we need to give the player their starting cards
     static public Catalog catalog; //catalog of all cards in the game
     static public EnemyCatalog enemyCatalog; //catalog of all enemies in the game
+    static public AllyCatalog allyCatalog;
     static public List<Sprite> numbers; //assumed to be exactly 10 numbers
     static public EncounterDetails encounterDetails; //the enemy ids and card rewards for the next encounter. Set in OverworldThingy before transitioning to the Combat scene
     static public System.Random random = new System.Random();
     static public int health; //the player's health
     static public int maxHealth; //the player's max health, they cannot heal above this value
+    static public List<Ally> allies;
 }
