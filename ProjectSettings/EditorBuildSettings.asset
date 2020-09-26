@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Tavern.unity
+    guid: 11bcd24018ede1b4a8cc9399cc0e659b
+  - enabled: 1
     path: Assets/Scenes/Overworld.unity
     guid: e56b00b6012d7df46ade79de75eb2806
   - enabled: 1
