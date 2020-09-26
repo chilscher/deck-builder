@@ -20,27 +20,5 @@ public class PlatonicAlly {
 
     [Header("Starting Cards")]
     public string[] startingCards;
-
-    /*
-    [Header("Attacks")]
-    public string[] allyAttacks;
-    */
-
-    /*
-    //contains the data for one kind of enemy. these are created in the inspector within the EnemyCatalog script
-    //an individual copy of a enemy used in the game uses the Enemy script
-    //the Enemy script points towards this script as the source for the card's actual information, like name, text, image, etc
-
-    [Header("Displayed Info")]
-    public int id;
-    public string enemyName;
-    public int hitPoints;
-
-    [Header("Visuals")]
-    public Sprite enemyArt;
-    public bool isLargeEnemy;
-
-    [Header("Attacks")]
-    public string[] enemyAttacks;
-    */
+    
 }

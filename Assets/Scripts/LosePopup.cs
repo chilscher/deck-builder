@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LosePopup : MonoBehaviour { 
     //controls the canvas for the popup that appears after the player loses a combat encounter
@@ -26,6 +27,11 @@ public class LosePopup : MonoBehaviour {
     public void PlayerLoses() {
         //called by the Combat Controller when the player loses the encounter
         SetVisibility(true);
+    }
+
+    public void BackToTavern() {
+        //takes the player back to the tavern scene
+        SceneManager.LoadScene("Tavern");
     }
     
 }

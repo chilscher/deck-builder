@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour {
     public int hitPointDamage;
     [HideInInspector]
     public int currentAttackIndex;
+    [HideInInspector]
+    public CombatController combatController;
 
     [HideInInspector]
     public List<EnemyStatus> statuses = new List<EnemyStatus>();
@@ -40,6 +42,10 @@ public class Enemy : MonoBehaviour {
                 c.transform.Find("Text").GetComponent<Text>().text = statuses[i].turnsRemaining + "";
             }
         }
+
+        //update their next attack display
+        //specifically important if the enemy gains or loses the weak status
+        combatController.UpdateEnemyAttack(this);
     }
 
     public bool DoesEnemyHaveStatus(EnemyCatalog.StatusEffects s) {
@@ -83,5 +89,6 @@ public class Enemy : MonoBehaviour {
         }
         return 0;
     }
+   
     
 }

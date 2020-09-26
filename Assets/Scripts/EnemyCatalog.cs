@@ -18,10 +18,6 @@ public class EnemyCatalog : MonoBehaviour {
 
     public PlatonicStatus[] enemyStatuses;
 
-    void Awake() {
-        DontDestroyOnLoad(gameObject); //retain the catalog in between scenes
-    }
-
     public PlatonicEnemy GetEnemyWithID(int id) {
         //returns the PlatonicEnemy with the specified id
         foreach (PlatonicEnemy el in allEnemies) {

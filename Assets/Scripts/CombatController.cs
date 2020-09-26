@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class CombatController : MonoBehaviour {
     //controls the flow of combat, including handling player inputs and tracking damage
@@ -39,8 +40,8 @@ public class CombatController : MonoBehaviour {
     public int drawNum; //the number of cards the player draws at the start of their turn
     public int maxMana; //the mana that the player starts each turn with
     [Header("Status Effect Power")]
-    public float weakScalar = 0.5f;
-    public float vulnerableScalar = 1.5f;
+    public float weakScalar = 0.5f; //damage rounds down
+    public float vulnerableScalar = 1.5f; //damage rounds down
 
     
     private int shieldCount = 0;
@@ -486,9 +487,26 @@ public class CombatController : MonoBehaviour {
 
     private void UpdateEnemyAttacks() {
         //updates the attack text for all enemies that are still alive, called at the end of the turn
+        //also called when an enemy gets the weak condition applied to them
         foreach (Enemy enemy in enemies) {
-            enemy.transform.Find("Next Attack").GetComponent<Text>().text = enemy.source.enemyAttacks[enemy.currentAttackIndex];
+            UpdateEnemyAttack(enemy);
         }
+    }
+
+    public void UpdateEnemyAttack(Enemy enemy) {
+
+        string attack = enemy.source.enemyAttacks[enemy.currentAttackIndex];
+
+        if (attack.Split('-')[0] == "Damage") {
+            float originalAmount = Int32.Parse(attack.Split('-')[1]);
+            if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) {
+                originalAmount *= weakScalar;
+                int newAmount = (int)originalAmount;
+                attack = "Damage-" + newAmount;
+            }
+        }
+
+        enemy.transform.Find("Next Attack").GetComponent<Text>().text = attack;
     }
 
     private Enemy AddNewEnemy(PlatonicEnemy p, int enemyNum) {
@@ -512,6 +530,9 @@ public class CombatController : MonoBehaviour {
 
         //set the enemy art to match the provided enemy art sprite
         enemy.transform.Find("Enemy Art").GetComponent<Image>().sprite = enemy.source.enemyArt;
+
+        //set some useful references
+        enemy.combatController = this;
 
         //return the new enemy object
         return enemy;
