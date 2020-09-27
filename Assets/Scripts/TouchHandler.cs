@@ -83,6 +83,12 @@ public class TouchHandler : MonoBehaviour {
                 //hide the card info popup
                 combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
                 activeCardDetails = false;
+
+                //return the selected card to its previous position
+                movingCard.ReturnToStartingPos();
+
+                //also, un-highlight the card that is being displayed
+                movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
 
             //otherwise, if the player has not moved their finger, register it as a tap
@@ -93,6 +99,9 @@ public class TouchHandler : MonoBehaviour {
                     combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
                     activeCardDetails = true;
                 }
+
+                //also, highlight the card that is being displayed
+                movingCard.transform.Find("Highlight").gameObject.SetActive(true);
             }
 
             //otherwise, if the player is moving a card, stop moving it

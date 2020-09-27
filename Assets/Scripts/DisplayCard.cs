@@ -27,7 +27,7 @@ public class DisplayCard: MonoBehaviour{
         //if the player does not have enough mana left, do nothing and return the card to where it was before being dragged
         if (combatController.mana < associatedCard.source.manaCost) {
             print("not enough mana");
-            GetComponent<RectTransform>().anchoredPosition = startingPosition;
+            ReturnToStartingPos();
             return;
         }
 
@@ -125,7 +125,7 @@ public class DisplayCard: MonoBehaviour{
         }
     }
 
-    private void ReturnToStartingPos() {
+    public void ReturnToStartingPos() {
         //returns the DisplayCard to the position it was at in the hand previously
         //also returns it to its rightful place in the hierarchy, so it is on top of earlier cards, and later cards are on top of it
         GetComponent<RectTransform>().anchoredPosition = startingPosition;
