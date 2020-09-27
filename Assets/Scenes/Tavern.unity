@@ -2363,8 +2363,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -73.69023}
-  m_SizeDelta: {x: 0, y: 147.38046}
+  m_AnchoredPosition: {x: 0, y: -39.92922}
+  m_SizeDelta: {x: 0, y: 79.8584}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &798928251
 MonoBehaviour:
@@ -3014,8 +3014,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -73.69023}
-  m_SizeDelta: {x: 0, y: 147.38046}
+  m_AnchoredPosition: {x: 0, y: -39.92922}
+  m_SizeDelta: {x: 0, y: 79.8584}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &944815687
 GameObject:
@@ -3810,8 +3810,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -73.69023}
-  m_SizeDelta: {x: 0, y: 147.38046}
+  m_AnchoredPosition: {x: 0, y: -39.92922}
+  m_SizeDelta: {x: 0, y: 79.8584}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1282487427
 GameObject:
@@ -4470,7 +4470,7 @@ MonoBehaviour:
 
       to all enemies'
     manaCost: 3
-    cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
+    cardArt: {fileID: 21300000, guid: d597184c7eaa0f44bb68b7705c6b7e9e, type: 3}
     requiresTarget: 0
     effects:
     - effectType: 9
@@ -4478,7 +4478,7 @@ MonoBehaviour:
   - cardName: firebolt
     text: deal 2 damage
     manaCost: 0
-    cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
+    cardArt: {fileID: 21300000, guid: d597184c7eaa0f44bb68b7705c6b7e9e, type: 3}
     requiresTarget: 1
     effects:
     - effectType: 0
@@ -4486,7 +4486,7 @@ MonoBehaviour:
   - cardName: deflect
     text: gain 9 shield
     manaCost: 2
-    cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
+    cardArt: {fileID: 21300000, guid: 010e49c81144f1e43a927921cd261b91, type: 3}
     requiresTarget: 0
     effects:
     - effectType: 1
@@ -4494,7 +4494,7 @@ MonoBehaviour:
   - cardName: replenish
     text: draw 2 cards
     manaCost: 0
-    cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
+    cardArt: {fileID: 21300000, guid: e38d7ca58c23eb845bd69db30ca5d474, type: 3}
     requiresTarget: 0
     effects:
     - effectType: 6
@@ -4502,7 +4502,7 @@ MonoBehaviour:
   - cardName: curse
     text: apply 4 vulnerable
     manaCost: 1
-    cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
+    cardArt: {fileID: 21300000, guid: 55dbce8f9493a9f45988d8da84117459, type: 3}
     requiresTarget: 1
     effects:
     - effectType: 3
@@ -4510,7 +4510,7 @@ MonoBehaviour:
   - cardName: hex
     text: apply 3 weak
     manaCost: 1
-    cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
+    cardArt: {fileID: 21300000, guid: 5bbd90977628db94ea19446a6ec17086, type: 3}
     requiresTarget: 1
     effects:
     - effectType: 4

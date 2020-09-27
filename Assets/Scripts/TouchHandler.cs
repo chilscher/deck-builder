@@ -37,7 +37,6 @@ public class TouchHandler : MonoBehaviour {
     public wh widthOrHeight;
     public float percent = 5f; //% of the width/height of screen that the player can move their finger by to register as a tap
 
-
     private void Start() {
         //define variables that are used to call functions
         combatController = FindObjectOfType<CombatController>();
@@ -48,21 +47,17 @@ public class TouchHandler : MonoBehaviour {
 
         //process a tap with the finger
         if (Input.GetMouseButtonDown(0)) {
-            //look for all game objects that the player touched, and interact with one of them
-            List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
-            GameObject o = ChooseObjectToTouch(objs);
-            InteractWithObject(o);
+            if (!activeCardDetails) { //dont interact with anything if a card's details are showing
+                //look for all game objects that the player touched, and interact with one of them
+                List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
+                GameObject o = ChooseObjectToTouch(objs);
+                InteractWithObject(o);
+            }
+
 
             //register the current finger position for the purpose of detecting a tap
             startingFingerPlacement = Input.mousePosition;
             tapping = true;
-
-            //if a card's info is shown on screen, touching the screen again should hide that info
-            if (activeCardDetails) {
-                //hide the card info popup
-                combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
-                activeCardDetails = false;
-            }
         }
 
 
@@ -71,11 +66,11 @@ public class TouchHandler : MonoBehaviour {
             if (tapping) {
                 tapping = StillTapping();
             }
-
-
+            
             //if the player is dragging a card, move the card to match the current mouse position
             //only move the card if the player's finger has left the tap-range
-            if (shouldMoveCard && !tapping) {
+            //dont move the card if a card's details are showing on the large pop-up
+            if (shouldMoveCard && !tapping && !activeCardDetails) {
                 DragCard();
             }
         }
@@ -83,22 +78,30 @@ public class TouchHandler : MonoBehaviour {
         //process the finger being released
         if (Input.GetMouseButtonUp(0)) {
 
-            //if the player has not moved their finger, register it as a tap
-            if (tapping){
+            //if a card's info is shown on screen, releasing the screen again should hide that info
+            if (activeCardDetails) {
+                //hide the card info popup
+                combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
+                activeCardDetails = false;
+            }
+
+            //otherwise, if the player has not moved their finger, register it as a tap
+            else if (tapping){
                 //if you just tapped over a card, then show the card info pop-up
                 GameObject o = ChooseObjectToTouch(FindAllObjectCollisions(Input.mousePosition));
-                if (o != null && o.name == "Card Template"){
+                if (o != null && o.name == "Card Template") {
                     combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
                     activeCardDetails = true;
                 }
             }
 
-            //if the player is moving a card, stop moving it
+            //otherwise, if the player is moving a card, stop moving it
             //for testing, when the player releases a card, run its click function
             else if (shouldMoveCard) {
                 shouldMoveCard = false;
                 movingCard.ReleasedCard();
             }
+            
         }
 
     }
