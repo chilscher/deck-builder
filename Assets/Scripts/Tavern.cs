@@ -57,7 +57,7 @@ public class Tavern : MonoBehaviour {
         //create the new ally object
         Ally newAlly = new Ally(allyCatalog.GetAllyWithName(button.name));
         //find what spot it belongs to
-        int allySpot = Int32.Parse(button.transform.parent.parent.name.Split(' ')[2]);
+        int allySpot = Int32.Parse(button.transform.parent.parent.parent.name.Split(' ')[2]);
         //overwrite the chosen ally spot with the new ally
         for (int i = 0; i < StaticVariables.allies.Count; i++) {
             if (i == allySpot - 1) {
@@ -75,7 +75,7 @@ public class Tavern : MonoBehaviour {
         for (int i =0; i<allyButtons.Count; i++) {
             Ally chosenAlly = StaticVariables.allies[i];
 
-            foreach (Transform child in allyButtons[i].transform.Find("Ally Choices")) {
+            foreach (Transform child in allyButtons[i].transform.Find("Ally Choices").Find("Scroll")) {
                 if (child.name == chosenAlly.source.name) { child.gameObject.GetComponent<Image>().color = Color.grey; }
                 else { child.gameObject.GetComponent<Image>().color = Color.white; }
             }
