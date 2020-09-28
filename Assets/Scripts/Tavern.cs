@@ -16,7 +16,9 @@ public class Tavern : MonoBehaviour {
     public List<Sprite> numbers; //assumed to be exactly 10 numbers
     public int startingHealth; //the player's starting health, probably should be less than 1000.
     public List<string> startingAllyNames = new List<string>();
-    public List<GameObject> allyButtons = new List<GameObject>();
+    public List<GameObject> allyGroups = new List<GameObject>();
+    public GameObject allySelectorPrefab;
+    public GameObject cardDetailsPopup;
 
 
     public void Start() {
@@ -32,8 +34,33 @@ public class Tavern : MonoBehaviour {
         foreach (string allyName in startingAllyNames) {
             StaticVariables.allies.Add(new Ally(allyCatalog.GetAllyWithName(allyName)));
         }
+        foreach (GameObject allyChoice in allyGroups) {
+            foreach (PlatonicAlly pAlly in allyCatalog.allAllies) {
+                GameObject c = Instantiate(allySelectorPrefab);
+                c.transform.SetParent(allyChoice.transform.Find("Ally Choices").Find("Scroll"), false);
+                c.transform.Find("Name").GetComponent<Text>().text = pAlly.name.ToUpper();
+                c.transform.Find("Select").GetComponent<Button>().onClick.AddListener(delegate { SelectAlly(c); });
+                c.name = pAlly.name;
+                c.transform.Find("Ally Art").GetComponent<Image>().sprite = pAlly.allyArt;
+                c.transform.Find("Show Cards").GetComponent<Button>().onClick.AddListener(delegate { DisplayAllyCards(c); });
+            }
+        }
 
         UpdateAllyButtons();
+
+        cardDetailsPopup.SetActive(false);
+    }
+
+
+    private void Update() {
+        //process a tap with the finger
+        if (Input.GetMouseButtonDown(0)) {
+            if (cardDetailsPopup.activeSelf) {
+                cardDetailsPopup.SetActive(false);
+            }
+        }
+
+
     }
 
     public void StartGame() {
@@ -49,15 +76,17 @@ public class Tavern : MonoBehaviour {
         SceneManager.LoadScene("Overworld");
     }
 
-    public void SelectAlly(GameObject button) {
+    public void SelectAlly(GameObject allySelector) {
         //called when you click one of the ally-selection buttons
         //places the chosen ally into the appropriate spot on your ally list
         //the ally name and spot number are inferred from object names in the hierarchy
 
+        //print("clicked!");
+
         //create the new ally object
-        Ally newAlly = new Ally(allyCatalog.GetAllyWithName(button.name));
+        Ally newAlly = new Ally(allyCatalog.GetAllyWithName(allySelector.name));
         //find what spot it belongs to
-        int allySpot = Int32.Parse(button.transform.parent.parent.parent.name.Split(' ')[2]);
+        int allySpot = Int32.Parse(allySelector.transform.parent.parent.parent.name.Split(' ')[2]);
         //overwrite the chosen ally spot with the new ally
         for (int i = 0; i < StaticVariables.allies.Count; i++) {
             if (i == allySpot - 1) {
@@ -72,14 +101,37 @@ public class Tavern : MonoBehaviour {
         //assumes the ally button list and the ally list are the same length
         //colors the buttons corresponding to chosen allies grey
         //colors non-chosen allies white
-        for (int i =0; i<allyButtons.Count; i++) {
+        for (int i =0; i<allyGroups.Count; i++) {
             Ally chosenAlly = StaticVariables.allies[i];
 
-            foreach (Transform child in allyButtons[i].transform.Find("Ally Choices").Find("Scroll")) {
-                if (child.name == chosenAlly.source.name) { child.gameObject.GetComponent<Image>().color = Color.grey; }
-                else { child.gameObject.GetComponent<Image>().color = Color.white; }
+            foreach (Transform child in allyGroups[i].transform.Find("Ally Choices").Find("Scroll")) {
+                if (child.name == chosenAlly.source.name) { child.Find("Select").gameObject.GetComponent<Image>().color = Color.grey; }
+                else { child.Find("Select").gameObject.GetComponent<Image>().color = Color.white; }
             }
         }
+    }
+
+    public void DisplayAllyCards(GameObject allySelector) {
+        Ally newAlly = new Ally(allyCatalog.GetAllyWithName(allySelector.name));
+
+        //changes the visual display of the ally starting cards
+        for (int i = 0; i < newAlly.source.startingCards.Length; i++) {
+            string cardName = newAlly.source.startingCards[i];
+            PlatonicCard pc = catalog.GetCardWithName(cardName);
+
+            GameObject go = cardDetailsPopup.transform.Find("Background").Find("Card Options").GetChild(i).gameObject;
+
+            //set the card art to match the provided card art sprite
+            go.transform.Find("Card Art").GetComponent<Image>().sprite = pc.cardArt;
+
+            //set the visual's text, name, and mana cost from the card data
+            go.transform.Find("Name").GetComponent<Text>().text = pc.cardName.ToUpper();
+            go.transform.Find("Text").GetComponent<Text>().text = pc.text.ToUpper();
+            go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[pc.manaCost];
+        }
+
+        cardDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = newAlly.source.name.ToUpper();
+        cardDetailsPopup.SetActive(true);
     }
 
 

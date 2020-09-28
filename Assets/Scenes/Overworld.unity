@@ -1921,7 +1921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac4106a19154784a9c61af5f4939fca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyIds: 01000000000000000200000001000000
+  enemyIds: 01000000020000000100000000000000
   cardRewards:
   - turquoise
   - orange
