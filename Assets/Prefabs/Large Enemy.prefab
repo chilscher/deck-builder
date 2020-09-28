@@ -148,6 +148,7 @@ MonoBehaviour:
     enemyAttacks: []
   hitPointDamage: 0
   currentAttackIndex: 0
+  combatController: {fileID: 0}
 --- !u!1 &1404201423405540440
 GameObject:
   m_ObjectHideFlags: 0

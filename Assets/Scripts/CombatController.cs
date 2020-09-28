@@ -28,7 +28,7 @@ public class CombatController : MonoBehaviour {
     public GameObject largeEnemiesGameObject;
     public GameObject mixedEnemiesGameObject;
     private GameObject enemiesGameObject;
-    private List<Enemy> enemies = new List<Enemy>();
+    public List<Enemy> enemies = new List<Enemy>();
 
     //the DisplayCard's prefab, which is instantiated to create a visual display of a card
     public GameObject displayCardPrefab;

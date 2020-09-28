@@ -101,7 +101,7 @@ public class TouchHandler : MonoBehaviour {
                 }
 
                 //also, highlight the card that is being displayed
-                movingCard.transform.Find("Highlight").gameObject.SetActive(true);
+                //movingCard.transform.Find("Highlight").gameObject.SetActive(true);
             }
 
             //otherwise, if the player is moving a card, stop moving it
@@ -109,8 +109,11 @@ public class TouchHandler : MonoBehaviour {
             else if (shouldMoveCard) {
                 shouldMoveCard = false;
                 movingCard.ReleasedCard();
+
+                //also, un-highlight the card that is being dragged
+                movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
-            
+
         }
 
     }
@@ -288,6 +291,9 @@ public class TouchHandler : MonoBehaviour {
         relativeCardPosition = pos - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
         //move the card to be above all other cards
         dc.transform.SetSiblingIndex(dc.transform.parent.childCount + 1);
+
+        //highlight the selected card
+        dc.transform.Find("Highlight").gameObject.SetActive(true);
     }
 
     private void DragCard() {
