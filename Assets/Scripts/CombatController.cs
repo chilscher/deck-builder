@@ -56,6 +56,7 @@ public class CombatController : MonoBehaviour {
     public bool hasLost;
     public MainCanvas mainCanvas;
     public DetailsPopup detailsPopup;
+    public PileDetailsPopup pileDetailsPopup;
     
     public int idealHandSize = 5; //if there are fewer than this many cards in the hand, they are spaced evenly as if there were this many. a little confusing to explain, see PositionCardsInHand
     private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
@@ -261,25 +262,14 @@ public class CombatController : MonoBehaviour {
         }
     }
 
-    private void PrintCards(string introText, List<CardData> cards) {
-        //prints the names of all cards in "cards"
-        string output = introText + " - ";
-        foreach (CardData c in cards) {
-            output += c.source.cardName;
-            output += " - ";
-        }
-        print(output);
+    public void DisplayDeck() {
+        //displays the cards in the deck on screen. called via TouchHandler when the player touches the deck
+        pileDetailsPopup.TogglePileDetails("DECK", deck);
     }
 
-    public void PrintDeck() {
-        //prints the cards in the deck
-        //a temporary function used by TouchHandler, until proper Deck-tapping functionality is added
-        PrintCards("deck: ", deck);
-    }
-    public void PrintDiscard() {
-        //prints the cards in the discard pile
-        //a temporary function used by TouchHandler, until proper Discard-tapping functionality is added
-        PrintCards("discard: ", discardPile);
+    public void DisplayDiscard() {
+        //displays the cards in the discard pile on screen. called via TouchHandler when the player touches the discard pile
+        pileDetailsPopup.TogglePileDetails("DISCARD", discardPile);
     }
 
     public void MoveCardFromHandToDiscard(CardData card) {

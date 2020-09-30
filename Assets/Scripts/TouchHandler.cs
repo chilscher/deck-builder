@@ -37,6 +37,8 @@ public class TouchHandler : MonoBehaviour {
     public wh widthOrHeight;
     public float percent = 5f; //% of the width/height of screen that the player can move their finger by to register as a tap
 
+    public PileDetailsPopup pileDetailsPopup;
+
     private void Start() {
         //define variables that are used to call functions
         combatController = FindObjectOfType<CombatController>();
@@ -90,12 +92,13 @@ public class TouchHandler : MonoBehaviour {
                 //also, un-highlight the card that is being displayed
                 movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
+            
 
             //otherwise, if the player has not moved their finger, register it as a tap
             else if (tapping){
                 //if you just tapped over a card, then show the card info pop-up
                 GameObject o = ChooseObjectToTouch(FindAllObjectCollisions(Input.mousePosition));
-                if (o != null && o.name == "Card Template") {
+                if (o != null && IdentifyObject(o) == "Display Card") {
                     combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
                     activeCardDetails = true;
                 }
@@ -178,7 +181,7 @@ public class TouchHandler : MonoBehaviour {
         //first, look for a DisplayCard, and that has tap priority
         foreach(GameObject obj in gos) {
             if (IdentifyObject(obj) == "Display Card") {
-                if (!combatController.hasWon && !combatController.hasLost) { //you cant click a displaycard if you won or lost the combat
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click a displaycard if you won or lost the combat
                     return obj;
                 }
             }
@@ -187,14 +190,14 @@ public class TouchHandler : MonoBehaviour {
         //next, look for a Discard Pile or Deck
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Discard Pile") {
-                if (!combatController.hasWon && !combatController.hasLost) { //you cant click the discard pile if you won or lost the combat
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click the discard pile if you won or lost the combat
                     return obj;
                 }
             }
         }
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Deck") {
-                if (!combatController.hasWon && !combatController.hasLost) { //you cant click the deck if you won or lost the combat
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click the deck if you won or lost the combat
                     return obj;
                 }
             }
@@ -203,7 +206,7 @@ public class TouchHandler : MonoBehaviour {
         //then, look for the End Turn Button
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "End Turn") {
-                if (!combatController.hasWon && !combatController.hasLost) { //you cant click the end turn button if you won or lost the combat
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click the end turn button if you won or lost the combat
                     return obj;
                 }
             }
@@ -212,7 +215,7 @@ public class TouchHandler : MonoBehaviour {
         //then, a card that you can claim after you have won an encounter
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Win Card") {
-                if (combatController.hasWon) { //you cant claim the card if you have not won the combat
+                if (combatController.hasWon && !pileDetailsPopup.visible) { //you cant claim the card if you have not won the combat
                     return obj;
                 }
             }
@@ -221,7 +224,7 @@ public class TouchHandler : MonoBehaviour {
         //then, the treasure that you can claim instead of a card after you have won an encounter
         foreach (GameObject obj in gos) {
             if (IdentifyObject(obj) == "Take Treasure") {
-                if (combatController.hasWon) { //you cant claim take the treasure if you have not won the combat
+                if (combatController.hasWon && !pileDetailsPopup.visible) { //you cant claim take the treasure if you have not won the combat
                     return obj;
                 }
             }
@@ -250,12 +253,12 @@ public class TouchHandler : MonoBehaviour {
 
         //if the object is the Discard Pile
         if (type == "Discard Pile") {
-            combatController.PrintDiscard();
+            combatController.DisplayDiscard();
         }
 
         //if the object is the Deck
         if (type == "Deck") {
-            combatController.PrintDeck();
+            combatController.DisplayDeck();
         }
 
         //if the object is the End Turn Button
