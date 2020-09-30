@@ -458,7 +458,6 @@ GameObject:
   - component: {fileID: 1332726333}
   - component: {fileID: 1332726332}
   - component: {fileID: 1332726331}
-  - component: {fileID: 1332726334}
   m_Layer: 5
   m_Name: Random Encounter
   m_TagString: Untagged
@@ -572,24 +571,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332726329}
   m_CullTransparentMesh: 0
---- !u!114 &1332726334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332726329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ac4106a19154784a9c61af5f4939fca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyIds: 00000000000000000100000000000000
-  cardRewards:
-  - purple
-  - green
-  - turquoise
-  - yellow
 --- !u!1 &1604268123
 GameObject:
   m_ObjectHideFlags: 0
