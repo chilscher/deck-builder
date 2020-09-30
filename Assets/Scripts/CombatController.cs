@@ -46,7 +46,7 @@ public class CombatController : MonoBehaviour {
     
     private int shieldCount = 0;
     
-    public List<int> startingEnemies = new List<int>();
+    public int[] startingEnemies;
 
     public GameObject winPopup;
     public GameObject losePopup;
@@ -66,7 +66,7 @@ public class CombatController : MonoBehaviour {
     private void Start() {
         //draw level data from StaticVariables
         deck = new List<CardData>(StaticVariables.playerDeck); //the player's cards that they will start each encounter with
-        startingEnemies = StaticVariables.encounterDetails.enemyIds; //the enemy ids, passed into StaticVariables from Overworld. For now, the enemy ids are passed as parameters to a button click function in OverworldThingy
+        startingEnemies = StaticVariables.encounter.source.enemyIds; //the enemy ids, passed into StaticVariables from Overworld. For now, the enemy ids are passed as parameters to a button click function in OverworldThingy
 
         //figure out which enemy group we need to use: small, large, or mixed
         //important to note, for a mixed group, the large enemy goes in the 3rd position
@@ -98,7 +98,7 @@ public class CombatController : MonoBehaviour {
 
         //add enemies to the scene. temporarily here until we have a way to dynamically add enemies
         //this loop also displays the enemies on screen, and hides their status conditions
-        for (int i = 0; i<startingEnemies.Count; i++) {
+        for (int i = 0; i<startingEnemies.Length; i++) {
             if (startingEnemies[i] != 0) { //inputting an enemy id of 0 will leave that space blank
                 enemies.Add(AddNewEnemy(StaticVariables.enemyCatalog.GetEnemyWithID(startingEnemies[i]), i));
                 enemiesGameObject.transform.GetChild(i).gameObject.SetActive(true);
@@ -513,7 +513,7 @@ public class CombatController : MonoBehaviour {
 
         //render enemy name
         Transform enemyName = enemy.transform.Find("Name");
-        enemyName.GetComponent<Text>().text = enemy.source.enemyName;
+        enemyName.GetComponent<Text>().text = enemy.source.name;
 
         //render enemy hp
         UpdateEnemyHP(enemy);

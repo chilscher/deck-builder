@@ -32,17 +32,18 @@ public class WinPopup : MonoBehaviour {
         //changes the visual display of the cards you can claim on the win popup, called in Start
         for (int i = 0; i<winOptions.Count; i++) {
             GameObject go = winOptions[i];
-            string cardReward = StaticVariables.encounterDetails.cardRewards[i]; 
 
-            CardData cardData = new CardData(StaticVariables.catalog.GetCardWithName(cardReward));
+            CardData cardReward = StaticVariables.encounter.cardRewards[i];
+
+            //CardData cardData = new CardData(StaticVariables.catalog.GetCardWithName(cardReward));
 
             //set the card art to match the provided card art sprite
-            go.transform.Find("Card Art").GetComponent<Image>().sprite = cardData.source.cardArt;
+            go.transform.Find("Card Art").GetComponent<Image>().sprite = cardReward.source.cardArt;
 
             //set the visual's text, name, and mana cost from the card data
-            go.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
-            go.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
-            go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardData.source.manaCost];
+            go.transform.Find("Name").GetComponent<Text>().text = cardReward.source.cardName.ToUpper();
+            go.transform.Find("Text").GetComponent<Text>().text = cardReward.source.text.ToUpper();
+            go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardReward.source.manaCost];
         }
     }
     

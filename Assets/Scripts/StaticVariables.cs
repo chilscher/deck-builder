@@ -13,9 +13,10 @@ public class StaticVariables {
     static public EnemyCatalog enemyCatalog; //catalog of all enemies in the game
     static public AllyCatalog allyCatalog;
     static public List<Sprite> numbers; //assumed to be exactly 10 numbers
-    static public EncounterDetails encounterDetails; //the enemy ids and card rewards for the next encounter. Set in OverworldThingy before transitioning to the Combat scene
+    static public Encounter encounter; //the enemy ids and card rewards for the next encounter. Set in OverworldThingy before transitioning to the Combat scene
     static public System.Random random = new System.Random();
     static public int health; //the player's health
     static public int maxHealth; //the player's max health, they cannot heal above this value
     static public List<Ally> allies;
+    static public EncounterCatalog encounterCatalog;
 }

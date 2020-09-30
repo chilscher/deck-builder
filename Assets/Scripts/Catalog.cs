@@ -25,21 +25,21 @@ public class Catalog : MonoBehaviour {
     }
 
     
-    public List<string> GetRandomCards(int num) {
+    public List<CardData> GetRandomCards(int num) {
         //returns num random cards from the list of all possible cards.
         //used in OverworldThingy to get the card rewards for an encounter
         //will not return multiple copies of the same card
         //do NOT call this function using a num higher than the total number of cards in the catalog!
-        List<string> result = new List<string>();
+        List<CardData> result = new List<CardData>();
         for (int i = 0; i<num; i++) {
             bool foundOne = false;
 
-            string n = "";
+            CardData c = null;
             while (!foundOne) {
-                n = GetRandomCard();
-                foundOne = !result.Contains(n);
+                c = GetRandomCard();
+                foundOne = !result.Contains(c);
             }
-            result.Add(n);
+            result.Add(c);
         }
 
         return result;
@@ -47,10 +47,10 @@ public class Catalog : MonoBehaviour {
     }
 
 
-    public string GetRandomCard() {
+    public CardData GetRandomCard() {
         //returns a random card from the list of all possible cards
         int index = StaticVariables.random.Next(cards.Length);
-        return cards[index].cardName;
+        return new CardData(cards[index]);
     }
     
 }

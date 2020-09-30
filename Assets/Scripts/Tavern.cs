@@ -19,6 +19,7 @@ public class Tavern : MonoBehaviour {
     public List<GameObject> allyGroups = new List<GameObject>();
     public GameObject allySelectorPrefab;
     public GameObject cardDetailsPopup;
+    public EncounterCatalog encounterCatalog;
 
 
     public void Start() {
@@ -29,6 +30,7 @@ public class Tavern : MonoBehaviour {
         StaticVariables.allyCatalog = allyCatalog;
         StaticVariables.health = startingHealth;
         StaticVariables.maxHealth = startingHealth;
+        StaticVariables.encounterCatalog = encounterCatalog;
 
         StaticVariables.allies = new List<Ally>();
         foreach (string allyName in startingAllyNames) {

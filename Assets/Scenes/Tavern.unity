@@ -1117,16 +1117,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allEnemies:
-  - id: 1
-    enemyName: Katie
+  - name: Katie
+    id: 1
     hitPoints: 3
     enemyArt: {fileID: 21300000, guid: f6d91bd115346084fb737a93bc9f28d3, type: 3}
     isLargeEnemy: 0
     enemyAttacks:
     - Damage-4
     - Damage-3
-  - id: 2
-    enemyName: Lauren
+  - name: Lauren
+    id: 2
     hitPoints: 8
     enemyArt: {fileID: 21300000, guid: 34799b0322647304eb617c44db2274ce, type: 3}
     isLargeEnemy: 0
@@ -1134,8 +1134,8 @@ MonoBehaviour:
     - Damage-1
     - Damage-2
     - Damage-5
-  - id: 3
-    enemyName: Nancy
+  - name: Nancy
+    id: 3
     hitPoints: 8
     enemyArt: {fileID: 21300000, guid: e24d2175ac07231488d4faeeef6e34d6, type: 3}
     isLargeEnemy: 1
@@ -2025,6 +2025,7 @@ MonoBehaviour:
   allySelectorPrefab: {fileID: 4108604136839665649, guid: 2e6d4ff268cf59c4e81f10a664ebf61c,
     type: 3}
   cardDetailsPopup: {fileID: 142957261}
+  encounterCatalog: {fileID: 1909583653}
 --- !u!1 &1162739319
 GameObject:
   m_ObjectHideFlags: 0
@@ -4346,6 +4347,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1869533580}
   m_CullTransparentMesh: 0
+--- !u!1 &1909583652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1909583654}
+  - component: {fileID: 1909583653}
+  m_Layer: 0
+  m_Name: EncounterCatalog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1909583653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909583652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f45de7bb4496a441bbb56e0039f0543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allEncounters:
+  - enemyIds: 01000000020000000300000000000000
+  - enemyIds: 01000000020000000100000002000000
+  - enemyIds: 03000000030000000000000000000000
+  - enemyIds: 01000000020000000000000000000000
+  - enemyIds: 01000000000000000000000000000000
+  - enemyIds: 01000000020000000100000000000000
+--- !u!4 &1909583654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909583652}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1343.4515, y: 707.83026, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1911378380
 GameObject:
   m_ObjectHideFlags: 0

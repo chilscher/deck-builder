@@ -9,15 +9,12 @@ using System;
 public class Overworld : MonoBehaviour {
     //manages the Overworld scene
     
-    public void GoToCombat(EncounterDetails details) {
+    public void GoToCombat() {
         //attached to a temporary button that, when clicked, takes the player to a combat scene with the provided list of enemies and reward cards
 
         //pass the details for the encounter to StaticVariables
-        StaticVariables.encounterDetails = details;
-
-        //generate the card rewards for the encounter
-        StaticVariables.encounterDetails.cardRewards = StaticVariables.catalog.GetRandomCards(4);
-
+        StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomEncounter());
+        
         //load the combat scene
         SceneManager.LoadScene("Combat");
     }
