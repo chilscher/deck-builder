@@ -349,6 +349,8 @@ MonoBehaviour:
     type: 3}
   roomParent: {fileID: 1253336683}
   canvas: {fileID: 1325090790}
+  horizontalSpacing: 200
+  verticalSpacing: 100
 --- !u!1 &1253336683
 GameObject:
   m_ObjectHideFlags: 0

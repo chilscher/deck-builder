@@ -13,12 +13,14 @@ public class Overworld : MonoBehaviour {
     public GameObject roomPrefab;
     public GameObject roomParent;
     public Canvas canvas;
+    public float horizontalSpacing;
+    public float verticalSpacing;
 
     public enum RoomTypes { Empty, Combat }; 
     
     public void Start() {
         //create and arrange the room buttons
-        BuildFloor();
+        BuildFloor(horizontalSpacing, verticalSpacing);
 
         //if you haven't visited a room before, start with the first room
         DungeonRoom start = StaticVariables.dungeonFloor[0];
@@ -48,7 +50,7 @@ public class Overworld : MonoBehaviour {
         }
     }
 
-    private void BuildFloor() {
+    private void BuildFloor(float buttonGapHoriz, float buttonGapVert) {
         //takes the list of Dungeon Rooms, creates instances of the room Prefab, and positions those objects to fit the dungeon layout
         
         //first, create the room prefabs and assign them the appropriate parent and starting positions
@@ -65,8 +67,8 @@ public class Overworld : MonoBehaviour {
         //move the buttons to the right depending on their column number
         foreach (DungeonRoom dr in StaticVariables.dungeonFloor) {
             Vector3 pos = dr.button.transform.localPosition;
-            pos.x += 200 * dr.columnNumber;
-            pos.x -= 200 * (totalColumns - 1) / 2; //move each button left by the total number of columns, to center the group in the middle of the screen
+            pos.x += buttonGapHoriz * dr.columnNumber;
+            pos.x -= buttonGapHoriz * (totalColumns - 1) / 2; //move each button left by the total number of columns, to center the group in the middle of the screen
             dr.button.transform.localPosition = pos;
         }
 
@@ -79,8 +81,8 @@ public class Overworld : MonoBehaviour {
             }
             for (int j = 0; j<rooms.Count; j++) {
                 Vector3 pos = rooms[j].button.transform.localPosition;
-                pos.y -= 100 * j; //move each room down depending on its position in the column
-                pos.y += (100 * rooms.Count / 2); //move all rooms in the column up to center them
+                pos.y -= buttonGapVert * j; //move each room down depending on its position in the column
+                pos.y += (buttonGapVert * rooms.Count / 2); //move all rooms in the column up to center them
                 rooms[j].button.transform.localPosition = pos;
             }
         }
