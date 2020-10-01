@@ -2027,11 +2027,15 @@ MonoBehaviour:
   cardDetailsPopup: {fileID: 142957261}
   encounterCatalog: {fileID: 1909583653}
   floorNodes:
-  - 1,2-combat
-  - 3-combat
-  - 4-rest
-  - 5-rest
+  - 1,2,3-combat
+  - 4-combat
+  - 4,5-rest
   - 5-combat
+  - 6-combat
+  - 7-combat
+  - 8-combat
+  - 8-combat
+  - 9-rest
   - 0-boss
 --- !u!1 &1162739319
 GameObject:

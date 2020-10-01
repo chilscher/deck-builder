@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class DungeonRoom{
     
     public List<DungeonRoom> childNodes;
+    public List<GameObject> childHallways;
     public List<DungeonRoom> parentNodes;
     public GameObject button;
     public int nodeNumber;
@@ -47,6 +48,29 @@ public class DungeonRoom{
         //or neither
         else {
             button.GetComponent<Image>().color = Color.black;
+        }
+    }
+
+    public void ShowHallwayStatus() {
+        //displays the accessibility status of the room's child hallways
+
+        //iterate through all parent-child relationships
+        for(int i = 0; i<childNodes.Count; i++) {
+            DungeonRoom child = childNodes[i];
+            GameObject hallway = childHallways[i];
+
+            //if you just came out of a room, its child hallways are accessible
+            if (hasVisited && child.canChooseNext) {
+                hallway.GetComponent<Image>().color = Color.white;
+            }
+            //if you previously took a hallway
+            else if (hasVisited && child.hasVisited) {
+                hallway.GetComponent<Image>().color = Color.grey;
+            }
+            //if you do not have the option to take a hallway
+            else {
+                hallway.GetComponent<Image>().color = Color.black;
+            }
         }
     }
     

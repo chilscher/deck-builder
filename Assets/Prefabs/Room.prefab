@@ -76,7 +76,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RANDOM ENCOUNTER
+  m_Text: COMBAT
 --- !u!1 &1583928639901021573
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,11 +111,11 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -90.06, y: -145.8}
-  m_SizeDelta: {x: 181.37189, y: 80}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 131.8327, y: 80}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1583928639901021569
 CanvasRenderer:
   m_ObjectHideFlags: 0

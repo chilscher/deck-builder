@@ -15,18 +15,19 @@ public class Overworld : MonoBehaviour {
     public Canvas canvas;
     public float horizontalSpacing;
     public float verticalSpacing;
+    public GameObject hallwayPrefab;
 
     public enum RoomTypes { Empty, Combat, Rest, Boss }; 
     
     public void Start() {
         //create and arrange the room buttons
         BuildFloor(horizontalSpacing, verticalSpacing);
+        AddHallways();
 
         //if you haven't visited a room before, start with the first room
         DungeonRoom start = StaticVariables.dungeonFloor[0];
         if (!start.hasVisited && !start.canChooseNext) {
             start.canChooseNext = true;
-            start.ShowEntryStatus();
         }
         //if you just came from a room, check your most recent room as visited
         //then, determine which rooms are available to visit next
@@ -39,11 +40,14 @@ public class Overworld : MonoBehaviour {
             foreach(DungeonRoom child in StaticVariables.currentRoom.childNodes) {
                 child.canChooseNext = true;
             }
-            foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
-                room.ShowEntryStatus();
-            }
-
         }
+
+        //show the accessibility of all rooms and hallways
+        foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
+            room.ShowEntryStatus();
+            room.ShowHallwayStatus();
+        }
+
         //if you just beat the last room in the floor, congrats!
         if (StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1].hasVisited) {
             print("you beat the floor!");
@@ -82,13 +86,13 @@ public class Overworld : MonoBehaviour {
             for (int j = 0; j<rooms.Count; j++) {
                 Vector3 pos = rooms[j].button.transform.localPosition;
                 pos.y -= buttonGapVert * j; //move each room down depending on its position in the column
-                pos.y += (buttonGapVert * rooms.Count / 2); //move all rooms in the column up to center them
+                pos.y += (buttonGapVert * (rooms.Count - 1) / 2); //move all rooms in the column up to center them
                 rooms[j].button.transform.localPosition = pos;
             }
         }
-
+        
         //add the click effects of the buttons
-        foreach(DungeonRoom room in StaticVariables.dungeonFloor) {
+        foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
             room.button.GetComponent<Button>().onClick.AddListener(delegate { room.EnterRoom(); });
         }
 
@@ -118,5 +122,48 @@ public class Overworld : MonoBehaviour {
             roomParent.transform.localScale = newSize;
         }
 
+    }
+
+    private void AddHallways() {
+        //adds all of the halways between rooms
+        //assumes the room buttons are already built
+
+        //iterate through every parent-child relationship
+        foreach(DungeonRoom room in StaticVariables.dungeonFloor) {
+            room.childHallways = new List<GameObject>();
+            foreach(DungeonRoom child in room.childNodes) {
+                //create the hallway and set its parent as the room parent
+                GameObject hallway = Instantiate(hallwayPrefab);
+                hallway.transform.SetParent(roomParent.transform);
+                hallway.transform.localScale = new Vector3(1f, 1f, 1f);
+
+                //set the hallway's position to be the average position of the two rooms
+                Vector3 roomPos = room.button.transform.localPosition;
+                Vector3 childPos = child.button.transform.localPosition;
+                float avgX = (roomPos.x + childPos.x) / 2f;
+                float avgY = (roomPos.y + childPos.y) / 2f;
+                Vector3 avg = new Vector3(avgX, avgY, roomPos.z); //ignore the z position, we never change it
+                hallway.transform.localPosition = avg;
+
+                //rotate the hallway so it points from the center of the parent to the center of the child
+                //basically, draw a right triangle, use the arctangent function to find the angle
+                float lengthX = childPos.x - roomPos.x;
+                float lengthY = childPos.y - roomPos.y;
+                float angle = Mathf.Rad2Deg * Mathf.Atan2(lengthY, lengthX);
+                hallway.transform.localRotation = Quaternion.Euler(0, 0, angle);
+
+                //stretch the hallway so it connects from the center of the parent to the center of the child
+                float distance = Mathf.Sqrt((lengthX * lengthX) + (lengthY * lengthY));
+                float currentLength = hallway.GetComponent<RectTransform>().sizeDelta.x;
+                float ratio = distance / currentLength;
+                Vector3 newSize = new Vector3(ratio, 1, 1);
+                hallway.transform.localScale = newSize;
+
+                //move the hallway to be behind the room buttons
+                hallway.transform.SetSiblingIndex(0);
+
+                room.childHallways.Add(hallway);
+            }
+        }
     }
 }
