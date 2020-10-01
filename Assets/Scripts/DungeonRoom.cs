@@ -19,10 +19,17 @@ public class DungeonRoom{
     public bool canChooseNext = false;
    
     public void EnterRoom() {
+        //Debug.Log(type);
         if (canChooseNext) {
-            if (type == Overworld.RoomTypes.Combat) {
-                GoToCombat();
+            switch (type) {
+                case Overworld.RoomTypes.Combat:
+                    GoToCombat(); break;
+                case Overworld.RoomTypes.Rest:
+                    Rest(); break;
+                case Overworld.RoomTypes.Boss:
+                    GoToCombat(); break;
             }
+
         }
     }
     
@@ -39,7 +46,7 @@ public class DungeonRoom{
     }
     
     public void GoToCombat() {
-        //attached to a temporary button that, when clicked, takes the player to a combat scene with the provided list of enemies and reward cards
+        //takes the player to the combat scene
 
         //pass the details for the encounter to StaticVariables
         StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomEncounter());
@@ -50,5 +57,10 @@ public class DungeonRoom{
         SceneManager.LoadScene("Combat");
     }
     
+    public void Rest() {
+
+        StaticVariables.currentRoom = this;
+        SceneManager.LoadScene("Rest");
+    }
 
 }

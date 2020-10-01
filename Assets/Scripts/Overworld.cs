@@ -16,7 +16,7 @@ public class Overworld : MonoBehaviour {
     public float horizontalSpacing;
     public float verticalSpacing;
 
-    public enum RoomTypes { Empty, Combat }; 
+    public enum RoomTypes { Empty, Combat, Rest, Boss }; 
     
     public void Start() {
         //create and arrange the room buttons
@@ -95,6 +95,11 @@ public class Overworld : MonoBehaviour {
         //display the entry status of the buttons
         foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
             room.ShowEntryStatus();
+        }
+
+        //change the text of the buttons to match the room type
+        foreach(DungeonRoom room in StaticVariables.dungeonFloor) {
+            room.button.transform.Find("Text").GetComponent<Text>().text = room.type.ToString().ToUpper();
         }
 
         //scale down the Rooms parent object if the rooms do not fit on screen

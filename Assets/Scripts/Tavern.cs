@@ -153,21 +153,40 @@ public class Tavern : MonoBehaviour {
             rooms.Add(dr);
         }
 
-        //then, parse the string and assign each room the appropriate children
-        for(int i=0; i<s.Length; i++) {
+        //then, parse the room data string
+        //of the form #,#-Type
+        for (int i = 0; i<s.Length; i++) {
             DungeonRoom dr = rooms[i];
+            string nodeList = s[i]; //the entire string for the room
+
+            string[] segments = nodeList.Split('-'); //first segment is child rooms, second segment is room type
+
+            //set the child nodes from the data string
+            string[] childStrings = segments[0].Split(',');
             dr.childNodes = new List<DungeonRoom>();
-
-            string nodeList = s[i];
-            string[] nodes = nodeList.Split(',');
-
-            foreach(string node in nodes) {
+            foreach (string node in childStrings) {
                 int n = Int32.Parse(node);
                 DungeonRoom child = rooms[n];
                 if (child.nodeNumber != 0) { //if the child has 0 listed for its children, that means it is the last room of the floor. do not assign any children
                     dr.childNodes.Add(child);
                 }
             }
+
+            //set the room type from the data string
+            string roomType = segments[1];
+            dr.type = Overworld.RoomTypes.Combat; //the default is a combat room
+            switch (roomType.ToUpper()) {
+                case "COMBAT":
+                    dr.type = Overworld.RoomTypes.Combat;
+                    break;
+                case "REST":
+                    dr.type = Overworld.RoomTypes.Rest;
+                    break;
+                case "BOSS":
+                    dr.type = Overworld.RoomTypes.Boss;
+                    break;
+            }
+
         }
         
         //create an empty list of parents
@@ -194,11 +213,6 @@ public class Tavern : MonoBehaviour {
             }
         }
 
-        //assign the rooms their type
-        foreach(DungeonRoom room in rooms) {
-            room.type = Overworld.RoomTypes.Combat;
-        }
-        
         //store the dungeon floor rooms into StaticVariables
         StaticVariables.dungeonFloor = rooms;
     }
