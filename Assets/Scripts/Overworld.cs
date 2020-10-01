@@ -12,6 +12,7 @@ public class Overworld : MonoBehaviour {
     
     public GameObject roomPrefab;
     public GameObject roomParent;
+    public Canvas canvas;
 
     public enum RoomTypes { Empty, Combat }; 
     
@@ -92,6 +93,22 @@ public class Overworld : MonoBehaviour {
         //display the entry status of the buttons
         foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
             room.ShowEntryStatus();
+        }
+
+        //scale down the Rooms parent object if the rooms do not fit on screen
+        float lastButonPos = StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1].button.transform.localPosition.x;
+        float lastButtonWidth = StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1].button.GetComponent<RectTransform>().sizeDelta.x;
+        float distanceRight = (lastButtonWidth / 2) + lastButonPos;
+
+        float distWithBuffer = distanceRight + 30f;
+        float screenWidth = canvas.GetComponent<RectTransform>().sizeDelta.x;
+        float screenWidthRight = screenWidth / 2;
+
+        float ratio = screenWidthRight / distWithBuffer;
+
+        if (ratio < 1f) {
+            Vector3 newSize = new Vector3(ratio, ratio, ratio);
+            roomParent.transform.localScale = newSize;
         }
 
     }

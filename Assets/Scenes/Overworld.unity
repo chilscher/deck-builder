@@ -348,6 +348,7 @@ MonoBehaviour:
   roomPrefab: {fileID: 1583928639901021573, guid: 47bc0984d29b1c8499dd6abbb2c1079c,
     type: 3}
   roomParent: {fileID: 1253336683}
+  canvas: {fileID: 1325090790}
 --- !u!1 &1253336683
 GameObject:
   m_ObjectHideFlags: 0
