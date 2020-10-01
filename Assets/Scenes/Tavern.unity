@@ -4385,11 +4385,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allEncounters:
   - enemyIds: 01000000020000000300000000000000
+    bossFight: 1
   - enemyIds: 01000000020000000100000002000000
+    bossFight: 1
   - enemyIds: 03000000030000000000000000000000
+    bossFight: 1
   - enemyIds: 01000000020000000000000000000000
+    bossFight: 0
   - enemyIds: 01000000000000000000000000000000
+    bossFight: 0
   - enemyIds: 01000000020000000100000000000000
+    bossFight: 0
+  - enemyIds: 02000000000000000000000000000000
+    bossFight: 0
+  - enemyIds: 01000000010000000100000001000000
+    bossFight: 0
+  - enemyIds: 02000000020000000200000002000000
+    bossFight: 1
+  - enemyIds: 02000000020000000000000000000000
+    bossFight: 0
 --- !u!4 &1909583654
 Transform:
   m_ObjectHideFlags: 0

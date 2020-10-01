@@ -11,6 +11,7 @@ public class EncounterCatalog : MonoBehaviour {
 
     public PlatonicEncounter[] allEncounters; //the collection of encounters. encounters are added and modified in the inspector
 
+    /*
     public PlatonicEncounter GetRandomEncounter() {
         //returns a random encounter
         int index = Random.Range(0, allEncounters.Length);
@@ -20,5 +21,30 @@ public class EncounterCatalog : MonoBehaviour {
         //encounter.cardRewards = StaticVariables.catalog.GetRandomCards(4);
 
         return p;
+    }
+    */
+
+    public PlatonicEncounter GetRandomNormal() {
+        //returns a random non-boss encounter
+        int index = Random.Range(0, allEncounters.Length);
+
+        PlatonicEncounter p = allEncounters[index];
+
+        if (p.bossFight) {
+            return GetRandomNormal();
+        }
+        else { return p; }
+    }
+
+    public PlatonicEncounter GetRandomBoss() {
+        //returns a random boss encounter
+        int index = Random.Range(0, allEncounters.Length);
+
+        PlatonicEncounter p = allEncounters[index];
+
+        if (p.bossFight) {
+            return p;
+        }
+        else { return GetRandomBoss(); }
     }
 }

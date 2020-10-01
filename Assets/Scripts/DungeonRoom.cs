@@ -19,48 +19,55 @@ public class DungeonRoom{
     public bool canChooseNext = false;
    
     public void EnterRoom() {
-        //Debug.Log(type);
+        //if the player is allowed to enter this room, enter it
+        //call the appropriate function based on the room type
         if (canChooseNext) {
             switch (type) {
                 case Overworld.RoomTypes.Combat:
-                    GoToCombat(); break;
+                    GoToNormalCombat(); break;
                 case Overworld.RoomTypes.Rest:
-                    Rest(); break;
+                    GoToRest(); break;
                 case Overworld.RoomTypes.Boss:
-                    GoToCombat(); break;
+                    GoToBossCombat(); break;
             }
 
         }
     }
     
     public void ShowEntryStatus() {
+        //display the entry status of the button
+        //the player can either choose to enter the room next (meaning they just came out of its parent)
         if (canChooseNext) {
             button.GetComponent<Image>().color = Color.white;
         }
+        //or the player has already visited this room
         else if (hasVisited) {
             button.GetComponent<Image>().color = Color.gray;
         }
+        //or neither
         else {
             button.GetComponent<Image>().color = Color.black;
         }
     }
     
-    public void GoToCombat() {
-        //takes the player to the combat scene
-
-        //pass the details for the encounter to StaticVariables
-        StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomEncounter());
-
-        StaticVariables.currentRoom = this;
-
-        //load the combat scene
-        SceneManager.LoadScene("Combat");
-    }
-    
-    public void Rest() {
-
+    public void GoToRest() {
+        //go to the Rest Room
         StaticVariables.currentRoom = this;
         SceneManager.LoadScene("Rest");
+    }
+
+    public void GoToNormalCombat() {
+        //go to a random normal (non-boss) combat encounter
+        StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomNormal());
+        StaticVariables.currentRoom = this;
+        SceneManager.LoadScene("Combat");
+    }
+
+    public void GoToBossCombat() {
+        //go to a random boss encounter
+        StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomBoss());
+        StaticVariables.currentRoom = this;
+        SceneManager.LoadScene("Combat");
     }
 
 }

@@ -14,5 +14,6 @@ public class PlatonicEncounter {
     //the Enemy script points towards this script as the source for the enemy's actual information, like name, text, image, etc
 
     public int[] enemyIds; //assumed to be a list of 4 ints
+    public bool bossFight; //true if the fight is a boss fight
 
 }

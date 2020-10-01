@@ -9,13 +9,10 @@ using System;
 
 public class Rest : MonoBehaviour {
     //manages the Rest scene
-    
-    
-    public void Start() {
 
-    }
 
     public void Heal() {
+        //heals the player and returns them to the overworld
         StaticVariables.health += 5;
         if (StaticVariables.health >= StaticVariables.maxHealth) {
             StaticVariables.health = StaticVariables.maxHealth;
