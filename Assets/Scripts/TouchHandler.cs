@@ -270,6 +270,7 @@ public class TouchHandler : MonoBehaviour {
         if (type == "Win Card") {
             string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
             combatController.AddCardToPlayerDeck(cardName);
+
             SceneManager.LoadScene("Overworld");
         }
 

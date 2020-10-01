@@ -19,4 +19,8 @@ public class StaticVariables {
     static public int maxHealth; //the player's max health, they cannot heal above this value
     static public List<Ally> allies;
     static public EncounterCatalog encounterCatalog;
+
+    static public List<DungeonRoom> dungeonFloor;
+    static public DungeonRoom currentRoom;
+    
 }

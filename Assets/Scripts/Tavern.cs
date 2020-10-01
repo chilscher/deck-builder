@@ -21,6 +21,8 @@ public class Tavern : MonoBehaviour {
     public GameObject cardDetailsPopup;
     public EncounterCatalog encounterCatalog;
 
+    public string[] floorNodes;
+
 
     public void Start() {
         //assumes you only go to the tavern once, at the start of the game session
@@ -75,6 +77,8 @@ public class Tavern : MonoBehaviour {
                 StaticVariables.playerDeck.Add(new CardData(catalog.GetCardWithName(cardName)));
             }
         }
+
+        GenerateFloor(floorNodes);
         SceneManager.LoadScene("Overworld");
     }
 
@@ -134,6 +138,69 @@ public class Tavern : MonoBehaviour {
 
         cardDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = newAlly.source.name.ToUpper();
         cardDetailsPopup.SetActive(true);
+    }
+
+    public void GenerateFloor(string[] s) {
+        //generates the Dungeon Rooms for the next floor based on the provided string
+
+        //first, create an empty list of rooms
+        List<DungeonRoom> rooms = new List<DungeonRoom>();
+
+        //then, create each room and assign their node numbers
+        for(int i =  0; i<s.Length; i++) {
+            DungeonRoom dr = new DungeonRoom();
+            dr.nodeNumber = i;
+            rooms.Add(dr);
+        }
+
+        //then, parse the string and assign each room the appropriate children
+        for(int i=0; i<s.Length; i++) {
+            DungeonRoom dr = rooms[i];
+            dr.childNodes = new List<DungeonRoom>();
+
+            string nodeList = s[i];
+            string[] nodes = nodeList.Split(',');
+
+            foreach(string node in nodes) {
+                int n = Int32.Parse(node);
+                DungeonRoom child = rooms[n];
+                if (child.nodeNumber != 0) { //if the child has 0 listed for its children, that means it is the last room of the floor. do not assign any children
+                    dr.childNodes.Add(child);
+                }
+            }
+        }
+        
+        //create an empty list of parents
+        foreach (DungeonRoom room in rooms) {
+            room.parentNodes = new List<DungeonRoom>();
+        }
+
+        //iterate through each room, and for each child, set the current room as its parent
+        foreach (DungeonRoom room in rooms) {
+            foreach (DungeonRoom child in room.childNodes) {
+                   child.parentNodes.Add(room);
+            }
+        }
+
+
+
+        //calculate column number for each room
+        foreach(DungeonRoom room in rooms) {
+            if (room.parentNodes.Count == 0) {
+                room.columnNumber = 0;
+            }
+            else {
+                room.columnNumber = room.parentNodes[0].columnNumber + 1;
+            }
+        }
+
+        //assign the rooms their type
+        foreach(DungeonRoom room in rooms) {
+            room.type = Overworld.RoomTypes.Combat;
+        }
+        
+        //store the dungeon floor rooms into StaticVariables
+        StaticVariables.dungeonFloor = rooms;
     }
 
 
