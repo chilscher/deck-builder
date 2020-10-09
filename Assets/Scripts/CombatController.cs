@@ -134,6 +134,10 @@ public class CombatController : MonoBehaviour {
             imageGO.GetComponent<Image>().sprite = StaticVariables.allies[i].source.allyArt;
             textGO.GetComponent<Text>().text = StaticVariables.allies[i].source.name;
         }
+
+
+        //start fade-in
+        GameObject.FindObjectOfType<FadeCanvas>().StartFadeIn();
     }
 
     private void ShuffleDeck() {
@@ -358,7 +362,7 @@ public class CombatController : MonoBehaviour {
         losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
 
-    private void DisplayHealth() { mainCanvas.DisplayHealth(StaticVariables.health, StaticVariables.maxHealth); }
+    private void DisplayHealth() { mainCanvas.DisplayHealth(); }
 
     private void DisplayShields() { mainCanvas.DisplayShields(shieldCount); }
 

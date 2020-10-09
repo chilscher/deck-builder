@@ -17,6 +17,8 @@ public class Overworld : MonoBehaviour {
     public float verticalSpacing;
     public GameObject hallwayPrefab;
 
+    public GameObject healthDisplay;
+
     public enum RoomTypes { Empty, Combat, Rest, Boss }; 
     
     public void Start() {
@@ -52,6 +54,11 @@ public class Overworld : MonoBehaviour {
         if (StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1].hasVisited) {
             print("you beat the floor!");
         }
+
+        DisplayHealth();
+
+        //start fade-in
+        FindObjectOfType<FadeCanvas>().StartFadeIn();
     }
 
     private void BuildFloor(float buttonGapHoriz, float buttonGapVert) {
@@ -166,4 +173,24 @@ public class Overworld : MonoBehaviour {
             }
         }
     }
+
+    public void DisplayHealth() {
+        //shows the player's current health and max health, with a max of 999 for each
+        int currentHP = StaticVariables.health;
+        int maxHP = StaticVariables.maxHealth;
+        int cHundreds = currentHP / 100;
+        int cTens = (currentHP - cHundreds * 100) / 10;
+        int cOnes = currentHP - (cTens * 10) - (cHundreds * 100);
+        healthDisplay.transform.Find("Current Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[cHundreds];
+        healthDisplay.transform.Find("Current Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[cTens];
+        healthDisplay.transform.Find("Current Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[cOnes];
+
+        int mHundreds = maxHP / 100;
+        int mTens = (maxHP - mHundreds * 100) / 10;
+        int mOnes = maxHP - (mTens * 10) - (mHundreds * 100);
+        healthDisplay.transform.Find("Max Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[mHundreds];
+        healthDisplay.transform.Find("Max Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[mTens];
+        healthDisplay.transform.Find("Max Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[mOnes];
+    }
+
 }

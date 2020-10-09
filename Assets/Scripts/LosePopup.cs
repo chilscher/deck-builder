@@ -31,7 +31,10 @@ public class LosePopup : MonoBehaviour {
 
     public void BackToTavern() {
         //takes the player back to the tavern scene
-        SceneManager.LoadScene("Tavern");
+
+        //start fade-out
+        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Tavern");
+        //SceneManager.LoadScene("Tavern");
     }
     
 }

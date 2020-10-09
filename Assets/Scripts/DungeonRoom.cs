@@ -77,21 +77,30 @@ public class DungeonRoom{
     public void GoToRest() {
         //go to the Rest Room
         StaticVariables.currentRoom = this;
-        SceneManager.LoadScene("Rest");
+
+        //start fade-out
+        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Rest");
+        //SceneManager.LoadScene("Rest");
     }
 
     public void GoToNormalCombat() {
         //go to a random normal (non-boss) combat encounter
         StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomNormal());
         StaticVariables.currentRoom = this;
-        SceneManager.LoadScene("Combat");
+
+        //start fade-out
+        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Combat");
+        //SceneManager.LoadScene("Combat");
     }
 
     public void GoToBossCombat() {
         //go to a random boss encounter
         StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomBoss());
         StaticVariables.currentRoom = this;
-        SceneManager.LoadScene("Combat");
+
+        //start fade-out
+        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Combat");
+        //SceneManager.LoadScene("Combat");
     }
 
 }

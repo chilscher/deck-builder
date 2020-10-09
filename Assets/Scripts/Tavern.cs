@@ -53,6 +53,9 @@ public class Tavern : MonoBehaviour {
         UpdateAllyButtons();
 
         cardDetailsPopup.SetActive(false);
+
+        //start fade-in
+        FindObjectOfType<FadeCanvas>().StartFadeIn();
     }
 
 
@@ -79,7 +82,9 @@ public class Tavern : MonoBehaviour {
         }
 
         GenerateFloor(floorNodes);
-        SceneManager.LoadScene("Overworld");
+
+        //start fade-out
+        FindObjectOfType<FadeCanvas>().StartFadeOut("Overworld");
     }
 
     public void SelectAlly(GameObject allySelector) {
