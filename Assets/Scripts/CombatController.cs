@@ -62,6 +62,8 @@ public class CombatController : MonoBehaviour {
     private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
     public GameObject allies;
 
+    public float winPopupDelay = 0.3f; //the amount of time after the last enemy dies that the win popup appears
+
 
     private void Start() {
         //draw level data from StaticVariables
@@ -392,22 +394,36 @@ public class CombatController : MonoBehaviour {
         //updates the current health of the enemy
         UpdateEnemyHP(enemy);
 
+        //shows the taking-damage animation
+        enemy.ShowDamage();
+
         // if the enemy data has more damage than it has hitpoints, remove it
         if (enemy.hitPointDamage >= enemy.source.hitPoints){
             DefeatEnemy(enemy);
 
             //check to see if you win!
             if (enemies.Count == 0) {
-                Win();
+                foreach (AnimationClip clip in enemy.transform.Find("Visuals").GetComponent<Animator>().runtimeAnimatorController.animationClips) {
+                    if (clip.name == "Enemy Disappearing") {
+                        StartCoroutine(WaitForWin(clip.length + winPopupDelay));
+                    }
+                }
             }
         }
+    }
+
+    IEnumerator WaitForWin(float f) {
+        //waits the specified amount of time, then shows the win popup screen
+        yield return new WaitForSeconds(f);
+        Win();
     }
 
     private void DefeatEnemy(Enemy enemy) {
         //stuff that happens when an enemy drops to 0 HP
         //more functions to be added here later
         enemies.Remove(enemy);
-        GameObject.Destroy(enemy.gameObject);
+        enemy.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("FadeOut");
+        //GameObject.Destroy(enemy.gameObject);
     }
 
     private void Win() {
@@ -476,7 +492,7 @@ public class CombatController : MonoBehaviour {
 
     private void UpdateEnemyHP(Enemy enemy) {
         //updates the health display for one single enemy, called after the player attacks an enemy
-        enemy.transform.Find("HP").GetComponent<Text>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
+        enemy.transform.Find("Visuals").Find("HP").GetComponent<Text>().text = "HP:" + (enemy.source.hitPoints - enemy.hitPointDamage) + "/" + enemy.source.hitPoints;
     }
 
     private void UpdateEnemyAttacks() {
@@ -500,7 +516,7 @@ public class CombatController : MonoBehaviour {
             }
         }
 
-        enemy.transform.Find("Next Attack").GetComponent<Text>().text = attack;
+        enemy.transform.Find("Visuals").Find("Next Attack").GetComponent<Text>().text = attack;
     }
 
     private Enemy AddNewEnemy(PlatonicEnemy p, int enemyNum) {
@@ -515,15 +531,17 @@ public class CombatController : MonoBehaviour {
         enemy.hitPointDamage = 0;
         enemy.currentAttackIndex = 0;
 
+        Transform visuals = enemy.transform.Find("Visuals");
+
         //render enemy name
-        Transform enemyName = enemy.transform.Find("Name");
+        Transform enemyName = visuals.Find("Name");
         enemyName.GetComponent<Text>().text = enemy.source.name;
 
         //render enemy hp
         UpdateEnemyHP(enemy);
 
         //set the enemy art to match the provided enemy art sprite
-        enemy.transform.Find("Enemy Art").GetComponent<Image>().sprite = enemy.source.enemyArt;
+        visuals.Find("Enemy Art").GetComponent<Image>().sprite = enemy.source.enemyArt;
 
         //set some useful references
         enemy.combatController = this;
@@ -602,11 +620,19 @@ public class CombatController : MonoBehaviour {
             int constantBleedDmg = e.GetDurationOfStatus(EnemyCatalog.StatusEffects.ConstantBleed);
             int diminishingBleedDmg = e.GetDurationOfStatus(EnemyCatalog.StatusEffects.DiminishingBleed);
 
+            if (constantBleedDmg > 0) {
+                DealDamageToEnemy(constantBleedDmg, e);
+            }
+            if (diminishingBleedDmg > 0) {
+                DealDamageToEnemy(diminishingBleedDmg, e);
+            }
+            /*
             int hpLeft = e.source.hitPoints - e.hitPointDamage;
             DealDamageToEnemy(constantBleedDmg, e);
             if (constantBleedDmg < hpLeft) {
                 DealDamageToEnemy(diminishingBleedDmg, e);
             }
+            */
         }
 
 

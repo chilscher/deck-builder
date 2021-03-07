@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour {
 
     public void ShowStatuses() {
         //displays the status effects for the enemy
-        Transform st = transform.Find("Status");
+        Transform st = transform.Find("Visuals").Find("Status");
         for (int i = 0; i<st.childCount; i++) {
             GameObject c = st.GetChild(i).gameObject;
             c.SetActive(false);
@@ -88,6 +88,11 @@ public class Enemy : MonoBehaviour {
             }
         }
         return 0;
+    }
+
+    public void ShowDamage() {
+        //plays the taking-damage animation
+        transform.Find("Slash").GetComponent<Animator>().SetTrigger("StartSlash");
     }
    
     

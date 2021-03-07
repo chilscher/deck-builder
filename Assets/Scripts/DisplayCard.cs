@@ -39,7 +39,12 @@ public class DisplayCard: MonoBehaviour{
             GameObject enemy = null;
             foreach(GameObject element in possibleEnemies) {
                 if (element.name == "Enemy Art") {
-                    enemy = element.transform.parent.gameObject;
+                    //if the player was holding over an enemy, check to see if it is still alive
+                    Enemy e = element.transform.parent.parent.GetComponent<Enemy>();
+                    if (e.hitPointDamage < e.source.hitPoints) {
+                        enemy = e.gameObject;
+                    }
+                    
                 }
             }
 
