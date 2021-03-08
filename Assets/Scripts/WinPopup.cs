@@ -26,6 +26,8 @@ public class WinPopup : MonoBehaviour {
     public void PlayerWins() {
         //called by the Combat Controller when the player wins the encounter
         SetVisibility(true);
+        transform.Find("Background").GetComponent<Animator>().SetTrigger("Popup");
+        transform.Find("Grey Backdrop").GetComponent<Animator>().SetTrigger("Fade In");
     }
 
     public void ShowWinCards() {

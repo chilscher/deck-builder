@@ -391,6 +391,10 @@ public class CombatController : MonoBehaviour {
         // deal damage to enemy
         enemy.hitPointDamage += totalDamage;
 
+        if (enemy.hitPointDamage > enemy.source.hitPoints) {
+            enemy.hitPointDamage = enemy.source.hitPoints;
+        }
+
         //updates the current health of the enemy
         UpdateEnemyHP(enemy);
 
@@ -405,6 +409,7 @@ public class CombatController : MonoBehaviour {
             if (enemies.Count == 0) {
                 foreach (AnimationClip clip in enemy.transform.Find("Visuals").GetComponent<Animator>().runtimeAnimatorController.animationClips) {
                     if (clip.name == "Enemy Disappearing") {
+                        hasWon = true;
                         StartCoroutine(WaitForWin(clip.length + winPopupDelay));
                     }
                 }
@@ -423,7 +428,6 @@ public class CombatController : MonoBehaviour {
         //more functions to be added here later
         enemies.Remove(enemy);
         enemy.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("FadeOut");
-        //GameObject.Destroy(enemy.gameObject);
     }
 
     private void Win() {
