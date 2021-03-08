@@ -39,6 +39,8 @@ public class TouchHandler : MonoBehaviour {
 
     public PileDetailsPopup pileDetailsPopup;
 
+    public bool endingTurn = false;
+
     private void Start() {
         //define variables that are used to call functions
         combatController = FindObjectOfType<CombatController>();
@@ -46,6 +48,8 @@ public class TouchHandler : MonoBehaviour {
 
     private void Update() {
         //every frame, check for any touch inputs
+
+        if (endingTurn) { return; } //if the game is processing the end of a turn, do not allow any player inputs
 
         //process a tap with the finger
         if (Input.GetMouseButtonDown(0)) {

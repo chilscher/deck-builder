@@ -11,6 +11,7 @@ public class MainCanvas : MonoBehaviour {
 
     public void DisplayHealth() {
         //shows the player's current health and max health, with a max of 999 for each
+        if (StaticVariables.health < 0) { StaticVariables.health = 0; }
         int currentHP = StaticVariables.health;
         int maxHP = StaticVariables.maxHealth;
         int cHundreds = currentHP / 100;
