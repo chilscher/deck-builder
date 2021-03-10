@@ -398,7 +398,8 @@ public class CombatController : MonoBehaviour {
         DisplayDiscardCount();
         DisplayDeckCount();
         DisplayMana();
-        UpdateHPandShields();
+        DisplayShields();
+        //UpdateHPandShields();
 
         UpdateEnemyAttacks();
 
@@ -413,10 +414,28 @@ public class CombatController : MonoBehaviour {
     }
 
     private void UpdateHPandShields() {
-        
+        int beforeHP = mainCanvas.ShownHP();
+        int diffHP = beforeHP - StaticVariables.health;
+        if (diffHP > 0) {
+            mainCanvas.DisplayHPLoss(diffHP);
+        }
+        else if (diffHP < 0) {
+            mainCanvas.DisplayHPGain(-diffHP);
+        }
+
+        int beforeShields = mainCanvas.ShownShields();
+        int diffShields = beforeShields - shieldCount;
+        if (diffShields > 0) {
+            mainCanvas.DisplayShieldLoss(diffShields);
+        }
+        else if (diffShields < 0) {
+            mainCanvas.DisplayShieldGain(-diffShields);
+        }
+
         DisplayShields();
         DisplayHealth();
     }
+    
 
 
     private void Lose() {
@@ -439,7 +458,7 @@ public class CombatController : MonoBehaviour {
     public void AddShields(int count) {
         //adds count to the player's shield total
         shieldCount += count;
-        DisplayShields();
+        UpdateHPandShields();
     }
 
     public void DealDamageToEnemy(int damage, Enemy enemy) {
@@ -504,63 +523,64 @@ public class CombatController : MonoBehaviour {
         //makes each enemy attack in sequence
 
         foreach (Enemy el in enemies) {
+            if (el.gameObject.activeSelf) {
+                //if the enemy is stunned, skip their attack
+                if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Stun)) {
+                    //do nothing here
+                }
 
-            //if the enemy is stunned, skip their attack
-            if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Stun)) {
-                //do nothing here
-            }
+                else {
+                    if (StaticVariables.health > 0) { //skip the attack if the player is at 0 hp
+                                                      // access current attack
+                        string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
 
-            else {
-                if (StaticVariables.health > 0) { //skip the attack if the player is at 0 hp
-                    // access current attack
-                    string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
+                        string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
 
-                    string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
+                        foreach (string atk in allCurrentAttacks) {
+                            string associatedEffect = atk.Split('-')[0];
+                            int associatedValue = int.Parse(atk.Split('-')[1]);
 
-                    foreach (string atk in allCurrentAttacks) {
-                        string associatedEffect = atk.Split('-')[0];
-                        int associatedValue = int.Parse(atk.Split('-')[1]);
+                            //animate the attack
+                            el.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
 
-                        //animate the attack
-                        el.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
+                            //wait for half the attack animation, then animate the party being hit
+                            yield return new WaitForSeconds(enemyAttackDuration / 2);
+                            allies.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
+                            yield return new WaitForSeconds(enemyAttackDuration / 2);
 
-                        //wait for half the attack animation, then animate the party being hit
-                        yield return new WaitForSeconds(enemyAttackDuration / 2);
-                        allies.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
-                        yield return new WaitForSeconds(enemyAttackDuration / 2);
+                            if (associatedEffect == "Damage") {
 
-                        if (associatedEffect == "Damage") {
+                                //take the weak status into account here
+                                float temp = associatedValue;
+                                if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= weakScalar; }
+                                int totalDamage = (int)temp;
 
-                            //take the weak status into account here
-                            float temp = associatedValue;
-                            if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= weakScalar; }
-                            int totalDamage = (int)temp;
+                                int netDamage = 0;
+                                if (totalDamage >= shieldCount) {
+                                    netDamage = totalDamage - shieldCount;
+                                    shieldCount = 0;
+                                }
+                                else {
+                                    shieldCount -= totalDamage;
+                                }
+                                StaticVariables.health -= netDamage;
 
-                            int netDamage = 0;
-                            if (totalDamage >= shieldCount) {
-                                netDamage = totalDamage - shieldCount;
-                                shieldCount = 0;
                             }
-                            else {
-                                shieldCount -= totalDamage;
-                            }
-                            StaticVariables.health -= netDamage;
+
+                            //after the enemy attack animation is done, update the party hp
+                            UpdateHPandShields();
+                            yield return new WaitForSeconds(pauseBetweenEnemyAttacks);
 
                         }
-                        
-                        //after the enemy attack animation is done, update the party hp
-                        UpdateHPandShields();
-                        yield return new WaitForSeconds(pauseBetweenEnemyAttacks);
-                        
                     }
                 }
-            }
 
-            if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length) {
-                el.currentAttackIndex += 1;
-            }
-            else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
-                el.currentAttackIndex = 0;
+                if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length) {
+                    el.currentAttackIndex += 1;
+                }
+                else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
+                    el.currentAttackIndex = 0;
+                }
             }
 
         }
@@ -650,7 +670,7 @@ public class CombatController : MonoBehaviour {
         //does the "Heal" card effect. heals the player's missing health by amount, but not above their max health
         StaticVariables.health += amount;
         if (StaticVariables.health >= StaticVariables.maxHealth) { StaticVariables.health = StaticVariables.maxHealth; }
-        DisplayHealth();
+        UpdateHPandShields();
     }
 
     public void HurtPlayer(int amount) {
