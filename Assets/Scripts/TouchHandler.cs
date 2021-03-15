@@ -185,7 +185,7 @@ public class TouchHandler : MonoBehaviour {
         //first, look for a DisplayCard, and that has tap priority
         foreach(GameObject obj in gos) {
             if (IdentifyObject(obj) == "Display Card") {
-                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click a displaycard if you won or lost the combat
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible && !obj.transform.parent.GetComponent<DisplayCard>().tweening) { //you cant click a displaycard if you won or lost the combat
                     return obj;
                 }
             }

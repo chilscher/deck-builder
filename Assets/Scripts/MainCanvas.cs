@@ -222,4 +222,9 @@ public class MainCanvas : MonoBehaviour {
 
     }
 
+    public Vector2 GetCenterOfDiscardPile() {
+        //returns the center point of the discard pile
+        return transform.Find("Discard Pile Display").Find("Center").position;
+
+    }
 }

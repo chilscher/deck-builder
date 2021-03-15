@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
+
 [System.Serializable]
 public class DisplayCard: MonoBehaviour{
     //a card in the game
@@ -19,6 +21,8 @@ public class DisplayCard: MonoBehaviour{
     public Vector2 startingPosition; //the position in the hand that the card was at before being dragged around. if the player can't play the card, return it to this specified position
     [HideInInspector]
     public int placeInHierarchy; //the card's number in the list of children of the Hand gameobject
+    [HideInInspector]
+    public bool tweening = false; //set to true while the card is in motion from a tween. cannot be interacted with in the meantime
 
 
     public void ReleasedCard() {
@@ -67,7 +71,7 @@ public class DisplayCard: MonoBehaviour{
                     cardOutOfHand = false;
                 }
             }
-            //if the card it out of the hand's dead zone, play it. else, return it to the hand
+            //if the card is out of the hand's dead zone, play it. else, return it to the hand
             if (cardOutOfHand) { PlayCard(); }
             else { ReturnToStartingPos(); }            
         }
@@ -76,15 +80,20 @@ public class DisplayCard: MonoBehaviour{
     private void PlayCard(Enemy enemy = null) {
         //plays the associated card. if a target enemy is required for the effect, it can be provided
 
-        //iterate through all the effects of the card, and do each one
-        foreach (EffectBit effect in associatedCard.source.effects) {
-            DoCardEffect(effect, enemy);
-        }
+
         //subtract the card's mana cost from the player's remaining mana
         combatController.mana -= associatedCard.source.manaCost;
 
         //discard the card
         combatController.MoveCardFromHandToDiscard(associatedCard);
+
+        //iterate through all the effects of the card, and do each one
+        //doing the effect has to go last, just in case the card has a drawing effect
+        //           -- a drawing effect will re-deal the hand with the to-be-discarded card still in it
+        foreach (EffectBit effect in associatedCard.source.effects) {
+
+            DoCardEffect(effect, enemy);
+        }
     }
     
     private void DoCardEffect(EffectBit effect, Enemy enemy) {
@@ -133,7 +142,18 @@ public class DisplayCard: MonoBehaviour{
     public void ReturnToStartingPos() {
         //returns the DisplayCard to the position it was at in the hand previously
         //also returns it to its rightful place in the hierarchy, so it is on top of earlier cards, and later cards are on top of it
-        GetComponent<RectTransform>().anchoredPosition = startingPosition;
+
+        tweening = true;
+
+        //tweens the card to its old position gradually
+        DOTween.To(()=> GetComponent<RectTransform>().anchoredPosition, x => GetComponent<RectTransform>().anchoredPosition = x, startingPosition, 0.2f).OnComplete(ClearTweeningFlag);
         transform.SetSiblingIndex(placeInHierarchy);
+        //print("return");
     }
+
+    private void ClearTweeningFlag() {
+        //clears the tweening flag, to be called after a tween is done executing
+        tweening = false;
+    }
+    
 }

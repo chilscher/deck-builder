@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using DG.Tweening;
 
 public class CombatController : MonoBehaviour {
     //controls the flow of combat, including handling player inputs and tracking damage
@@ -319,7 +320,15 @@ public class CombatController : MonoBehaviour {
         //remove the DisplayCard
         List<DisplayCard> temp = new List<DisplayCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
         foreach (DisplayCard dc in displayCardsInHand) {
-            if (dc.associatedCard == card) { GameObject.Destroy(dc.gameObject); } //if we want to remove the card, delete the gameobject
+            if (dc.associatedCard == card) {
+                //tween the card going to the discard pile
+                dc.transform.DOScale(0.07f, 0.2f).OnComplete(() => dc.transform.DOMove(mainCanvas.GetCenterOfDiscardPile(), 0.3f).OnComplete(()=> GameObject.Destroy(dc.gameObject)));
+                dc.tweening = true; //the player can no longer tap the card
+                //hide the card art and replace it with a static image
+                dc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, 0.2f);
+                //remove card from the hand gameobject
+                //dc.transform.SetParent(dc.transform.parent.parent);
+            } //if we want to remove the card, delete the gameobject
             else { temp.Add(dc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
         }
 
