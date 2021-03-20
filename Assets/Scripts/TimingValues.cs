@@ -14,4 +14,5 @@ public class TimingValues {
     static public float pauseBetweenCardsMoving = 0.1f; //when multiple cards are shrunk and moved around, this is time between when one card moves and the next card moves
     static public float durationOfCardMoveFromDiscardToDeck = 0.6f; //how long it takes a card to move from the discard pile to the deck
     static public float durationOfCardMoveFromPlayToDiscard = 0.3f; //how long it takes a card to move from the hand to the discard, also used when the player plays a card
+    static public float screenFadeTime = 0.4f; //the time it takes for the black overlay on any scene to fade in/out
 }

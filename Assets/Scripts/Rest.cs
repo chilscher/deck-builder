@@ -15,7 +15,7 @@ public class Rest : MonoBehaviour {
     public void Start() {
         DisplayHealth();
         //start fade-in
-        GameObject.FindObjectOfType<FadeCanvas>().StartFadeIn();
+        StartCoroutine(GeneralFunctions.StartFadeIn());
     }
 
     public void DisplayHealth() {
@@ -45,14 +45,13 @@ public class Rest : MonoBehaviour {
         }
 
         //start fade-out
-        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Overworld");
-        //SceneManager.LoadScene("Overworld");
+        StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
     }
 
     public void GainHealth(int amount) {
         //increases the player's max health and returns them to the overworld
         StaticVariables.maxHealth += amount;
         //start fade-out
-        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Overworld");
+        StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
     }
 }

@@ -78,7 +78,7 @@ public class CombatController : MonoBehaviour {
     public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
 
 
-    private void Start() {
+    private IEnumerator Start() {
         //draw level data from StaticVariables
         deck = new List<CardData>(StaticVariables.playerDeck); //the player's cards that they will start each encounter with
         startingEnemies = StaticVariables.encounter.source.enemyIds; //the enemy ids, passed into StaticVariables from Overworld. For now, the enemy ids are passed as parameters to a button click function in OverworldThingy
@@ -172,21 +172,17 @@ public class CombatController : MonoBehaviour {
             imageGO.GetComponent<Image>().sprite = StaticVariables.allies[i].source.allyArt;
             textGO.GetComponent<Text>().text = StaticVariables.allies[i].source.name;
         }
-
-
-        //start fade-in, then deal the hand when it's done
-        //GameObject.FindObjectOfType<FadeCanvas>().StartFadeIn();
-        GameObject.FindObjectOfType<FadeCanvas>().transform.Find("Background").gameObject.SetActive(true);
-        GameObject.FindObjectOfType<FadeCanvas>().transform.Find("Background").GetComponent<Image>().DOFade(0, 0.4f).OnComplete(()=> StartCoroutine(DrawCards(drawNum)));
         
+        //fade the screen in, then start drawing cards
+        yield return GeneralFunctions.StartFadeIn();
+        StartCoroutine(DrawCards(drawNum));
 
     }
+   
 
     private void MadeCardSmallAndRed(DisplayCard dc) {
         Image im = dc.transform.Find("Circle Overlay").GetComponent<Image>();
-        Color c = im.color;
-        c.a = 1f;
-        im.color = c;
+        GeneralFunctions.SetTransparency(im, 1f);
         dc.transform.localScale = new Vector3(tinyCardScale, tinyCardScale, tinyCardScale);
     }
 

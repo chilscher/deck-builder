@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3450282414879606694
 RectTransform:
   m_ObjectHideFlags: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.0754717, g: 0.05648101, b: 0.033107866, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -84,7 +84,6 @@ GameObject:
   - component: {fileID: 3450282415064813843}
   - component: {fileID: 3450282415064813868}
   - component: {fileID: 3450282415064813869}
-  - component: {fileID: 3450282415064813870}
   m_Layer: 5
   m_Name: Fade Canvas
   m_TagString: Untagged
@@ -172,16 +171,3 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3450282415064813870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3450282415064813871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 038f235842a462542a7bb5500942dd48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fadeTime: 0.4

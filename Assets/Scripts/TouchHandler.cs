@@ -276,16 +276,14 @@ public class TouchHandler : MonoBehaviour {
             combatController.AddCardToPlayerDeck(cardName);
 
             //start fade-out
-            GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Overworld");
-            //SceneManager.LoadScene("Overworld");
+            StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
         }
 
         //if the object is the treasure you can claim after winning an encounter
         if (type == "Take Treasure") {
 
             //start fade-out
-            GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Overworld");
-            //SceneManager.LoadScene("Overworld");
+            StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
         }
 
     }

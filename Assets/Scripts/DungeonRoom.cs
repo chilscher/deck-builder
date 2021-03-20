@@ -79,8 +79,7 @@ public class DungeonRoom{
         StaticVariables.currentRoom = this;
 
         //start fade-out
-        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Rest");
-        //SceneManager.LoadScene("Rest");
+        GameObject.FindObjectOfType<Overworld>().GoToScene("Rest");
     }
 
     public void GoToNormalCombat() {
@@ -89,8 +88,7 @@ public class DungeonRoom{
         StaticVariables.currentRoom = this;
 
         //start fade-out
-        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Combat");
-        //SceneManager.LoadScene("Combat");
+        GameObject.FindObjectOfType<Overworld>().GoToScene("Combat");
     }
 
     public void GoToBossCombat() {
@@ -99,8 +97,7 @@ public class DungeonRoom{
         StaticVariables.currentRoom = this;
 
         //start fade-out
-        GameObject.FindObjectOfType<FadeCanvas>().StartFadeOut("Combat");
-        //SceneManager.LoadScene("Combat");
+        GameObject.FindObjectOfType<Overworld>().GoToScene("Combat");
     }
 
 }

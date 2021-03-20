@@ -55,7 +55,7 @@ public class Tavern : MonoBehaviour {
         cardDetailsPopup.SetActive(false);
 
         //start fade-in
-        FindObjectOfType<FadeCanvas>().StartFadeIn();
+        StartCoroutine(GeneralFunctions.StartFadeIn());
     }
 
 
@@ -84,15 +84,13 @@ public class Tavern : MonoBehaviour {
         GenerateFloor(floorNodes);
 
         //start fade-out
-        FindObjectOfType<FadeCanvas>().StartFadeOut("Overworld");
+        StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
     }
 
     public void SelectAlly(GameObject allySelector) {
         //called when you click one of the ally-selection buttons
         //places the chosen ally into the appropriate spot on your ally list
         //the ally name and spot number are inferred from object names in the hierarchy
-
-        //print("clicked!");
 
         //create the new ally object
         Ally newAlly = new Ally(allyCatalog.GetAllyWithName(allySelector.name));

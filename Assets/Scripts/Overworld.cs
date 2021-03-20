@@ -58,7 +58,7 @@ public class Overworld : MonoBehaviour {
         DisplayHealth();
 
         //start fade-in
-        FindObjectOfType<FadeCanvas>().StartFadeIn();
+        StartCoroutine(GeneralFunctions.StartFadeIn());
     }
 
     private void BuildFloor(float buttonGapHoriz, float buttonGapVert) {
@@ -191,6 +191,11 @@ public class Overworld : MonoBehaviour {
         healthDisplay.transform.Find("Max Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[mHundreds];
         healthDisplay.transform.Find("Max Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[mTens];
         healthDisplay.transform.Find("Max Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[mOnes];
+    }
+
+    public void GoToScene(string nextScene) {
+        //starts the coroutine to go to another scene. only called by DungeonRoom
+        StartCoroutine(GeneralFunctions.StartFadeOut(nextScene));
     }
 
 }
