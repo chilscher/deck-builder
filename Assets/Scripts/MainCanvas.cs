@@ -227,4 +227,15 @@ public class MainCanvas : MonoBehaviour {
         return transform.Find("Discard Pile Display").Find("Center").position;
 
     }
+
+    public Vector2 GetCenterOfDeck() {
+        //returns the center point of the deck
+        return transform.Find("Deck Display").Find("Center").position;
+    }
+
+    public Vector2 GetCenterOfHand() {
+        //returns the center point of the hand
+        return transform.Find("Hand").Find("Hand Size").position;
+
+    }
 }

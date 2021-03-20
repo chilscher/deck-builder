@@ -84,6 +84,8 @@ public class DisplayCard: MonoBehaviour{
         //subtract the card's mana cost from the player's remaining mana
         combatController.mana -= associatedCard.source.manaCost;
 
+        combatController.DisplayMana();
+
         //discard the card
         combatController.MoveCardFromHandToDiscard(associatedCard);
 
@@ -119,7 +121,7 @@ public class DisplayCard: MonoBehaviour{
                 combatController.HurtPlayer(p);
                 break;
             case Catalog.EffectTypes.Draw:
-                combatController.Draw(p);
+                StartCoroutine(combatController.Draw(p));
                 break;
             case Catalog.EffectTypes.AddMana:
                 combatController.AddMana(p);

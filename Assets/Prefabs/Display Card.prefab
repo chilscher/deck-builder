@@ -371,7 +371,7 @@ MonoBehaviour:
   touchHandler: {fileID: 0}
   startingPosition: {x: 0, y: 0}
   placeInHierarchy: 0
-  interactable: 1
+  tweening: 0
 --- !u!1 &3835674594581204960
 GameObject:
   m_ObjectHideFlags: 0
