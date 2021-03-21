@@ -29,6 +29,7 @@ public class TouchHandler : MonoBehaviour {
 
     private Vector2 startingFingerPlacement;
     private bool activeCardDetails = false;
+    private bool activeEnemyDetails = false;
     private bool tapping = false; //set to true when the player taps the screen. changed to false when the player moves their finger more than the tap radius
 
     //the following declarations let us choose the size of the tap radius from the inspector. It is a percentage of either screen width or screen height
@@ -40,6 +41,7 @@ public class TouchHandler : MonoBehaviour {
     public PileDetailsPopup pileDetailsPopup;
 
     public bool endingTurn = false;
+    public bool startingCombat = false;
 
     private void Start() {
         //define variables that are used to call functions
@@ -49,11 +51,12 @@ public class TouchHandler : MonoBehaviour {
     private void Update() {
         //every frame, check for any touch inputs
 
-        if (endingTurn) { return; } //if the game is processing the end of a turn, do not allow any player inputs
+        if (endingTurn) { return; } //if the game is processing the end of a turn, do not reigster touch input
+        if (startingCombat) { return; }//if the game is processing the start of the game, do not register input
 
         //process a tap with the finger
         if (Input.GetMouseButtonDown(0)) {
-            if (!activeCardDetails) { //dont interact with anything if a card's details are showing
+            if (!activeCardDetails && !activeEnemyDetails) { //dont interact with anything if a card's details are showing
                 //look for all game objects that the player touched, and interact with one of them
                 List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
                 GameObject o = ChooseObjectToTouch(objs);
@@ -76,7 +79,7 @@ public class TouchHandler : MonoBehaviour {
             //if the player is dragging a card, move the card to match the current mouse position
             //only move the card if the player's finger has left the tap-range
             //dont move the card if a card's details are showing on the large pop-up
-            if (shouldMoveCard && !tapping && !activeCardDetails) {
+            if (shouldMoveCard && !tapping && !activeCardDetails && !activeEnemyDetails) {
                 DragCard();
             }
         }
@@ -96,6 +99,18 @@ public class TouchHandler : MonoBehaviour {
                 //also, un-highlight the card that is being displayed
                 movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
+
+            else if (activeEnemyDetails) {
+                //hide the info popup
+                combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleEnemyDetails(null);
+                activeEnemyDetails = false;
+
+                //return the selected card to its previous position
+                //movingCard.ReturnToStartingPos();
+
+                //also, un-highlight the card that is being displayed
+                //movingCard.transform.Find("Highlight").gameObject.SetActive(false);
+            }
             
 
             //otherwise, if the player has not moved their finger, register it as a tap
@@ -106,10 +121,28 @@ public class TouchHandler : MonoBehaviour {
                     combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
                     activeCardDetails = true;
                 }
+                else if(o != null && IdentifyObject(o) == "Enemy") {
+                        combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleEnemyDetails(o.transform.parent.parent.GetComponent<Enemy>());
+                        activeEnemyDetails = true;
+                    }
 
                 //also, highlight the card that is being displayed
                 //movingCard.transform.Find("Highlight").gameObject.SetActive(true);
             }
+
+            /*
+            else if (tapping) {
+                //if you just tapped over a card, then show the card info pop-up
+                GameObject o = ChooseObjectToTouch(FindAllObjectCollisions(Input.mousePosition));
+                if (o != null && IdentifyObject(o) == "Enemy") {
+                    combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleEnemyDetails(o.transform.parent.parent.GetComponent<Enemy>());
+                    activeCardDetails = true;
+                }
+
+                //also, highlight the card that is being displayed
+                //movingCard.transform.Find("Highlight").gameObject.SetActive(true);
+            }
+            */
 
             //otherwise, if the player is moving a card, stop moving it
             //for testing, when the player releases a card, run its click function
@@ -169,7 +202,9 @@ public class TouchHandler : MonoBehaviour {
         if (obj.name == "End Turn Button") {
             return "End Turn";
         }
-
+        if (obj.name == "Enemy Art") {
+            return "Enemy";
+        }
         //if it is none of the above, return a useless value that corresponds to none of them
         return "No Type";
     }
@@ -234,6 +269,15 @@ public class TouchHandler : MonoBehaviour {
             }
         }
 
+        //then, an enemy
+        foreach (GameObject obj in gos) {
+            if (IdentifyObject(obj) == "Enemy") {
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click a displaycard if you won or lost the combat
+                    return obj;
+                }
+            }
+        }
+
         //if no gameobject to touch is found, return null
         return null;
 
@@ -284,6 +328,13 @@ public class TouchHandler : MonoBehaviour {
 
             //start fade-out
             StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
+        }
+
+        //if the object is an enemy
+        if (type == "Enemy") {
+            //print(obj.transform.parent.parent.name);
+            //combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleEnemyDetails(obj.transform.parent.parent.GetComponent<Enemy>());
+            //activeEnemyDetails = true;
         }
 
     }

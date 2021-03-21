@@ -80,6 +80,7 @@ public class CombatController : MonoBehaviour {
 
     private IEnumerator Start() {
         //draw level data from StaticVariables
+        FindObjectOfType<TouchHandler>().startingCombat = true;
         deck = new List<CardData>(StaticVariables.playerDeck); //the player's cards that they will start each encounter with
         startingEnemies = StaticVariables.encounter.source.enemyIds; //the enemy ids, passed into StaticVariables from Overworld. For now, the enemy ids are passed as parameters to a button click function in OverworldThingy
 
@@ -149,7 +150,7 @@ public class CombatController : MonoBehaviour {
 
 
 
-        //basic display functions
+        //basic display function
         //enemy display function is bundled in AddNewEnemy above
 
         //hide all pre-existing gameobjects in the hand, except the card dead zone
@@ -175,8 +176,8 @@ public class CombatController : MonoBehaviour {
         
         //fade the screen in, then start drawing cards
         yield return GeneralFunctions.StartFadeIn();
-        StartCoroutine(DrawCards(drawNum));
-
+        yield return StartCoroutine(DrawCards(drawNum));
+        FindObjectOfType<TouchHandler>().startingCombat = false;
     }
    
 
