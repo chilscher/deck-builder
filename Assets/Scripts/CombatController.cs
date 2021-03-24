@@ -77,6 +77,8 @@ public class CombatController : MonoBehaviour {
 
     public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
 
+    public List<DisplayCard> cardQueue = new List<DisplayCard>();
+    public List<Enemy> targetQueue = new List<Enemy>();
 
     private IEnumerator Start() {
         //draw level data from StaticVariables
@@ -179,7 +181,17 @@ public class CombatController : MonoBehaviour {
         yield return StartCoroutine(DrawCards(drawNum));
         FindObjectOfType<TouchHandler>().startingCombat = false;
     }
-   
+
+    public void Update() {
+        //checks if there is a card waiting in queue
+        if (cardQueue.Count > 0 && !hasWon && !hasLost) {
+            if (!cardQueue[0].inPlay) {
+                //if there is a card waiting, play it
+                StartCoroutine(cardQueue[0].PlayCard(targetQueue[0]));
+            }
+        }
+    }
+
 
     private void MadeCardSmallAndRed(DisplayCard dc) {
         Image im = dc.transform.Find("Circle Overlay").GetComponent<Image>();
@@ -207,11 +219,14 @@ public class CombatController : MonoBehaviour {
                 alreadyDrawn = deck.Count;
                 yield return (DrawCards(deck.Count));
             }
-            //add the discard pile to the deck and shuffle it
-            yield return StartCoroutine(AddDiscardToDeck());
-            yield return new WaitForSeconds(TimingValues.pauseBetweenShufflingAndDrawing);
-            //draw the remaining cards
-            yield return StartCoroutine(DrawCards(amt - alreadyDrawn));
+            if (discardPile.Count > 0) {
+                //add the discard pile to the deck and shuffle it
+                yield return StartCoroutine(AddDiscardToDeck());
+                yield return new WaitForSeconds(TimingValues.pauseBetweenShufflingAndDrawing);
+                //draw the remaining cards
+                yield return StartCoroutine(DrawCards(amt - alreadyDrawn));
+            }
+
         }
     }
 
@@ -313,7 +328,7 @@ public class CombatController : MonoBehaviour {
         return c.GetComponent<DisplayCard>();
     }
     
-    private IEnumerator PositionCardsInHand() { 
+    public IEnumerator PositionCardsInHand() { 
         //takes all of the DisplayCards in the hand and moves them to the right positions
         //evenly spaces all cards to fill the HandSize width, which is a child of the Hand gameobject in the inspector
 
@@ -335,6 +350,7 @@ public class CombatController : MonoBehaviour {
 
         //set the card's position based on the predetermined distance between all cards, and the card's index in the hand
         for (int i = 0; i < hand.Count; i++) {
+            //print(i);
             Vector2 cardPos = Vector2.zero;
             cardPos.x -= totalHandSize / 2; //move all cards left by half the available space
             cardPos.x += distBetweenCards * i; //move each card right by its index and the predetermined distance
@@ -372,6 +388,7 @@ public class CombatController : MonoBehaviour {
         pileDetailsPopup.TogglePileDetails("DISCARD", discardPile);
     }
 
+    /*
     public void MoveCardFromHandToDiscard(CardData card) {
         //takes card from hand and moves it to the discard pile, then re-displays the hand, deck, and discard pile
         //used when a card is played
@@ -393,6 +410,31 @@ public class CombatController : MonoBehaviour {
         //display the cards in the hand, deck, and discard pile
         StartCoroutine(PositionCardsInHand());        
     }
+    */
+
+   // public void MoveCardToDiscard(DisplayCard dc) {
+        //moves a displaycard to the discard pile. nothing fancy.
+        //SendCardToDiscard(dc);
+    //}
+
+    public void RemoveCardFromHand(CardData card) {
+        //removes a card from the hand without sending it to the discard pile
+        //displaycards have to continue existing after they are played, before they go to the discard
+
+        //remove the DisplayCard and send it to the discard pile
+        List<DisplayCard> temp = new List<DisplayCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
+        foreach (DisplayCard dc in displayCardsInHand) {
+            if (dc.associatedCard == card) {
+                dc.transform.SetParent(mainCanvas.transform);
+            }
+            else { temp.Add(dc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
+        }
+
+        displayCardsInHand = temp; //all the cards that haven't just been removed
+
+        //move the card from the hand to the discard pile
+        hand.Remove(card);
+    }
 
     private IEnumerator DiscardHand() {
         //discards all cards in the player's hand in order, with a pause in between
@@ -400,7 +442,7 @@ public class CombatController : MonoBehaviour {
         displayCardsInHand.Reverse();
         //move all the display cards to the discard pile
         foreach (DisplayCard dc in displayCardsInHand) {
-            SendCardToDiscard(dc);
+            StartCoroutine(SendCardToDiscardThenDestroy(dc));
             yield return new WaitForSeconds(TimingValues.pauseBetweenCardsMoving);
 
         }
@@ -413,7 +455,7 @@ public class CombatController : MonoBehaviour {
         yield return new WaitForSeconds(TimingValues.durationOfCardMoveFromPlayToDiscard * 2f);
     }
 
-    private void SendCardToDiscard(DisplayCard dc) {
+    public IEnumerator SendCardToDiscard(DisplayCard dc) {
         //moves a displaycard to the discard pile
         dc.transform.DOScale(tinyCardScale, TimingValues.cardScalingTime).OnComplete(() => 
             dc.transform.DOMove(mainCanvas.GetCenterOfDiscardPile(), TimingValues.durationOfCardMoveFromPlayToDiscard).OnComplete(() => 
@@ -422,13 +464,23 @@ public class CombatController : MonoBehaviour {
                             //hide the card art and replace it with a static image
         dc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
 
+        //do not return until the card has been sent to the discard pile
+        float discardDuration = (TimingValues.cardScalingTime + TimingValues.durationOfCardMoveFromPlayToDiscard);
+        //print(discardDuration);
+        yield return new WaitForSeconds(discardDuration);
+        //print("ok");
+    }
+
+    private IEnumerator SendCardToDiscardThenDestroy(DisplayCard dc) {
+        yield return StartCoroutine(SendCardToDiscard(dc));
+        GameObject.Destroy(dc);
     }
 
     private void AddCardToDiscardPile(DisplayCard dc) {
         //adds the card to the discard pile list, updates the visual display for the number of cards in the discard pile, then destroys the displaycard
         discardPile.Add(dc.associatedCard);
         DisplayDiscardCount();
-        GameObject.Destroy(dc.gameObject);
+        //GameObject.Destroy(dc.gameObject);
 
     }
     

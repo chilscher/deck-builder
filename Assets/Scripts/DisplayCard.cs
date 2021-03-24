@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System;
 
 [System.Serializable]
 public class DisplayCard: MonoBehaviour{
@@ -23,7 +24,7 @@ public class DisplayCard: MonoBehaviour{
     public int placeInHierarchy; //the card's number in the list of children of the Hand gameobject
     [HideInInspector]
     public bool tweening = false; //set to true while the card is in motion from a tween. cannot be interacted with in the meantime
-
+    public bool inPlay = false;
 
     public void ReleasedCard() {
         //what happens when the player is dragging this card around and then releases it
@@ -32,11 +33,10 @@ public class DisplayCard: MonoBehaviour{
         if (combatController.mana < associatedCard.source.manaCost) {
             print("not enough mana");
             ReturnToStartingPos();
-            return;
         }
 
         //if the card requires a target to be played, check to see if it is on top of an enemy
-        if (associatedCard.source.requiresTarget) {
+        else if (associatedCard.source.requiresTarget) {
 
             //find the enemy that the player is holding the card over
             List<GameObject> possibleEnemies = touchHandler.FindAllObjectCollisions(Input.mousePosition);
@@ -54,7 +54,8 @@ public class DisplayCard: MonoBehaviour{
 
             //if an enemy was found, play the card targeting that enemy
             if (enemy != null) {
-                PlayCard(enemy.GetComponent<Enemy>());
+                //yield return PlayCard(enemy.GetComponent<Enemy>());
+                QueueForPlay(enemy.GetComponent<Enemy>());
             }
 
             //if no enemy was found, return the card to where it was in the hand
@@ -72,33 +73,64 @@ public class DisplayCard: MonoBehaviour{
                 }
             }
             //if the card is out of the hand's dead zone, play it. else, return it to the hand
-            if (cardOutOfHand) { PlayCard(); }
+            //if (cardOutOfHand) { StartCoroutine(PlayCard()); }
+            if (cardOutOfHand) { QueueForPlay(); }
             else { ReturnToStartingPos(); }            
         }
     }
+
+    private void QueueForPlay(Enemy e = null) {
+        combatController.RemoveCardFromHand(associatedCard);
+        StartCoroutine(combatController.PositionCardsInHand());
+        combatController.cardQueue.Add(this);
+        combatController.targetQueue.Add(e);
+        if (combatController.cardQueue[0] == this) {
+            //StartCoroutine(PlayCard(e));
+        }
+    }
     
-    private void PlayCard(Enemy enemy = null) {
+    public IEnumerator PlayCard(Enemy enemy = null) {
         //plays the associated card. if a target enemy is required for the effect, it can be provided
-
-
+        inPlay = true;
+        //print("bah");
         //subtract the card's mana cost from the player's remaining mana
         combatController.mana -= associatedCard.source.manaCost;
 
         combatController.DisplayMana();
 
-        //discard the card
-        combatController.MoveCardFromHandToDiscard(associatedCard);
+        //remove the card from the hand, and reposition the cards already in the hand
+        //combatController.RemoveCardFromHand(associatedCard);
+        //StartCoroutine(combatController.PositionCardsInHand());
+        //print("good");
 
         //iterate through all the effects of the card, and do each one
         //doing the effect has to go last, just in case the card has a drawing effect
         //           -- a drawing effect will re-deal the hand with the to-be-discarded card still in it
         foreach (EffectBit effect in associatedCard.source.effects) {
 
-            DoCardEffect(effect, enemy);
+            yield return DoCardEffect(effect, enemy);
         }
+
+        //print("tah");
+
+        //discard the card
+        //combatController.MoveCardFromHandToDiscard(associatedCard);
+        //combatController.MoveCardToDiscard(this);
+        //print("about to discard");
+        yield return StartCoroutine(combatController.SendCardToDiscard(this));
+        //print("done");
+        //remove this card from the queue.
+        //if there is another card in queue, start that card's activation
+        combatController.cardQueue.RemoveAt(0);
+        combatController.targetQueue.RemoveAt(0);
+        if (combatController.cardQueue.Count > 0) {
+            //print("there is another card in queue!");
+            //StartCoroutine(combatController.cardQueue[0].PlayCard(combatController.targetQueue[0]));
+        }
+        Destroy(gameObject);
     }
     
-    private void DoCardEffect(EffectBit effect, Enemy enemy) {
+    private IEnumerator DoCardEffect(EffectBit effect, Enemy enemy) {
         //does a single segment of a card effect
         int p = effect.parameter;
         switch (effect.effectType) {
@@ -121,7 +153,7 @@ public class DisplayCard: MonoBehaviour{
                 combatController.HurtPlayer(p);
                 break;
             case Catalog.EffectTypes.Draw:
-                StartCoroutine(combatController.Draw(p));
+                yield return combatController.Draw(p);
                 break;
             case Catalog.EffectTypes.AddMana:
                 combatController.AddMana(p);
@@ -144,7 +176,7 @@ public class DisplayCard: MonoBehaviour{
     public void ReturnToStartingPos() {
         //returns the DisplayCard to the position it was at in the hand previously
         //also returns it to its rightful place in the hierarchy, so it is on top of earlier cards, and later cards are on top of it
-
+        //print("returning");
         tweening = true;
 
         //tweens the card to its old position gradually
