@@ -473,7 +473,8 @@ public class CombatController : MonoBehaviour {
 
     private IEnumerator SendCardToDiscardThenDestroy(DisplayCard dc) {
         yield return StartCoroutine(SendCardToDiscard(dc));
-        GameObject.Destroy(dc);
+        //print("destroy now!");
+        GameObject.Destroy(dc.gameObject);
     }
 
     private void AddCardToDiscardPile(DisplayCard dc) {

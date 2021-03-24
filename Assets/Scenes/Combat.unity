@@ -3365,6 +3365,8 @@ MonoBehaviour:
   pauseBeforeEnemyAttacks: 0.2
   pauseBetweenEnemyAttacks: 0.3
   tinyCardScale: 0.07
+  cardQueue: []
+  targetQueue: []
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -5994,9 +5996,9 @@ RectTransform:
   - {fileID: 559947862}
   - {fileID: 1205583958}
   - {fileID: 2018387293}
-  - {fileID: 1930545195}
   - {fileID: 1157161651}
   - {fileID: 1433486300}
+  - {fileID: 1930545195}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8247,7 +8249,7 @@ RectTransform:
   - {fileID: 2052599814}
   - {fileID: 533627921}
   m_Father: {fileID: 809473776}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -9621,7 +9623,7 @@ RectTransform:
   - {fileID: 1470505980}
   - {fileID: 429416163}
   m_Father: {fileID: 809473776}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -12122,7 +12124,7 @@ RectTransform:
   - {fileID: 458887987}
   - {fileID: 1048706908}
   m_Father: {fileID: 809473776}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -13497,6 +13499,7 @@ MonoBehaviour:
   startingPosition: {x: -303.6, y: 0}
   placeInHierarchy: 0
   tweening: 0
+  inPlay: 0
 --- !u!222 &2097484592
 CanvasRenderer:
   m_ObjectHideFlags: 0
