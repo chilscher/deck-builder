@@ -23,7 +23,7 @@ public class TouchHandler : MonoBehaviour {
     private CombatController combatController; //defined at the start of the scene, used to call functions for objects once they have been clicked
 
     //variables used to drag a card around the screen
-    private DisplayCard movingCard; //the card to be dragged
+    public DisplayCard movingCard; //the card to be dragged
     private bool shouldMoveCard = false; //if the card should move to follow the player's touch
     private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
 
@@ -90,7 +90,7 @@ public class TouchHandler : MonoBehaviour {
             //if a card's info is shown on screen, releasing the screen again should hide that info
             if (activeCardDetails) {
                 //hide the card info popup
-                combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(movingCard.associatedCard);
+                combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(null);
                 activeCardDetails = false;
 
                 //return the selected card to its previous position
@@ -148,8 +148,8 @@ public class TouchHandler : MonoBehaviour {
             //for testing, when the player releases a card, run its click function
             else if (shouldMoveCard) {
                 shouldMoveCard = false;
+                movingCard.isDragged = false;
                 movingCard.ReleasedCard();
-
                 //also, un-highlight the card that is being dragged
                 movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
@@ -220,8 +220,11 @@ public class TouchHandler : MonoBehaviour {
         //first, look for a DisplayCard, and that has tap priority
         foreach(GameObject obj in gos) {
             if (IdentifyObject(obj) == "Display Card") {
-                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible && !obj.transform.parent.GetComponent<DisplayCard>().tweening) { //you cant click a displaycard if you won or lost the combat
-                    return obj;
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click a displaycard if you won or lost the combat
+                    DisplayCard dc = obj.transform.parent.GetComponent<DisplayCard>();
+                    if (!dc.tweening && !dc.inPlay && !dc.inQueue) {
+                        return obj;
+                    }
                 }
             }
         }
@@ -346,6 +349,7 @@ public class TouchHandler : MonoBehaviour {
         //set the touchHandler to drag the card
         movingCard = dc;
         shouldMoveCard = true;
+        movingCard.isDragged = true;
 
         //define the touch's position relative to the card's position.
         //ex: if the player taps a card in the top-left of the boxcollider, and the player drags the card, the card will be moved so that the top-left of the boxcollider remains under their finger

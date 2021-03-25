@@ -25,6 +25,8 @@ public class DisplayCard: MonoBehaviour{
     [HideInInspector]
     public bool tweening = false; //set to true while the card is in motion from a tween. cannot be interacted with in the meantime
     public bool inPlay = false;
+    public bool inQueue = false;
+    public bool isDragged = false;
 
     public void ReleasedCard() {
         //what happens when the player is dragging this card around and then releases it
@@ -80,10 +82,17 @@ public class DisplayCard: MonoBehaviour{
     }
 
     private void QueueForPlay(Enemy e = null) {
+        combatController.mana -= associatedCard.source.manaCost;
+        combatController.DisplayMana();
+        inQueue = true;
         combatController.RemoveCardFromHand(associatedCard);
         StartCoroutine(combatController.PositionCardsInHand());
         combatController.cardQueue.Add(this);
         combatController.targetQueue.Add(e);
+        //move the displaycard to the queue pile
+        //transform.DOMove(combatController.mainCanvas.GetCenterOfQueue(), 0.1f);
+        //transform.DOScale(0.54f, 0.1f);
+        combatController.MoveDisplayCardToQueue(this);
         if (combatController.cardQueue[0] == this) {
             //StartCoroutine(PlayCard(e));
         }
@@ -94,9 +103,9 @@ public class DisplayCard: MonoBehaviour{
         inPlay = true;
         //print("bah");
         //subtract the card's mana cost from the player's remaining mana
-        combatController.mana -= associatedCard.source.manaCost;
+        //combatController.mana -= associatedCard.source.manaCost;
 
-        combatController.DisplayMana();
+        //combatController.DisplayMana();
 
         //remove the card from the hand, and reposition the cards already in the hand
         //combatController.RemoveCardFromHand(associatedCard);

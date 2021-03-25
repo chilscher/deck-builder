@@ -236,6 +236,10 @@ public class MainCanvas : MonoBehaviour {
     public Vector2 GetCenterOfHand() {
         //returns the center point of the hand
         return transform.Find("Hand").Find("Hand Size").position;
+    }
 
+    public Vector2 GetCenterOfQueue() {
+        //returns the center point of the queue that cards go into before they are played
+        return transform.Find("InPlay Queue").Find("Center").position;
     }
 }

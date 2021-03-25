@@ -187,6 +187,7 @@ public class CombatController : MonoBehaviour {
         if (cardQueue.Count > 0 && !hasWon && !hasLost) {
             if (!cardQueue[0].inPlay) {
                 //if there is a card waiting, play it
+                PositionCardsInQueue();
                 StartCoroutine(cardQueue[0].PlayCard(targetQueue[0]));
             }
         }
@@ -368,7 +369,9 @@ public class CombatController : MonoBehaviour {
 
             //start the process to move the card to its correct spot
             //do not wait for the card to move before continuing - all of the cards should move at the same time
-            rt.DOAnchorPos(cardPos, 0.2f);
+            //do not move a card if: it is currently being dragged by the touch handler
+            TouchHandler th = FindObjectOfType<TouchHandler>();
+            if (!(th.movingCard == dc && dc.isDragged)) { rt.DOAnchorPos(cardPos, 0.2f); }
 
             //also set the card's sorting order in the hierarchy, based on the number of non-DisplayCards in the hierarchy and this card's place in the hand
             dc.placeInHierarchy = nonCardsInHierarchy + i;
@@ -425,7 +428,7 @@ public class CombatController : MonoBehaviour {
         List<DisplayCard> temp = new List<DisplayCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
         foreach (DisplayCard dc in displayCardsInHand) {
             if (dc.associatedCard == card) {
-                dc.transform.SetParent(mainCanvas.transform);
+                //dc.transform.SetParent(mainCanvas.transform);
             }
             else { temp.Add(dc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
         }
@@ -483,6 +486,30 @@ public class CombatController : MonoBehaviour {
         DisplayDiscardCount();
         //GameObject.Destroy(dc.gameObject);
 
+    }
+
+    public void MoveDisplayCardToQueue(DisplayCard dc) {
+        //moves the displaycard to the queue, and repositions all cards in the queue
+        //dc.transform.DOMove(mainCanvas.GetCenterOfQueue(), 0.1f);
+        dc.transform.DOScale(1f, 0.1f);
+        dc.transform.SetParent(mainCanvas.transform.Find("InPlay Queue"));
+        PositionCardsInQueue();
+        //put the card at the back of the queue?
+    }
+
+    public void PositionCardsInQueue() {
+        //re-positions all of the displaycards in the queue to fit nicely
+        for (int i=0; i<cardQueue.Count; i++) {
+
+            Vector2 newPosition = mainCanvas.GetCenterOfQueue();
+            int offset = i;
+            if (i > 4) {
+                offset = 4;
+            }
+            newPosition.y += 20 * offset;
+            cardQueue[i].transform.DOMove(newPosition, 0.1f);
+            cardQueue[i].transform.SetSiblingIndex(cardQueue.Count - i);
+        }
     }
     
 
