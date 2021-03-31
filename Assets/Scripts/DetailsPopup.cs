@@ -12,11 +12,19 @@ public class DetailsPopup : MonoBehaviour {
     //the gameobject this is attached to should always be active in the inspector. During runtime, its contents are hidden
 
     public CardData cardData;
+    public bool allowInteraction = true;
 
-    private bool visibility = false;
+    //private bool visibility = false;
+    public string showingWhat = "None";
+    //public bool transitioning = false;
+    //public bool fullyOpen = false;
 
     void Start() {
         SetVisibility(false);
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
+        transform.Find("Details Card").DOScale(0, 0);
+        transform.Find("Details Enemy").DOScale(0, 0);
+        transform.Find("Text Info").DOScale(0, 0);
     }
 
     private void SetVisibility(bool b) {
@@ -24,9 +32,15 @@ public class DetailsPopup : MonoBehaviour {
         foreach (Transform t in transform) {
             t.gameObject.SetActive(b);
         }
+
+    }
+
+    public bool GetVisibility() {
+        return transform.Find("Grey Backdrop").gameObject.activeSelf;
     }
 
     public void Show() {
+        SetAllowInteraction(false);
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
 
@@ -37,75 +51,140 @@ public class DetailsPopup : MonoBehaviour {
         transform.Find("Details Enemy").DOScale(1, 0.5f);
 
         transform.Find("Text Info").DOScale(0, 0);
-        transform.Find("Text Info").DOScale(1, 0.5f);
+        transform.Find("Text Info").DOScale(1, 0.5f).OnComplete(() => SetAllowInteraction(true)) ;
+        //yield return new WaitForSeconds(0.5f);
+        //SetOpen(true);
     }
 
-    public void ToggleCardDetails(CardData dc) {
+    private void SetAllowInteraction(bool b) {
+        allowInteraction = b;
+    }
+
+    //private void SetOpen(bool b) {
+    //    fullyOpen = b;
+    //}
+
+    public void OpenCardDetails(CardData dc) {
         //called by the Combat Controller when the player taps a card for details
-        if (visibility == false){
-            Show();
-            visibility = true;
-            SetVisibility(true);
-            transform.Find("Details Enemy").gameObject.SetActive(false);
-            cardData = dc;
-            GameObject details = transform.Find("Details Card").gameObject;
-            details.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
-            details.transform.Find("Card Art").GetComponent<Image>().sprite = cardData.source.cardArt;
-            details.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
-            details.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardData.source.manaCost];
-            transform.Find("Text Info").Find("Text").GetComponent<Text>().text = GetEffectInfoText(dc);
-        } else {
-            visibility = false;
-            SetVisibility(false);
+        //if (visibility == false){
+        showingWhat = "Card";
+        //visibility = true;
+        SetVisibility(true);
+        //transitioning = true;
+        transform.Find("Details Enemy").gameObject.SetActive(false);
+        cardData = dc;
+        GameObject details = transform.Find("Details Card").gameObject;
+        details.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
+        details.transform.Find("Card Art").GetComponent<Image>().sprite = cardData.source.cardArt;
+        details.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
+        details.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardData.source.manaCost];
+        transform.Find("Text Info").Find("Text").GetComponent<Text>().text = GetEffectInfoText(dc);
+        Show();
+        //}
+        //else {
+        //    visibility = false;
+        //    SetVisibility(false);
+        //}
+    }
+
+    public void HideIfOpen() {
+        if (allowInteraction) {
+            Hide();
         }
     }
 
     public void Hide() {
-        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.5f);
+        SetAllowInteraction(false);
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.3f);
         
-        transform.Find("Details Card").DOScale(0, 0.5f);
+        transform.Find("Details Card").DOScale(0, 0.3f);
         
-        transform.Find("Details Enemy").DOScale(0, 0.5f);
+        transform.Find("Details Enemy").DOScale(0, 0.3f).OnComplete(() => SetAllowInteraction(true));
         
-        transform.Find("Text Info").DOScale(0, 0.5f).OnComplete(() => Hide2());
+        transform.Find("Text Info").DOScale(0, 0.3f).OnComplete(() => SetVisibility(false));
     }
-
+    /*
     private void Hide2() {
-        visibility = false;
+        //visibility = false;
         SetVisibility(false);
+        //transitioning = false;
+    }
+    */
+    public void CloseDetails() {
+        //print("close");
+        Hide();
+        //SetOpen(false);
     }
 
+    //public bool CanOpen() {
+        //you are only allowed to open the popup if it is fully closed
+     //   print(!transform.Find("Grey Backdrop").gameObject.activeSelf);
+     //   return !transform.Find("Grey Backdrop").gameObject.activeSelf;
+    //}
 
-    public void ToggleEnemyDetails(Enemy e) {
+    //public bool CanClose() {
+        //you are only allowed to close the popup if it is fully open
+
+    //    return fullyOpen;
+    //}
+    /*
+    public bool IsFullyOpen() {
+        //print(transform.Find("Grey Backdrop").GetComponent<Image>().color.a);
+        if (transform.Find("Text Info").localScale.x == 1) {
+            //print("t");
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsFullyClosed() {
+        if (transform.Find("Text Info").localScale.x == 0) {
+            return true;
+        }
+        return false;
+    }
+    */
+
+    //public bool IsOpen() {
+    //   return (visibility && !transitioning);
+    //}
+    //public bool IsClosed() {
+    //    return (!visibility && !transitioning);
+    //}
+
+
+    public void OpenEnemyDetails(Enemy e) {
         //called by the Combat Controller when the player taps an enemy for details
-        if (visibility == false) {
-            Show();
-            visibility = true;
-            SetVisibility(true);
-            transform.Find("Details Card").gameObject.SetActive(false);
+        //if (visibility == false) {
+        showingWhat = "Enemy";
+        //visibility = true;
+        SetVisibility(true);
+        //transitioning = true;
+        transform.Find("Details Card").gameObject.SetActive(false);
 
-            Transform details = transform.Find("Details Enemy");
-            Transform enemyVisuals = e.transform.Find("Visuals");
-            details.Find("Name").GetComponent<Text>().text = enemyVisuals.Find("Name").GetComponent<Text>().text;
-            details.Find("Enemy Art").GetComponent<Image>().sprite = enemyVisuals.Find("Enemy Art").GetComponent<Image>().sprite;
-            details.Find("Next Attack").GetComponent<Text>().text = enemyVisuals.Find("Next Attack").GetComponent<Text>().text;
-            details.Find("HP").GetComponent<Text>().text = enemyVisuals.Find("HP").GetComponent<Text>().text;
-            Transform statuses = details.Find("Status");
-            Transform enemyStatuses = enemyVisuals.Find("Status");
-            for (int i = 0; i<statuses.childCount; i++) {
-                statuses.GetChild(i).GetComponent<Image>().sprite = enemyStatuses.GetChild(i).GetComponent<Image>().sprite;
-                statuses.GetChild(i).gameObject.SetActive(enemyStatuses.GetChild(i).gameObject.activeSelf);
-                statuses.GetChild(i).GetChild(0).GetComponent<Text>().text = enemyStatuses.GetChild(i).GetChild(0).GetComponent<Text>().text;
-            }
-
-            transform.Find("Text Info").Find("Text").GetComponent<Text>().text = GetEnemySummary(e);
-
-
+        Transform details = transform.Find("Details Enemy");
+        Transform enemyVisuals = e.transform.Find("Visuals");
+        details.Find("Name").GetComponent<Text>().text = enemyVisuals.Find("Name").GetComponent<Text>().text;
+        details.Find("Enemy Art").GetComponent<Image>().sprite = enemyVisuals.Find("Enemy Art").GetComponent<Image>().sprite;
+        details.Find("Next Attack").GetComponent<Text>().text = enemyVisuals.Find("Next Attack").GetComponent<Text>().text;
+        details.Find("HP").GetComponent<Text>().text = enemyVisuals.Find("HP").GetComponent<Text>().text;
+        Transform statuses = details.Find("Status");
+        Transform enemyStatuses = enemyVisuals.Find("Status");
+        for (int i = 0; i<statuses.childCount; i++) {
+            statuses.GetChild(i).GetComponent<Image>().sprite = enemyStatuses.GetChild(i).GetComponent<Image>().sprite;
+            statuses.GetChild(i).gameObject.SetActive(enemyStatuses.GetChild(i).gameObject.activeSelf);
+            statuses.GetChild(i).GetChild(0).GetComponent<Text>().text = enemyStatuses.GetChild(i).GetChild(0).GetComponent<Text>().text;
         }
-        else {
-            visibility = false;
-            SetVisibility(false);
-        }
+
+        transform.Find("Text Info").Find("Text").GetComponent<Text>().text = GetEnemySummary(e);
+
+        Show();
+
+        //}
+        //else {
+        //    visibility = false;
+        //    SetVisibility(false);
+        //}
     }
 
     private string GetEffectInfoText(CardData dc) {

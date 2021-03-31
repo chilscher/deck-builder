@@ -51,7 +51,7 @@ public class CardVisuals: MonoBehaviour{
             print("ouch you tapped me! i am " + source.source.cardName);
         }
         else if (clickOption == clickOptions.OpenDetails) {
-            FindObjectOfType<DetailsPopup>().ToggleCardDetails(source);
+            FindObjectOfType<DetailsPopup>().OpenCardDetails(source);
         }
     }
     
