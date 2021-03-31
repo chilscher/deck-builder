@@ -60,6 +60,7 @@ public class TouchHandler : MonoBehaviour {
                 //look for all game objects that the player touched, and interact with one of them
                 List<GameObject> objs = FindAllObjectCollisions(Input.mousePosition);
                 GameObject o = ChooseObjectToTouch(objs);
+                //print(o.name);
                 InteractWithObject(o);
             }
 
@@ -205,6 +206,10 @@ public class TouchHandler : MonoBehaviour {
         if (obj.name == "Enemy Art") {
             return "Enemy";
         }
+
+        if (obj.name == "Pile Detail Card Background") {
+            return "Pile Detail Card";
+        }
         //if it is none of the above, return a useless value that corresponds to none of them
         return "No Type";
     }
@@ -281,6 +286,14 @@ public class TouchHandler : MonoBehaviour {
             }
         }
 
+        foreach (GameObject obj in gos) {
+            if (IdentifyObject(obj) == "Pile Detail Card"){
+                if (!combatController.hasWon && !combatController.hasLost && pileDetailsPopup.visible) {
+                    return obj;
+                }
+            }
+        }
+
         //if no gameobject to touch is found, return null
         return null;
 
@@ -338,6 +351,12 @@ public class TouchHandler : MonoBehaviour {
             //print(obj.transform.parent.parent.name);
             //combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleEnemyDetails(obj.transform.parent.parent.GetComponent<Enemy>());
             //activeEnemyDetails = true;
+        }
+
+        if (type == "Pile Detail Card") {
+            //combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(obj.);
+            //activeCardDetails = true;
+            //print("gotem");
         }
 
     }

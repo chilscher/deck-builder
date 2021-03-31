@@ -412,7 +412,7 @@ GameObject:
   - component: {fileID: 5412904550045782529}
   - component: {fileID: 434340895872005828}
   m_Layer: 0
-  m_Name: Card Background
+  m_Name: Pile Detail Card Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -484,7 +484,7 @@ GameObject:
   - component: {fileID: 5412904550031011775}
   - component: {fileID: 434340895953947514}
   m_Layer: 0
-  m_Name: Card Background
+  m_Name: Pile Detail Card Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 5412904550203019707}
   - component: {fileID: 434340895446365566}
   m_Layer: 0
-  m_Name: Card Background
+  m_Name: Pile Detail Card Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -628,7 +628,7 @@ GameObject:
   - component: {fileID: 5412904548352669869}
   - component: {fileID: 434340895217359976}
   m_Layer: 0
-  m_Name: Card Background
+  m_Name: Pile Detail Card Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -700,7 +700,7 @@ GameObject:
   - component: {fileID: 5412904548890401090}
   - component: {fileID: 434340894679137671}
   m_Layer: 0
-  m_Name: Card Background
+  m_Name: Pile Detail Card Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

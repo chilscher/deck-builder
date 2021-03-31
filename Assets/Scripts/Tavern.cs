@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Tavern : MonoBehaviour {
     //manages the Tavern scene
@@ -18,8 +19,9 @@ public class Tavern : MonoBehaviour {
     public List<string> startingAllyNames = new List<string>();
     public List<GameObject> allyGroups = new List<GameObject>();
     public GameObject allySelectorPrefab;
-    public GameObject cardDetailsPopup;
+    public GameObject startingCardsPopup;
     public EncounterCatalog encounterCatalog;
+    public GameObject cardVisualsPrefab;
 
     public string[] floorNodes;
 
@@ -33,6 +35,7 @@ public class Tavern : MonoBehaviour {
         StaticVariables.health = startingHealth;
         StaticVariables.maxHealth = startingHealth;
         StaticVariables.encounterCatalog = encounterCatalog;
+        StaticVariables.cardVisualsPrefab = cardVisualsPrefab;
 
         StaticVariables.allies = new List<Ally>();
         foreach (string allyName in startingAllyNames) {
@@ -52,22 +55,46 @@ public class Tavern : MonoBehaviour {
 
         UpdateAllyButtons();
 
-        cardDetailsPopup.SetActive(false);
+        //cardDetailsPopup.SetActive(false);
+        foreach (Transform t in startingCardsPopup.transform) {
+            t.gameObject.SetActive(false);
+        }
+        foreach (Transform t in startingCardsPopup.transform.Find("Background").Find("Card Options")) {
+            foreach (Transform t2 in t) {
+                Destroy(t2.gameObject);
+            }
+        }
 
         //start fade-in
         StartCoroutine(GeneralFunctions.StartFadeIn());
     }
 
 
-    private void Update() {
-        //process a tap with the finger
-        if (Input.GetMouseButtonDown(0)) {
-            if (cardDetailsPopup.activeSelf) {
-                cardDetailsPopup.SetActive(false);
+    public void ShowStartingCards() {
+        foreach (Transform t in startingCardsPopup.transform) {
+            t.gameObject.SetActive(true);
+        }
+        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
+        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
+
+        startingCardsPopup.transform.Find("Background").DOScale(0, 0);
+        startingCardsPopup.transform.Find("Background").DOScale(1, 0.5f);
+        //startingCardsPopup.SetActive(true);
+
+    }
+
+    public void HideStartingCards() {
+        foreach (Transform t in startingCardsPopup.transform) {
+            //t.gameObject.SetActive(false);
+        }
+        foreach (Transform t in startingCardsPopup.transform.Find("Background").Find("Card Options")) {
+            foreach (Transform t2 in t) {
+                Destroy(t2.gameObject);
             }
         }
-
-
+        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0f, 0.3f).OnComplete(() => startingCardsPopup.transform.Find("Grey Backdrop").gameObject.SetActive(false));
+        
+        startingCardsPopup.transform.Find("Background").DOScale(0, 0.3f).OnComplete(() => startingCardsPopup.transform.Find("Background").gameObject.SetActive(false));
     }
 
     public void StartGame() {
@@ -127,20 +154,17 @@ public class Tavern : MonoBehaviour {
         for (int i = 0; i < newAlly.source.startingCards.Length; i++) {
             string cardName = newAlly.source.startingCards[i];
             PlatonicCard pc = catalog.GetCardWithName(cardName);
+            CardData cd = new CardData(catalog.GetCardWithName(cardName));
 
-            GameObject go = cardDetailsPopup.transform.Find("Background").Find("Card Options").GetChild(i).gameObject;
-
-            //set the card art to match the provided card art sprite
-            go.transform.Find("Card Art").GetComponent<Image>().sprite = pc.cardArt;
-
-            //set the visual's text, name, and mana cost from the card data
-            go.transform.Find("Name").GetComponent<Text>().text = pc.cardName.ToUpper();
-            go.transform.Find("Text").GetComponent<Text>().text = pc.text.ToUpper();
-            go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[pc.manaCost];
+            CardVisuals cv = Instantiate(cardVisualsPrefab).GetComponent<CardVisuals>();
+            cv.SwitchCardData(cd);
+            cv.clickOption = CardVisuals.clickOptions.OpenDetails;
+            cv.SetParent(startingCardsPopup.transform.Find("Background").Find("Card Options").GetChild(i));
         }
 
-        cardDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = newAlly.source.name.ToUpper();
-        cardDetailsPopup.SetActive(true);
+        startingCardsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = newAlly.source.name.ToUpper();
+        //startingCardsPopup.SetActive(true);
+        ShowStartingCards();
     }
 
     public void GenerateFloor(string[] s) {

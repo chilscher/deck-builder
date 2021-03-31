@@ -24,7 +24,7 @@ public class PileDetailsPopup : MonoBehaviour {
         }
     }
 
-    public void TogglePileDetails(string pileName, List<CardData> contents) {
+    public void TogglePileDetails(string title, List<CardData> contents) {
         //called by the Combat Controller when the player taps the deck or discard pile
         if (visible == false){
             //show the popup
@@ -35,7 +35,7 @@ public class PileDetailsPopup : MonoBehaviour {
             List<CardData> shuffledContents = Shuffle(contents);
 
             //set the pile's identifying text
-            transform.Find("Background").Find("Title Text").GetComponent<Text>().text = pileName.ToUpper() + " CONTENTS";
+            transform.Find("Background").Find("Title Text").GetComponent<Text>().text = title.ToUpper();
 
             //display the correct number of rows of cards
             int cardCount = shuffledContents.Count;

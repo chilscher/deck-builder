@@ -383,12 +383,12 @@ public class CombatController : MonoBehaviour {
 
     public void DisplayDeck() {
         //displays the cards in the deck on screen. called via TouchHandler when the player touches the deck
-        pileDetailsPopup.TogglePileDetails("DECK", deck);
+        pileDetailsPopup.TogglePileDetails("DECK CONTENTS", deck);
     }
 
     public void DisplayDiscard() {
         //displays the cards in the discard pile on screen. called via TouchHandler when the player touches the discard pile
-        pileDetailsPopup.TogglePileDetails("DISCARD", discardPile);
+        pileDetailsPopup.TogglePileDetails("DISCARD CONTENTS", discardPile);
     }
 
     /*

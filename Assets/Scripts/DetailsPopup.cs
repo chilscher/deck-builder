@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 public class DetailsPopup : MonoBehaviour {
     //controls the canvas for the popup that appears when a player clicks on a card
@@ -25,9 +26,24 @@ public class DetailsPopup : MonoBehaviour {
         }
     }
 
+    public void Show() {
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
+
+        transform.Find("Details Card").DOScale(0, 0);
+        transform.Find("Details Card").DOScale(1, 0.5f);
+
+        transform.Find("Details Enemy").DOScale(0, 0);
+        transform.Find("Details Enemy").DOScale(1, 0.5f);
+
+        transform.Find("Text Info").DOScale(0, 0);
+        transform.Find("Text Info").DOScale(1, 0.5f);
+    }
+
     public void ToggleCardDetails(CardData dc) {
         //called by the Combat Controller when the player taps a card for details
         if (visibility == false){
+            Show();
             visibility = true;
             SetVisibility(true);
             transform.Find("Details Enemy").gameObject.SetActive(false);
@@ -44,9 +60,26 @@ public class DetailsPopup : MonoBehaviour {
         }
     }
 
+    public void Hide() {
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.5f);
+        
+        transform.Find("Details Card").DOScale(0, 0.5f);
+        
+        transform.Find("Details Enemy").DOScale(0, 0.5f);
+        
+        transform.Find("Text Info").DOScale(0, 0.5f).OnComplete(() => Hide2());
+    }
+
+    private void Hide2() {
+        visibility = false;
+        SetVisibility(false);
+    }
+
+
     public void ToggleEnemyDetails(Enemy e) {
         //called by the Combat Controller when the player taps an enemy for details
         if (visibility == false) {
+            Show();
             visibility = true;
             SetVisibility(true);
             transform.Find("Details Card").gameObject.SetActive(false);

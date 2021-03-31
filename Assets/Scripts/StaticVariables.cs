@@ -22,5 +22,7 @@ public class StaticVariables {
 
     static public List<DungeonRoom> dungeonFloor;
     static public DungeonRoom currentRoom;
+
+    static public GameObject cardVisualsPrefab;
     
 }
