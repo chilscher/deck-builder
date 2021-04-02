@@ -9,7 +9,7 @@ using DG.Tweening;
 using System;
 
 [System.Serializable]
-public class DisplayCard: MonoBehaviour{
+public class CombatCard: MonoBehaviour{
     //a card in the game
 
     [HideInInspector]

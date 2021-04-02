@@ -3245,7 +3245,7 @@ MonoBehaviour:
   largeEnemiesGameObject: {fileID: 604143515}
   mixedEnemiesGameObject: {fileID: 71640958}
   enemies: []
-  displayCardPrefab: {fileID: 3806193581650125391, guid: 03b9c367324e9bd4bbbbe4661b27c0d1,
+  cardVisualsPrefab: {fileID: 3806193581650125391, guid: 1c28b49927830bd4589db75463b19dea,
     type: 3}
   drawNum: 6
   maxMana: 3
@@ -3265,7 +3265,6 @@ MonoBehaviour:
   pauseBeforeBleed: 0.2
   pauseBeforeEnemyAttacks: 0.2
   pauseBetweenEnemyAttacks: 0.3
-  tinyCardScale: 0.07
   cardQueue: []
   targetQueue: []
 --- !u!20 &519420031

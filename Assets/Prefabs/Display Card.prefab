@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 5742524449232190188}
   - component: {fileID: 5757052966326685718}
   m_Layer: 0
-  m_Name: Display Card
+  m_Name: Combat Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -372,6 +372,9 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0}
   placeInHierarchy: 0
   tweening: 0
+  inPlay: 0
+  inQueue: 0
+  isDragged: 0
 --- !u!1 &3835674594581204960
 GameObject:
   m_ObjectHideFlags: 0

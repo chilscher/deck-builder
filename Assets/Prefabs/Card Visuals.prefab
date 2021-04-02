@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 4428134369731905665}
   - component: {fileID: 4258611684505074447}
   m_Layer: 0
-  m_Name: CardVisuals
+  m_Name: Card Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -376,6 +376,7 @@ MonoBehaviour:
   manaCostBackgroundIm: {fileID: 5803666954151200088}
   manaCostIm: {fileID: 6758766422630584152}
   circleOverlayIm: {fileID: 4613733160426026680}
+  clickOption: 0
 --- !u!114 &4258611684505074447
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -24,6 +24,18 @@ public class CardVisuals: MonoBehaviour{
     public enum clickOptions { DoNothing, OpenDetails };
     public clickOptions clickOption = clickOptions.DoNothing;
 
+    public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
+
+    //private bool isFollowingMouse = false;
+
+    /*
+    private void Update() {
+        if (isFollowingMouse) {
+
+        }
+    }
+    */
+
     public void SetPositionImmediate(Vector2 newPos) {
         transform.position = newPos;
     }
@@ -54,5 +66,15 @@ public class CardVisuals: MonoBehaviour{
             FindObjectOfType<DetailsPopup>().OpenCardDetails(source);
         }
     }
-    
+
+    public void MakeSmallAndRed() {
+        GeneralFunctions.SetTransparency(circleOverlayIm, 1f);
+        transform.localScale = new Vector3(tinyCardScale, tinyCardScale, tinyCardScale);
+    }
+
+    /*
+    public void FollowMousePosition(bool shouldFollow) {
+        isFollowingMouse = shouldFollow;
+    }
+    */
 }

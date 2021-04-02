@@ -293,6 +293,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 493988911256041638, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HideIfOpen
+      objectReference: {fileID: 0}
     - target: {fileID: 724553507913665849, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
         type: 3}
       propertyPath: m_SortingOrder
@@ -503,6 +508,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2062397157276278964, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HideIfOpen
+      objectReference: {fileID: 0}
     - target: {fileID: 3315218835335093567, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -513,10 +523,20 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 64.599976
       objectReference: {fileID: 0}
+    - target: {fileID: 5455297663259421238, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HideIfOpen
+      objectReference: {fileID: 0}
     - target: {fileID: 7875330385050230022, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8831180972243317808, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HideIfOpen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d60cf4934ed7ad4c966f7b1c0287887, type: 3}

@@ -23,7 +23,7 @@ public class TouchHandler : MonoBehaviour {
     private CombatController combatController; //defined at the start of the scene, used to call functions for objects once they have been clicked
 
     //variables used to drag a card around the screen
-    public DisplayCard movingCard; //the card to be dragged
+    public CombatCard movingCard; //the card to be dragged
     private bool shouldMoveCard = false; //if the card should move to follow the player's touch
     private Vector2 relativeCardPosition = Vector2.zero; //the card's position relative to the touch. if you touch the top-left corner of a card and drag it, the top-left corner of the card will follow your finger's position
 
@@ -234,8 +234,8 @@ public class TouchHandler : MonoBehaviour {
         foreach(GameObject obj in gos) {
             if (IdentifyObject(obj) == "Display Card") {
                 if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) { //you cant click a displaycard if you won or lost the combat
-                    DisplayCard dc = obj.transform.parent.GetComponent<DisplayCard>();
-                    if (!dc.tweening && !dc.inPlay && !dc.inQueue) {
+                    CombatCard cc = obj.transform.parent.GetComponent<CombatCard>();
+                    if (!cc.tweening && !cc.inPlay && !cc.inQueue) {
                         return obj;
                     }
                 }
@@ -320,7 +320,7 @@ public class TouchHandler : MonoBehaviour {
 
         //if the object is a DisplayCard, click it
         if (type == "Display Card") {
-            SetCardToDrag(obj.transform.parent.GetComponent<DisplayCard>());
+            SetCardToDrag(obj.transform.parent.GetComponent<CombatCard>());
         }
 
         //if the object is the Discard Pile
@@ -369,24 +369,24 @@ public class TouchHandler : MonoBehaviour {
 
     }
 
-    private void SetCardToDrag(DisplayCard dc) {
+    private void SetCardToDrag(CombatCard cc) {
         //sets the designated DisplayCard to follow the player's finger across the screen
         //called when a DisplayCard is tapped
 
         //set the touchHandler to drag the card
-        movingCard = dc;
+        movingCard = cc;
         shouldMoveCard = true;
         movingCard.isDragged = true;
 
         //define the touch's position relative to the card's position.
         //ex: if the player taps a card in the top-left of the boxcollider, and the player drags the card, the card will be moved so that the top-left of the boxcollider remains under their finger
         Vector2 pos = Input.mousePosition;
-        relativeCardPosition = pos - new Vector2(dc.transform.position.x, dc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
+        relativeCardPosition = pos - new Vector2(cc.transform.position.x, cc.transform.position.y); //the relative position from touch to card is the card's center position subtracted from the current touch position
         //move the card to be above all other cards
-        dc.transform.SetSiblingIndex(dc.transform.parent.childCount + 1);
+        cc.transform.SetSiblingIndex(cc.transform.parent.childCount + 1);
 
         //highlight the selected card
-        dc.transform.Find("Highlight").gameObject.SetActive(true);
+        cc.transform.Find("Highlight").gameObject.SetActive(true);
     }
 
     private void DragCard() {

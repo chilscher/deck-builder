@@ -32,7 +32,7 @@ public class CombatController : MonoBehaviour {
     public List<Enemy> enemies = new List<Enemy>();
 
     //the DisplayCard's prefab, which is instantiated to create a visual display of a card
-    public GameObject displayCardPrefab;
+    public GameObject cardVisualsPrefab;
 
     //general utility
     private System.Random rand = new System.Random();
@@ -60,7 +60,7 @@ public class CombatController : MonoBehaviour {
     public PileDetailsPopup pileDetailsPopup;
     
     public int idealHandSize = 5; //if there are fewer than this many cards in the hand, they are spaced evenly as if there were this many. a little confusing to explain, see PositionCardsInHand
-    private List<DisplayCard> displayCardsInHand = new List<DisplayCard>();
+    private List<CombatCard> combatCardsInHand = new List<CombatCard>();
     public GameObject allies;
 
     public float winPopupDelay = 0.3f; //the amount of time after the last enemy dies that the win popup appears
@@ -75,9 +75,9 @@ public class CombatController : MonoBehaviour {
     private float playerAttackedDuration = 1f;
     private float enemyDamageDuration = 1f;
 
-    public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
+    //public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
 
-    public List<DisplayCard> cardQueue = new List<DisplayCard>();
+    public List<CombatCard> cardQueue = new List<CombatCard>();
     public List<Enemy> targetQueue = new List<Enemy>();
 
     private IEnumerator Start() {
@@ -193,12 +193,13 @@ public class CombatController : MonoBehaviour {
         }
     }
 
-
-    private void MadeCardSmallAndRed(DisplayCard dc) {
+    /*
+    private void MadeCardSmallAndRed(CombatCard cc) {
         Image im = dc.transform.Find("Circle Overlay").GetComponent<Image>();
         GeneralFunctions.SetTransparency(im, 1f);
         dc.transform.localScale = new Vector3(tinyCardScale, tinyCardScale, tinyCardScale);
     }
+    */
 
     private IEnumerator DrawCards(int amt) {
         //draws num cards from the deck and adds them to the hand. shuffles the discard pile into the deck if more cards need to be drawn
@@ -242,14 +243,15 @@ public class CombatController : MonoBehaviour {
         }
         foreach (CardData c in duplicateDiscardPile) {
             //create a temporary display card to show something moving, but don't put the display card in the list of cards in the hand
-            DisplayCard dc = CreateDisplayCard(c);
-            displayCardsInHand.Remove(dc);
+            CombatCard cc = CreateCombatCard(c);
+            combatCardsInHand.Remove(cc);
             //put the card on top of the discard pile, and make it a small red ball
-            dc.transform.position = mainCanvas.GetCenterOfDiscardPile();
-            MadeCardSmallAndRed(dc);
+            cc.transform.position = mainCanvas.GetCenterOfDiscardPile();
+            cc.GetComponent<CardVisuals>().MakeSmallAndRed();
+            //MadeCardSmallAndRed(dc);
             //move the card to the deck then destroy it
-            dc.transform.DOMove(mainCanvas.GetCenterOfDeck(), TimingValues.durationOfCardMoveFromDiscardToDeck).OnComplete(()=> 
-                DestroyCardAndAddToDeck(dc));
+            cc.transform.DOMove(mainCanvas.GetCenterOfDeck(), TimingValues.durationOfCardMoveFromDiscardToDeck).OnComplete(()=> 
+                DestroyCardAndAddToDeck(cc));
             //decrement the discard pile display count
             discardPile.Remove(c);
             DisplayDiscardCount();
@@ -260,12 +262,12 @@ public class CombatController : MonoBehaviour {
         ShuffleDeck();
     }
 
-    private void DestroyCardAndAddToDeck(DisplayCard dc) {
+    private void DestroyCardAndAddToDeck(CombatCard cc) {
         //adds the displaycard's associated card to the deck, updates the deck's visible card count
         //then destroys the displaycard
-        deck.Add(dc.associatedCard);
+        deck.Add(cc.associatedCard);
         DisplayDeckCount();
-        GameObject.Destroy(dc.gameObject);
+        GameObject.Destroy(cc.gameObject);
     }
 
     private void ShuffleDeck() {
@@ -285,37 +287,52 @@ public class CombatController : MonoBehaviour {
         //draws one card from the deck and adds it to the hand
         CardData card = deck[0];
         hand.Add(card);
-        DisplayCard dc = CreateDisplayCard(card);
+        CombatCard cc = CreateCombatCard(card);
         deck.RemoveAt(0);
         DisplayDeckCount();
 
         //put the card on top of the deck and make it a small red ball
-        dc.transform.position = mainCanvas.GetCenterOfDeck();
-        MadeCardSmallAndRed(dc);
+        cc.transform.position = mainCanvas.GetCenterOfDeck();
+        cc.GetComponent<CardVisuals>().MakeSmallAndRed();
+        //MadeCardSmallAndRed(dc);
 
         //move the card to the correct position in the hand, and move other cards to make room for it
         yield return StartCoroutine(PositionCardsInHand());
         //then enlarge the card and remove the red overlay
-        dc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(0, TimingValues.cardOverlayFadeTime);
-        dc.transform.DOScale(1, TimingValues.cardScalingTime);
+        cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(0, TimingValues.cardOverlayFadeTime);
+        cc.transform.DOScale(1, TimingValues.cardScalingTime);
     }
 
-    private DisplayCard CreateDisplayCard(CardData cardData) {
+    private CombatCard CreateCombatCard(CardData cardData) {
         //creates a DisplayCard for the provided CardData. Sets the visuals and references for the DisplayCard, but does not set its position
 
+        GameObject g = Instantiate(cardVisualsPrefab);
+        CardVisuals cv = g.GetComponent<CardVisuals>();
+        CombatCard cc = g.AddComponent<CombatCard>();
+
+        cv.SetParent(handGameObject.transform);
+
+        cv.SwitchCardData(cardData);
+        cc.combatController = this;
+        cc.associatedCard = cardData;
+        cc.touchHandler = GetComponent<TouchHandler>();
+        combatCardsInHand.Add(cc);
+        return cc;
+
+        /*
         //instantiate the prefab and set its position and parent
-        GameObject c = Instantiate(displayCardPrefab);
+        GameObject c = Instantiate(combatCardPrefab);
         c.transform.SetParent(handGameObject.transform, false);
 
         //set the card art to match the provided card art sprite
         c.transform.Find("Card Art").GetComponent<Image>().sprite = cardData.source.cardArt;
 
         //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
-        c.GetComponent<DisplayCard>().associatedCard = cardData;
+        c.GetComponent<CombatCard>().associatedCard = cardData;
 
         //set the DisplayCard's CombatController and TouchHandler references
-        c.GetComponent<DisplayCard>().combatController = this;
-        c.GetComponent<DisplayCard>().touchHandler = GetComponent<TouchHandler>();
+        c.GetComponent<CombatCard>().combatController = this;
+        c.GetComponent<CombatCard>().touchHandler = GetComponent<TouchHandler>();
 
 
         //set the visual's text, name, and mana cost from the card data
@@ -327,6 +344,7 @@ public class CombatController : MonoBehaviour {
         displayCardsInHand.Add(c.GetComponent<DisplayCard>());
 
         return c.GetComponent<DisplayCard>();
+        */
     }
     
     public IEnumerator PositionCardsInHand() { 
@@ -345,7 +363,7 @@ public class CombatController : MonoBehaviour {
 
         int nonCardsInHierarchy = 0; //the number of children of the hand gameobject that are not DisplayCards. Used in determining the sorting order for each DisplayCard
         foreach(Transform t in handGameObject.transform) {
-            if (t.gameObject.GetComponent<DisplayCard>() == null) { nonCardsInHierarchy++; }
+            if (t.gameObject.GetComponent<CombatCard>() == null) { nonCardsInHierarchy++; }
         }
 
 
@@ -363,19 +381,19 @@ public class CombatController : MonoBehaviour {
             }
 
             //set the DisplayCard's references
-            DisplayCard dc = displayCardsInHand[i];
-            RectTransform rt = dc.GetComponent<RectTransform>();
-            dc.startingPosition = cardPos;
+            CombatCard cc = combatCardsInHand[i];
+            RectTransform rt = cc.GetComponent<RectTransform>();
+            cc.startingPosition = cardPos;
 
             //start the process to move the card to its correct spot
             //do not wait for the card to move before continuing - all of the cards should move at the same time
             //do not move a card if: it is currently being dragged by the touch handler
             TouchHandler th = FindObjectOfType<TouchHandler>();
-            if (!(th.movingCard == dc && dc.isDragged)) { rt.DOAnchorPos(cardPos, 0.2f); }
+            if (!(th.movingCard == cc && cc.isDragged)) { rt.DOAnchorPos(cardPos, 0.2f); }
 
             //also set the card's sorting order in the hierarchy, based on the number of non-DisplayCards in the hierarchy and this card's place in the hand
-            dc.placeInHierarchy = nonCardsInHierarchy + i;
-            dc.transform.SetSiblingIndex(dc.placeInHierarchy);
+            cc.placeInHierarchy = nonCardsInHierarchy + i;
+            cc.transform.SetSiblingIndex(cc.placeInHierarchy);
         }
 
         yield return new WaitForSeconds(0.2f);
@@ -425,15 +443,15 @@ public class CombatController : MonoBehaviour {
         //displaycards have to continue existing after they are played, before they go to the discard
 
         //remove the DisplayCard and send it to the discard pile
-        List<DisplayCard> temp = new List<DisplayCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
-        foreach (DisplayCard dc in displayCardsInHand) {
-            if (dc.associatedCard == card) {
+        List<CombatCard> temp = new List<CombatCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
+        foreach (CombatCard cc in combatCardsInHand) {
+            if (cc.associatedCard == card) {
                 //dc.transform.SetParent(mainCanvas.transform);
             }
-            else { temp.Add(dc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
+            else { temp.Add(cc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
         }
 
-        displayCardsInHand = temp; //all the cards that haven't just been removed
+        combatCardsInHand = temp; //all the cards that haven't just been removed
 
         //move the card from the hand to the discard pile
         hand.Remove(card);
@@ -442,15 +460,15 @@ public class CombatController : MonoBehaviour {
     private IEnumerator DiscardHand() {
         //discards all cards in the player's hand in order, with a pause in between
         
-        displayCardsInHand.Reverse();
+        combatCardsInHand.Reverse();
         //move all the display cards to the discard pile
-        foreach (DisplayCard dc in displayCardsInHand) {
-            StartCoroutine(SendCardToDiscardThenDestroy(dc));
+        foreach (CombatCard cc in combatCardsInHand) {
+            StartCoroutine(SendCardToDiscardThenDestroy(cc));
             yield return new WaitForSeconds(TimingValues.pauseBetweenCardsMoving);
 
         }
         //empty the DisplayCard list
-        displayCardsInHand = new List<DisplayCard>();
+        combatCardsInHand = new List<CombatCard>();
 
         hand = new List<CardData>();
 
@@ -458,14 +476,14 @@ public class CombatController : MonoBehaviour {
         yield return new WaitForSeconds(TimingValues.durationOfCardMoveFromPlayToDiscard * 2f);
     }
 
-    public IEnumerator SendCardToDiscard(DisplayCard dc) {
+    public IEnumerator SendCardToDiscard(CombatCard cc) {
         //moves a displaycard to the discard pile
-        dc.transform.DOScale(tinyCardScale, TimingValues.cardScalingTime).OnComplete(() => 
-            dc.transform.DOMove(mainCanvas.GetCenterOfDiscardPile(), TimingValues.durationOfCardMoveFromPlayToDiscard).OnComplete(() => 
-                AddCardToDiscardPile(dc)));
-        dc.tweening = true; //the player can no longer tap the card
+        cc.transform.DOScale(cc.GetComponent<CardVisuals>().tinyCardScale, TimingValues.cardScalingTime).OnComplete(() => 
+            cc.transform.DOMove(mainCanvas.GetCenterOfDiscardPile(), TimingValues.durationOfCardMoveFromPlayToDiscard).OnComplete(() => 
+                AddCardToDiscardPile(cc)));
+        cc.tweening = true; //the player can no longer tap the card
                             //hide the card art and replace it with a static image
-        dc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
+        cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
 
         //do not return until the card has been sent to the discard pile
         float discardDuration = (TimingValues.cardScalingTime + TimingValues.durationOfCardMoveFromPlayToDiscard);
@@ -474,25 +492,25 @@ public class CombatController : MonoBehaviour {
         //print("ok");
     }
 
-    private IEnumerator SendCardToDiscardThenDestroy(DisplayCard dc) {
+    private IEnumerator SendCardToDiscardThenDestroy(CombatCard dc) {
         yield return StartCoroutine(SendCardToDiscard(dc));
         //print("destroy now!");
         GameObject.Destroy(dc.gameObject);
     }
 
-    private void AddCardToDiscardPile(DisplayCard dc) {
+    private void AddCardToDiscardPile(CombatCard cc) {
         //adds the card to the discard pile list, updates the visual display for the number of cards in the discard pile, then destroys the displaycard
-        discardPile.Add(dc.associatedCard);
+        discardPile.Add(cc.associatedCard);
         DisplayDiscardCount();
         //GameObject.Destroy(dc.gameObject);
 
     }
 
-    public void MoveDisplayCardToQueue(DisplayCard dc) {
+    public void MoveDisplayCardToQueue(CombatCard cc) {
         //moves the displaycard to the queue, and repositions all cards in the queue
         //dc.transform.DOMove(mainCanvas.GetCenterOfQueue(), 0.1f);
-        dc.transform.DOScale(1f, 0.1f);
-        dc.transform.SetParent(mainCanvas.transform.Find("InPlay Queue"));
+        cc.transform.DOScale(1f, 0.1f);
+        cc.transform.SetParent(mainCanvas.transform.Find("InPlay Queue"));
         PositionCardsInQueue();
         //put the card at the back of the queue?
     }
