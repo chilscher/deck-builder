@@ -37,15 +37,18 @@ public class WinPopup : MonoBehaviour {
 
             CardData cardReward = StaticVariables.encounter.cardRewards[i];
 
+            go.GetComponent<CardVisuals>().SwitchCardData(cardReward);
+            go.GetComponent<CardVisuals>().clickOption = CardVisuals.clickOptions.TakeFromWin;
+
             //CardData cardData = new CardData(StaticVariables.catalog.GetCardWithName(cardReward));
 
             //set the card art to match the provided card art sprite
-            go.transform.Find("Card Art").GetComponent<Image>().sprite = cardReward.source.cardArt;
+            //go.transform.Find("Card Art").GetComponent<Image>().sprite = cardReward.source.cardArt;
 
             //set the visual's text, name, and mana cost from the card data
-            go.transform.Find("Name").GetComponent<Text>().text = cardReward.source.cardName.ToUpper();
-            go.transform.Find("Text").GetComponent<Text>().text = cardReward.source.text.ToUpper();
-            go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardReward.source.manaCost];
+            //go.transform.Find("Name").GetComponent<Text>().text = cardReward.source.cardName.ToUpper();
+            //go.transform.Find("Text").GetComponent<Text>().text = cardReward.source.text.ToUpper();
+            //go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardReward.source.manaCost];
         }
     }
     

@@ -21,7 +21,7 @@ public class CardVisuals: MonoBehaviour{
     public Image manaCostBackgroundIm;
     public Image manaCostIm;
     public Image circleOverlayIm;
-    public enum clickOptions { DoNothing, OpenDetails };
+    public enum clickOptions { DoNothing, OpenDetails, TakeFromWin };
     public clickOptions clickOption = clickOptions.DoNothing;
 
     public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
@@ -60,10 +60,13 @@ public class CardVisuals: MonoBehaviour{
 
     public void TapCard() {
         if (clickOption == clickOptions.DoNothing) {
-            print("ouch you tapped me! i am " + source.source.cardName);
+            //print("ouch you tapped me! i am " + source.source.cardName);
         }
         else if (clickOption == clickOptions.OpenDetails) {
             FindObjectOfType<DetailsPopup>().OpenCardDetails(source);
+        }
+        else if (clickOption == clickOptions.TakeFromWin) {
+            FindObjectOfType<CombatController>().ClaimCardFromWin(source);
         }
     }
 

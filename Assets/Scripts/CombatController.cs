@@ -903,4 +903,12 @@ public class CombatController : MonoBehaviour {
         }
     }
 
+    public void ClaimCardFromWin(CardData card) {
+        //    string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
+        //    combatController.AddCardToPlayerDeck(cardName);
+        AddCardToPlayerDeck(card.source.cardName);
+        //start fade-out
+        StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
+    }
+
 }

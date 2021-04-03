@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PileDetailsPopup : MonoBehaviour {
     //controls the canvas for the popup that appears when a player clicks on their deck or discard pile
@@ -22,15 +23,16 @@ public class PileDetailsPopup : MonoBehaviour {
         foreach (Transform t in transform) {
             t.gameObject.SetActive(b);
         }
+        visible = b;
     }
 
     public void TogglePileDetails(string title, List<CardData> contents) {
         //called by the Combat Controller when the player taps the deck or discard pile
         if (visible == false){
             //show the popup
-            visible = true;
+            //visible = true;
             SetVisibility(true);
-
+            Show();
             //create a shuffled list of the cards in the pile
             List<CardData> shuffledContents = Shuffle(contents);
 
@@ -58,22 +60,36 @@ public class PileDetailsPopup : MonoBehaviour {
 
 
                 //display the card's info
+                card.GetComponent<CardVisuals>().SwitchCardData(shuffledContents[i]);
+                card.GetComponent<CardVisuals>().clickOption = CardVisuals.clickOptions.OpenDetails;
+                /*
                 PlatonicCard cardSource = shuffledContents[i].source;
 
                 card.transform.Find("Name").GetComponent<Text>().text = cardSource.cardName.ToUpper();
                 card.transform.Find("Card Art").GetComponent<Image>().sprite = cardSource.cardArt;
                 card.transform.Find("Text").GetComponent<Text>().text = cardSource.text.ToUpper();
                 card.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardSource.manaCost];
+                */
             }
 
+            //scroll to top of pile contents window
+            scrollView.transform.position = new Vector3(scrollView.transform.position.x, 0, scrollView.transform.position.z);
         }
     }
 
     public void ClosePopup() {
         //hide the popup, from a button in the corner
-        visible = false;
-        SetVisibility(false);
+        //visible = false;
+        //SetVisibility(false);
+        Hide();
+        //destroy all rows, so the popup is clear for next time
+        //foreach (Transform child in scrollView.transform) {
+        //    GameObject.Destroy(child.gameObject);
+        //}
+        //ClearCards();
+    }
 
+    public void ClearCards() {
         //destroy all rows, so the popup is clear for next time
         foreach (Transform child in scrollView.transform) {
             GameObject.Destroy(child.gameObject);
@@ -103,4 +119,34 @@ public class PileDetailsPopup : MonoBehaviour {
         return newList;
     }
 
+    public void Show() {
+        //SetAllowInteraction(false);
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
+
+        transform.Find("Background").DOScale(0, 0);
+        transform.Find("Background").DOScale(1, 0.5f);
+
+        //transform.Find("Text Info").DOScale(0, 0);
+        //transform.Find("Text Info").DOScale(1, 0.5f).OnComplete(() => SetAllowInteraction(true));
+        //yield return new WaitForSeconds(0.5f);
+        //SetOpen(true);
+    }
+
+    public void Hide() {
+        //SetAllowInteraction(false);
+
+
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.3f).OnComplete(() => ClearCards());
+        transform.Find("Background").DOScale(0, 0.3f).OnComplete(() => SetVisibility(false));
+        /*
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.3f);
+
+        transform.Find("Details Card").DOScale(0, 0.3f);
+
+        transform.Find("Details Enemy").DOScale(0, 0.3f).OnComplete(() => SetAllowInteraction(true));
+
+        transform.Find("Text Info").DOScale(0, 0.3f).OnComplete(() => SetVisibility(false));
+        */
+    }
 }

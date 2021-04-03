@@ -98,12 +98,15 @@ public class TouchHandler : MonoBehaviour {
                 //hide the card info popup
                 combatController.detailsPopup.GetComponent<DetailsPopup>().CloseDetails();
                 //activeCardDetails = false;
+                //print(movingCard);
+                if (movingCard != null) {
+                    //return the selected card to its previous position
+                    movingCard.ReturnToStartingPos();
 
-                //return the selected card to its previous position
-                movingCard.ReturnToStartingPos();
+                    //also, un-highlight the card that is being displayed
+                    movingCard.transform.Find("Highlight").gameObject.SetActive(false);
+                }
 
-                //also, un-highlight the card that is being displayed
-                movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
 
             else if (cardDetailsPopup.GetVisibility() && cardDetailsPopup.allowInteraction && (cardDetailsPopup.showingWhat == "Enemy")) {
@@ -188,9 +191,9 @@ public class TouchHandler : MonoBehaviour {
         //this string identifier is used when deciding which object to touch, and also when deciding how to interact with that object once it has been chosen
 
         //is the object a card on the win screen?
-        if (obj.name == "Win Card Choice") {
-            return "Win Card";
-        }        
+        //if (obj.name == "Win Card Choice") {
+        //    return "Win Card";
+        //}        
         //is the object the treasure button on the win screen?
         if (obj.name == "Take Treasure") {
             return "Take Treasure";
@@ -268,13 +271,13 @@ public class TouchHandler : MonoBehaviour {
         }
 
         //then, a card that you can claim after you have won an encounter
-        foreach (GameObject obj in gos) {
-            if (IdentifyObject(obj) == "Win Card") {
-                if (combatController.hasWon && !pileDetailsPopup.visible) { //you cant claim the card if you have not won the combat
-                    return obj;
-                }
-            }
-        }
+        //foreach (GameObject obj in gos) {
+        //    if (IdentifyObject(obj) == "Win Card") {
+        //        if (combatController.hasWon && !pileDetailsPopup.visible) { //you cant claim the card if you have not won the combat
+        //            return obj;
+        //        }
+        //    }
+        //}
 
         //then, the treasure that you can claim instead of a card after you have won an encounter
         foreach (GameObject obj in gos) {
@@ -339,13 +342,13 @@ public class TouchHandler : MonoBehaviour {
         }
 
         //if the object is a card you can claim after winning an encounter
-        if (type == "Win Card") {
-            string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
-            combatController.AddCardToPlayerDeck(cardName);
+        //if (type == "Win Card") {
+        //    string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
+        //    combatController.AddCardToPlayerDeck(cardName);
 
             //start fade-out
-            StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
-        }
+        //    StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
+        //}
 
         //if the object is the treasure you can claim after winning an encounter
         if (type == "Take Treasure") {
