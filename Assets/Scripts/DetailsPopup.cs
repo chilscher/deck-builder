@@ -11,7 +11,7 @@ public class DetailsPopup : MonoBehaviour {
     //controls the canvas for the popup that appears when a player clicks on a card
     //the gameobject this is attached to should always be active in the inspector. During runtime, its contents are hidden
 
-    public CardData cardData;
+    public CardData cardData; //the card you are examining
     public bool allowInteraction = true;
 
     //private bool visibility = false;
@@ -40,6 +40,7 @@ public class DetailsPopup : MonoBehaviour {
     }
 
     public void Show() {
+        //cardData.gameObject.GetComponent<CardVisuals>()
         SetAllowInteraction(false);
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
@@ -276,6 +277,13 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += ("Applies " + p + " bleed damage to the target enemy.");
                     cardTextInfo += "\n";
                     cardTextInfo += ("An enemy with a bleed takes damage every turn, decreasing each time.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
+                case Catalog.EffectTypes.RemoveFromDeck:
+                    cardTextInfo += ("Removes this card from your deck.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("Any card removed from the deck is returned after the combat ends.");
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;

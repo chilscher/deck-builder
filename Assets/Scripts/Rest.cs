@@ -54,4 +54,8 @@ public class Rest : MonoBehaviour {
         //start fade-out
         StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
     }
+
+    public void SelectToTrash() {
+        FindObjectOfType<PileDetailsPopup>().TogglePileDetails("Select a Card to Trash", StaticVariables.playerDeck, CardVisuals.clickOptions.TrashCard);
+    }
 }

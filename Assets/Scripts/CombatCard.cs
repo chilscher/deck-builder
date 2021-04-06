@@ -27,6 +27,7 @@ public class CombatCard: MonoBehaviour{
     public bool inPlay = false;
     public bool inQueue = false;
     public bool isDragged = false;
+    public bool hasBeenRemoved = false;
 
     public void ReleasedCard() {
         //what happens when the player is dragging this card around and then releases it
@@ -126,7 +127,14 @@ public class CombatCard: MonoBehaviour{
         //combatController.MoveCardFromHandToDiscard(associatedCard);
         //combatController.MoveCardToDiscard(this);
         //print("about to discard");
-        yield return StartCoroutine(combatController.SendCardToDiscard(this));
+
+        //send the card to the discard pile if it has not been removed due to its own effect
+        if (!hasBeenRemoved) {
+            yield return StartCoroutine(combatController.SendCardToDiscard(this));
+        }
+        else {
+            yield return StartCoroutine(combatController.RemoveCardFromGame(this));
+        }
         //print("done");
         //remove this card from the queue.
         //if there is another card in queue, start that card's activation
@@ -178,6 +186,9 @@ public class CombatCard: MonoBehaviour{
                 break;
             case Catalog.EffectTypes.DiminishingBleed:
                 enemy.AddStatus(EnemyCatalog.StatusEffects.DiminishingBleed, p);
+                break;
+            case Catalog.EffectTypes.RemoveFromDeck:
+                hasBeenRemoved = true;
                 break;
         }
     }

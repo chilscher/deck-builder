@@ -26,7 +26,7 @@ public class PileDetailsPopup : MonoBehaviour {
         visible = b;
     }
 
-    public void TogglePileDetails(string title, List<CardData> contents) {
+    public void TogglePileDetails(string title, List<CardData> contents, CardVisuals.clickOptions clickOption) {
         //called by the Combat Controller when the player taps the deck or discard pile
         if (visible == false){
             //show the popup
@@ -61,7 +61,7 @@ public class PileDetailsPopup : MonoBehaviour {
 
                 //display the card's info
                 card.GetComponent<CardVisuals>().SwitchCardData(shuffledContents[i]);
-                card.GetComponent<CardVisuals>().clickOption = CardVisuals.clickOptions.OpenDetails;
+                card.GetComponent<CardVisuals>().clickOption = clickOption;
                 /*
                 PlatonicCard cardSource = shuffledContents[i].source;
 

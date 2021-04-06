@@ -21,7 +21,7 @@ public class CardVisuals: MonoBehaviour{
     public Image manaCostBackgroundIm;
     public Image manaCostIm;
     public Image circleOverlayIm;
-    public enum clickOptions { DoNothing, OpenDetails, TakeFromWin };
+    public enum clickOptions { DoNothing, OpenDetails, TakeFromWin, TrashCard };
     public clickOptions clickOption = clickOptions.DoNothing;
 
     public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
@@ -67,6 +67,11 @@ public class CardVisuals: MonoBehaviour{
         }
         else if (clickOption == clickOptions.TakeFromWin) {
             FindObjectOfType<CombatController>().ClaimCardFromWin(source);
+        }
+        else if (clickOption == clickOptions.TrashCard) {
+            //print("im outta here!");
+            StaticVariables.playerDeck.Remove(source);
+            StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
         }
     }
 

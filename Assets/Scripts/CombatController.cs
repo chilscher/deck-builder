@@ -39,7 +39,8 @@ public class CombatController : MonoBehaviour {
 
     //the variables that are edited for game balance
     public int drawNum; //the number of cards the player draws at the start of their turn
-    public int maxMana; //the mana that the player starts each turn with
+    public int startingMana; //the mana that the player starts each turn with
+    public int manaCap; //the maximum mana that a player can get
     [Header("Status Effect Power")]
     public float weakScalar = 0.5f; //damage rounds down
     public float vulnerableScalar = 1.5f; //damage rounds down
@@ -125,7 +126,7 @@ public class CombatController : MonoBehaviour {
         }
 
         //sets the player's mana to their max value
-        mana = maxMana;
+        mana = startingMana;
 
         //set animation durations
         Animator anim = smallEnemiesGameObject.transform.GetChild(0).Find("Visuals").GetComponent<Animator>();
@@ -401,12 +402,12 @@ public class CombatController : MonoBehaviour {
 
     public void DisplayDeck() {
         //displays the cards in the deck on screen. called via TouchHandler when the player touches the deck
-        pileDetailsPopup.TogglePileDetails("DECK CONTENTS", deck);
+        pileDetailsPopup.TogglePileDetails("DECK CONTENTS", deck, CardVisuals.clickOptions.OpenDetails);
     }
 
     public void DisplayDiscard() {
         //displays the cards in the discard pile on screen. called via TouchHandler when the player touches the discard pile
-        pileDetailsPopup.TogglePileDetails("DISCARD CONTENTS", discardPile);
+        pileDetailsPopup.TogglePileDetails("DISCARD CONTENTS", discardPile, CardVisuals.clickOptions.OpenDetails);
     }
 
     /*
@@ -492,10 +493,31 @@ public class CombatController : MonoBehaviour {
         //print("ok");
     }
 
-    private IEnumerator SendCardToDiscardThenDestroy(CombatCard dc) {
-        yield return StartCoroutine(SendCardToDiscard(dc));
+    public IEnumerator RemoveCardFromGame(CombatCard cc) {
+        //does the visuals of removing the card from the game
+        cc.transform.DOScale(cc.GetComponent<CardVisuals>().tinyCardScale, TimingValues.cardScalingTime);
+        cc.tweening = true; //the player can no longer tap the card
+                            //hide the card art and replace it with a static image
+        cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
+
+        //do not return until the card has been sent to the discard pile
+        yield return new WaitForSeconds(TimingValues.cardScalingTime);
+    }
+
+    /*
+    private void AddCardToDiscardIfNotRemoved(CombatCard cc) {
+        //adds the card to the discard pile
+        //if the card removes itself from the game due to its own effect, do not add it back to the discard, and just remove it instead
+        if (!cc.hasBeenRemoved) {
+            discardPile.Add(cc.associatedCard)
+        }
+    }
+    */
+
+    private IEnumerator SendCardToDiscardThenDestroy(CombatCard cc) {
+        yield return StartCoroutine(SendCardToDiscard(cc));
         //print("destroy now!");
-        GameObject.Destroy(dc.gameObject);
+        GameObject.Destroy(cc.gameObject);
     }
 
     private void AddCardToDiscardPile(CombatCard cc) {
@@ -562,7 +584,7 @@ public class CombatController : MonoBehaviour {
         if (!hasLost) {
             CountDownEnemyStatuses();
 
-            mana = maxMana;
+            mana = startingMana;
             shieldCount = 0;
 
             yield return StartCoroutine(DiscardHand());
@@ -864,6 +886,7 @@ public class CombatController : MonoBehaviour {
     public void AddMana(int amount) {
         //does the "AddMana" card effect. Adds amount of mana to the player's current amount
         mana += amount;
+        if (mana > manaCap) { mana = manaCap; }
         DisplayMana();
     }
 

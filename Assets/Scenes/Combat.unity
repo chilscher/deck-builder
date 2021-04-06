@@ -2518,7 +2518,8 @@ MonoBehaviour:
   cardVisualsPrefab: {fileID: 3806193581650125391, guid: 1c28b49927830bd4589db75463b19dea,
     type: 3}
   drawNum: 6
-  maxMana: 3
+  startingMana: 3
+  manaCap: 9
   weakScalar: 0.5
   vulnerableScalar: 1.5
   startingEnemies: 00000000000000000100000000000000
