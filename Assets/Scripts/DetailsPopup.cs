@@ -19,11 +19,19 @@ public class DetailsPopup : MonoBehaviour {
     //public bool transitioning = false;
     //public bool fullyOpen = false;
 
+    private float cardScale = 1f;
+    private float enemyScale = 1f;
+    private float allyScale = 1f;
+
     void Start() {
+        cardScale = transform.Find("Details Card").localScale.x;
+        enemyScale = transform.Find("Details Enemy").localScale.x;
+        allyScale = transform.Find("Details Allies").localScale.x;
         SetVisibility(false);
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
         transform.Find("Details Card").DOScale(0, 0);
         transform.Find("Details Enemy").DOScale(0, 0);
+        transform.Find("Details Allies").DOScale(0, 0);
         transform.Find("Text Info").DOScale(0, 0);
     }
 
@@ -46,10 +54,13 @@ public class DetailsPopup : MonoBehaviour {
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
 
         transform.Find("Details Card").DOScale(0, 0);
-        transform.Find("Details Card").DOScale(1, 0.5f);
+        transform.Find("Details Card").DOScale(cardScale, 0.5f);
 
         transform.Find("Details Enemy").DOScale(0, 0);
-        transform.Find("Details Enemy").DOScale(1, 0.5f);
+        transform.Find("Details Enemy").DOScale(enemyScale, 0.5f);
+
+        transform.Find("Details Allies").DOScale(0, 0);
+        transform.Find("Details Allies").DOScale(allyScale, 0.5f);
 
         transform.Find("Text Info").DOScale(0, 0);
         transform.Find("Text Info").DOScale(1, 0.5f).OnComplete(() => SetAllowInteraction(true)) ;
@@ -73,6 +84,7 @@ public class DetailsPopup : MonoBehaviour {
         SetVisibility(true);
         //transitioning = true;
         transform.Find("Details Enemy").gameObject.SetActive(false);
+        transform.Find("Details Allies").gameObject.SetActive(false);
         cardData = dc;
         GameObject details = transform.Find("Details Card").gameObject;
         details.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
@@ -100,6 +112,8 @@ public class DetailsPopup : MonoBehaviour {
         
         transform.Find("Details Card").DOScale(0, 0.3f);
         
+        transform.Find("Details Allies").DOScale(0, 0.3f);
+
         transform.Find("Details Enemy").DOScale(0, 0.3f).OnComplete(() => SetAllowInteraction(true));
         
         transform.Find("Text Info").DOScale(0, 0.3f).OnComplete(() => SetVisibility(false));
@@ -153,6 +167,22 @@ public class DetailsPopup : MonoBehaviour {
     //    return (!visibility && !transitioning);
     //}
 
+    public void SetAllyImages() {
+        string a1Name = StaticVariables.allies[0].source.name;
+        Sprite a1Im = StaticVariables.allies[0].source.allyArt;
+        string a2Name = StaticVariables.allies[1].source.name;
+        Sprite a2Im = StaticVariables.allies[1].source.allyArt;
+        string a3Name = StaticVariables.allies[2].source.name;
+        Sprite a3Im = StaticVariables.allies[2].source.allyArt;
+
+        transform.Find("Details Allies").Find("Ally 1").GetComponent<Image>().sprite = a1Im;
+        transform.Find("Details Allies").Find("Ally 1").Find("Text").GetComponent<Text>().text = a1Name;
+        transform.Find("Details Allies").Find("Ally 2").GetComponent<Image>().sprite = a2Im;
+        transform.Find("Details Allies").Find("Ally 2").Find("Text").GetComponent<Text>().text = a2Name;
+        transform.Find("Details Allies").Find("Ally 3").GetComponent<Image>().sprite = a3Im;
+        transform.Find("Details Allies").Find("Ally 3").Find("Text").GetComponent<Text>().text = a3Name;
+    }
+
 
     public void OpenEnemyDetails(Enemy e) {
         //called by the Combat Controller when the player taps an enemy for details
@@ -162,6 +192,7 @@ public class DetailsPopup : MonoBehaviour {
         SetVisibility(true);
         //transitioning = true;
         transform.Find("Details Card").gameObject.SetActive(false);
+        transform.Find("Details Allies").gameObject.SetActive(false);
 
         Transform details = transform.Find("Details Enemy");
         Transform enemyVisuals = e.transform.Find("Visuals");
@@ -186,6 +217,21 @@ public class DetailsPopup : MonoBehaviour {
         //    visibility = false;
         //    SetVisibility(false);
         //}
+    }
+
+    public void OpenAllyDetails() {
+        //Called by CombatController when the player taps an ally for details
+        showingWhat = "Ally";
+        //visibility = true;
+        SetVisibility(true);
+        //transitioning = true;
+        transform.Find("Details Card").gameObject.SetActive(false);
+        transform.Find("Details Enemy").gameObject.SetActive(false);
+
+        transform.Find("Text Info").Find("Text").GetComponent<Text>().text = GetAllySummary();
+
+
+        Show();
     }
 
     private string GetEffectInfoText(CardData dc) {
@@ -287,6 +333,16 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
+                case Catalog.EffectTypes.IncreaseTurnDraw:
+                    cardTextInfo += ("Increases the number of cards drawn at the start of each turn by " + p + ", until the end of combat.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
+                case Catalog.EffectTypes.DecreaseTurnDraw:
+                    cardTextInfo += ("Decreases the number of cards drawn at the start of each turn by " + p + ", until the end of combat.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
             }
         }
         if (cardTextInfo.Length >= 2) {
@@ -361,6 +417,51 @@ public class DetailsPopup : MonoBehaviour {
 
         return summary;
 
+    }
+
+    private string GetAllySummary() {
+        string summary = "";
+
+        foreach (AllyStatus status in FindObjectOfType<CombatController>().allyStatuses) {
+            int d = status.turnsRemaining;
+            switch (status.source.statusType) {
+                case AllyCatalog.StatusEffects.IncreasedDraw:
+                    summary += ("You have the Increased Draw status. You will draw " + d + " extra cards at the start of every turn, for a total of " + (StaticVariables.drawNum + d) + ".");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+                case AllyCatalog.StatusEffects.ReducedDraw:
+                    summary += ("You have the Reduced Draw status. You will draw " + d + " fewer cards at the start of every turn, for a total of " + (StaticVariables.drawNum - d) + ".");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+            }
+
+        }
+
+        if (summary.Length >= 2) {
+            return summary.Substring(0, summary.Length - 2);
+        }
+
+        return summary;
+    }
+
+    public void DisplayAllyStatuses(List<AllyStatus> statuses) {
+        //displays the status effects for the player
+        Transform st = transform.Find("Details Allies").Find("Party Status");
+        for (int i = 0; i < st.childCount; i++) {
+            GameObject c = st.GetChild(i).gameObject;
+            c.SetActive(false);
+            if (i < statuses.Count) {
+                c.SetActive(true);
+                c.GetComponent<Image>().sprite = statuses[i].source.icon;
+                c.transform.Find("Text").GetComponent<Text>().text = statuses[i].turnsRemaining + "";
+            }
+        }
+
+        //update their next attack display
+        //specifically important if the enemy gains or loses the weak status
+        //combatController.UpdateEnemyAttack(this);
     }
 
 }

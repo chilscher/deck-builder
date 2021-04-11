@@ -377,6 +377,7 @@ MonoBehaviour:
   manaCostIm: {fileID: 6758766422630584152}
   circleOverlayIm: {fileID: 4613733160426026680}
   clickOption: 0
+  tinyCardScale: 0.07
 --- !u!114 &4258611684505074447
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -242,4 +242,26 @@ public class MainCanvas : MonoBehaviour {
         //returns the center point of the queue that cards go into before they are played
         return transform.Find("InPlay Queue").Find("Center").position;
     }
+    
+    
+    public void DisplayStatuses(List<AllyStatus> statuses) {
+        //displays the status effects for the player
+        Transform st = transform.Find("Party Status");
+        for (int i = 0; i < st.childCount; i++) {
+            GameObject c = st.GetChild(i).gameObject;
+            c.SetActive(false);
+            if (i < statuses.Count) {
+                c.SetActive(true);
+                c.GetComponent<Image>().sprite = statuses[i].source.icon;
+                c.transform.Find("Text").GetComponent<Text>().text = statuses[i].turnsRemaining + "";
+            }
+        }
+
+        //update their next attack display
+        //specifically important if the enemy gains or loses the weak status
+        //combatController.UpdateEnemyAttack(this);
+    }
+    
+
+
 }

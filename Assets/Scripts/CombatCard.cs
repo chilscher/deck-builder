@@ -190,6 +190,12 @@ public class CombatCard: MonoBehaviour{
             case Catalog.EffectTypes.RemoveFromDeck:
                 hasBeenRemoved = true;
                 break;
+            case Catalog.EffectTypes.IncreaseTurnDraw:
+                combatController.ChangeTurnDraw(p);
+                break;
+            case Catalog.EffectTypes.DecreaseTurnDraw:
+                combatController.ChangeTurnDraw(-p);
+                break;
         }
     }
 

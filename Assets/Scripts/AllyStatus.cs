@@ -4,15 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStatus{
+public class AllyStatus{
 
     //public EnemyCatalog.StatusEffects statusType;
-    public PlatonicEnemyStatus source;
+    public PlatonicAllyStatus source;
     public int turnsRemaining;
 
-    public EnemyStatus(EnemyCatalog.StatusEffects s, int duration) {
+    public AllyStatus(AllyCatalog.StatusEffects s, int duration) {
         //creates a new EnemyStatus with a specified duration
-        source = StaticVariables.enemyCatalog.GetStatusWithType(s);
+        source = StaticVariables.allyCatalog.GetStatusWithType(s);
         turnsRemaining = duration;
     }
 

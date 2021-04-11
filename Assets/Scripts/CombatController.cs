@@ -38,6 +38,7 @@ public class CombatController : MonoBehaviour {
     private System.Random rand = new System.Random();
 
     //the variables that are edited for game balance
+    [HideInInspector]
     public int drawNum; //the number of cards the player draws at the start of their turn
     public int startingMana; //the mana that the player starts each turn with
     public int manaCap; //the maximum mana that a player can get
@@ -81,15 +82,18 @@ public class CombatController : MonoBehaviour {
     public List<CombatCard> cardQueue = new List<CombatCard>();
     public List<Enemy> targetQueue = new List<Enemy>();
 
+    [HideInInspector]
+    public List<AllyStatus> allyStatuses = new List<AllyStatus>();
+
     private IEnumerator Start() {
         //draw level data from StaticVariables
         FindObjectOfType<TouchHandler>().startingCombat = true;
         deck = new List<CardData>(StaticVariables.playerDeck); //the player's cards that they will start each encounter with
         startingEnemies = StaticVariables.encounter.source.enemyIds; //the enemy ids, passed into StaticVariables from Overworld. For now, the enemy ids are passed as parameters to a button click function in OverworldThingy
-
+        drawNum = StaticVariables.drawNum;
         //figure out which enemy group we need to use: small, large, or mixed
         //important to note, for a mixed group, the large enemy goes in the 3rd position
-        
+
         //first, hide all enemy group gameobjects
         smallEnemiesGameObject.SetActive(false);
         largeEnemiesGameObject.SetActive(false);
@@ -168,6 +172,7 @@ public class CombatController : MonoBehaviour {
         DisplayMana();
         DisplayHealth();
         DisplayShields();
+        mainCanvas.DisplayStatuses(allyStatuses);
         UpdateEnemyAttacks();
 
         for (int i=0; i < StaticVariables.allies.Count; i++) {
@@ -176,6 +181,9 @@ public class CombatController : MonoBehaviour {
             imageGO.GetComponent<Image>().sprite = StaticVariables.allies[i].source.allyArt;
             textGO.GetComponent<Text>().text = StaticVariables.allies[i].source.name;
         }
+        detailsPopup.SetAllyImages();
+        detailsPopup.DisplayAllyStatuses(allyStatuses);
+        //drawNum = StaticVariables.drawNum;
         
         //fade the screen in, then start drawing cards
         yield return GeneralFunctions.StartFadeIn();
@@ -583,6 +591,7 @@ public class CombatController : MonoBehaviour {
 
         if (!hasLost) {
             CountDownEnemyStatuses();
+            CountDownAllyStatuses();
 
             mana = startingMana;
             shieldCount = 0;
@@ -863,6 +872,31 @@ public class CombatController : MonoBehaviour {
 
     }
 
+    private void CountDownAllyStatuses() {
+        //takes one turn off of all ongoing ally statuses. If a status drops to 0 turns left, remove it
+        
+        foreach (AllyStatus status in allyStatuses) {
+            if (status.source.decrementsAfterTurn) {
+                status.turnsRemaining -= 1;
+            }
+
+        }
+
+        //remove the statuses with no turns left
+        //called after all status timers have been counted down. Removes any statuses that have no duration left.
+        //does not re-show status effects
+        List<AllyStatus> newList = new List<AllyStatus>();
+        foreach (AllyStatus status in allyStatuses) {
+            if (status.turnsRemaining != 0) {
+                newList.Add(status);
+            }
+        }
+        allyStatuses = newList;
+
+        mainCanvas.DisplayStatuses(allyStatuses);
+        detailsPopup.DisplayAllyStatuses(allyStatuses);
+    }
+
     public void HealPlayer(int amount) {
         //does the "Heal" card effect. heals the player's missing health by amount, but not above their max health
         StaticVariables.health += amount;
@@ -933,5 +967,38 @@ public class CombatController : MonoBehaviour {
         //start fade-out
         StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
     }
+
+
+    public void ChangeTurnDraw(int amt) {
+        drawNum += amt;
+        if (drawNum < 0) {
+            drawNum = 0;
+        }
+
+        //remove draw-related statuses
+        List<AllyStatus> newList = new List<AllyStatus>();
+        foreach (AllyStatus status in allyStatuses) {
+            if (!(status.source == StaticVariables.allyCatalog.GetStatusWithType(AllyCatalog.StatusEffects.IncreasedDraw)) && !(status.source == StaticVariables.allyCatalog.GetStatusWithType(AllyCatalog.StatusEffects.ReducedDraw))) {
+                newList.Add(status);
+            }
+        }
+        
+        if (drawNum > StaticVariables.drawNum) {
+            int diff = drawNum - StaticVariables.drawNum;
+            newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDraw, diff));
+        }
+        else if (drawNum < StaticVariables.drawNum) {
+            int diff = StaticVariables.drawNum - drawNum;
+            newList.Add(new AllyStatus(AllyCatalog.StatusEffects.ReducedDraw, diff));
+        }
+
+        allyStatuses = newList;
+        
+        mainCanvas.DisplayStatuses(allyStatuses);
+        detailsPopup.DisplayAllyStatuses(allyStatuses);
+
+    }
+
+
 
 }

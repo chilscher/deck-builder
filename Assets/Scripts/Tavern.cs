@@ -22,6 +22,7 @@ public class Tavern : MonoBehaviour {
     public GameObject startingCardsPopup;
     public EncounterCatalog encounterCatalog;
     public GameObject cardVisualsPrefab;
+    public int drawnNum; //the number of cards you draw at the start of your turn
 
     public string[] floorNodes;
 
@@ -36,6 +37,7 @@ public class Tavern : MonoBehaviour {
         StaticVariables.maxHealth = startingHealth;
         StaticVariables.encounterCatalog = encounterCatalog;
         StaticVariables.cardVisualsPrefab = cardVisualsPrefab;
+        StaticVariables.drawNum = drawnNum;
 
         StaticVariables.allies = new List<Ally>();
         foreach (string allyName in startingAllyNames) {

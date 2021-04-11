@@ -11,7 +11,7 @@ public class Catalog : MonoBehaviour {
 
     public enum EffectTypes { Damage, Shield, Heal, Vulnerable, Weak,
         SelfDamage, Draw, AddMana, Stun, DamageAll, ConstantBleed, DiminishingBleed,
-        RemoveFromDeck}; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
+        RemoveFromDeck, IncreaseTurnDraw, DecreaseTurnDraw}; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
 
 
     public PlatonicCard[] cards; //the collection of cards. cards are added and modified in the inspector

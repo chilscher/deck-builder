@@ -16,7 +16,7 @@ public class EnemyCatalog : MonoBehaviour {
     //then, go to the EnemyCatalog script in the inspector, and add a new element to the enemyStatuses list
     //each status effect type defined in the StatusEffects enumerator should correspond to exactly one element in the enemyStatuses list.
 
-    public PlatonicStatus[] enemyStatuses;
+    public PlatonicEnemyStatus[] enemyStatuses;
 
     public PlatonicEnemy GetEnemyWithID(int id) {
         //returns the PlatonicEnemy with the specified id
@@ -28,8 +28,8 @@ public class EnemyCatalog : MonoBehaviour {
         return null;
     }
 
-    public PlatonicStatus GetStatusWithType(StatusEffects s) {
-        foreach(PlatonicStatus ps in enemyStatuses) {
+    public PlatonicEnemyStatus GetStatusWithType(StatusEffects s) {
+        foreach(PlatonicEnemyStatus ps in enemyStatuses) {
             if (ps.statusType == s) {
                 return ps;
             }

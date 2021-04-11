@@ -65,17 +65,19 @@ public class TouchHandler : MonoBehaviour {
                 //print(o.name);
                 //print("hey");
                 InteractWithObject(o);
+                //print("hi");
             }
 
+            if (!cardDetailsPopup.GetVisibility()) { //don't detect a tap if a card's details are showing                                  //register the current finger position for the purpose of detecting a tap
+                startingFingerPlacement = Input.mousePosition;
+                tapping = true;
+            }
 
-            //register the current finger position for the purpose of detecting a tap
-            startingFingerPlacement = Input.mousePosition;
-            tapping = true;
         }
 
 
         //process the finger being held down
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0) && !cardDetailsPopup.GetVisibility()) {
             if (tapping) {
                 tapping = StillTapping();
             }
@@ -83,7 +85,7 @@ public class TouchHandler : MonoBehaviour {
             //if the player is dragging a card, move the card to match the current mouse position
             //only move the card if the player's finger has left the tap-range
             //dont move the card if a card's details are showing on the large pop-up
-            if (shouldMoveCard && !tapping && !cardDetailsPopup.GetVisibility()) {
+            if (shouldMoveCard && !tapping && !cardDetailsPopup.GetVisibility() && movingCard != null) {
                 DragCard();
             }
         }
@@ -105,6 +107,7 @@ public class TouchHandler : MonoBehaviour {
 
                     //also, un-highlight the card that is being displayed
                     movingCard.transform.Find("Highlight").gameObject.SetActive(false);
+                    movingCard = null;
                 }
 
             }
@@ -120,7 +123,19 @@ public class TouchHandler : MonoBehaviour {
                 //also, un-highlight the card that is being displayed
                 //movingCard.transform.Find("Highlight").gameObject.SetActive(false);
             }
-            
+
+            else if (cardDetailsPopup.GetVisibility() && cardDetailsPopup.allowInteraction && (cardDetailsPopup.showingWhat == "Ally")) {
+                //hide the info popup
+                combatController.detailsPopup.GetComponent<DetailsPopup>().CloseDetails();
+                //activeEnemyDetails = false;
+
+                //return the selected card to its previous position
+                //movingCard.ReturnToStartingPos();
+
+                //also, un-highlight the card that is being displayed
+                //movingCard.transform.Find("Highlight").gameObject.SetActive(false);
+            }
+
 
             //otherwise, if the player has not moved their finger, register it as a tap
             else if (tapping){
@@ -133,6 +148,10 @@ public class TouchHandler : MonoBehaviour {
                     }
                     else if (o != null && IdentifyObject(o) == "Enemy") {
                         combatController.detailsPopup.GetComponent<DetailsPopup>().OpenEnemyDetails(o.transform.parent.parent.GetComponent<Enemy>());
+                        //activeEnemyDetails = true;
+                    }
+                    else if (o != null && IdentifyObject(o) == "Ally") {
+                        combatController.detailsPopup.GetComponent<DetailsPopup>().OpenAllyDetails();
                         //activeEnemyDetails = true;
                     }
                 }
@@ -158,7 +177,7 @@ public class TouchHandler : MonoBehaviour {
 
             //otherwise, if the player is moving a card, stop moving it
             //for testing, when the player releases a card, run its click function
-            else if (shouldMoveCard) {
+            else if (shouldMoveCard && movingCard != null) {
                 shouldMoveCard = false;
                 movingCard.isDragged = false;
                 movingCard.ReleasedCard();
@@ -220,6 +239,10 @@ public class TouchHandler : MonoBehaviour {
 
         if (obj.name == "Pile Detail Card Background") {
             return "Pile Detail Card";
+        }
+
+        if (obj.name == "Ally 1" || obj.name == "Ally 2" || obj.name == "Ally 3") {
+            return "Ally";
         }
         //if it is none of the above, return a useless value that corresponds to none of them
         return "No Type";
@@ -305,6 +328,14 @@ public class TouchHandler : MonoBehaviour {
             }
         }
 
+        foreach (GameObject obj in gos) {
+            if (IdentifyObject(obj) == "Ally") {
+                if (!combatController.hasWon && !combatController.hasLost && !pileDetailsPopup.visible) {
+                    return obj;
+                }
+            }
+        }
+
         //if no gameobject to touch is found, return null
         return null;
 
@@ -368,6 +399,10 @@ public class TouchHandler : MonoBehaviour {
             //combatController.detailsPopup.GetComponent<DetailsPopup>().ToggleCardDetails(obj.);
             //activeCardDetails = true;
             //print("gotem");
+        }
+
+        if (type == "Ally") {
+            //print("you clicked an ally!");
         }
 
     }
