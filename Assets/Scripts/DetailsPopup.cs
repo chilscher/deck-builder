@@ -426,12 +426,14 @@ public class DetailsPopup : MonoBehaviour {
             int d = status.turnsRemaining;
             switch (status.source.statusType) {
                 case AllyCatalog.StatusEffects.IncreasedDraw:
-                    summary += ("You have the Increased Draw status. You will draw " + d + " extra cards at the start of every turn, for a total of " + (StaticVariables.drawNum + d) + ".");
+                    if (d == 1) summary += ("You have the Increased Draw status. You will draw " + d + " extra card at the start of every turn, for a total of " + (StaticVariables.drawNum + d) + ".");
+                    else summary += ("You have the Increased Draw status. You will draw " + d + " extra cards at the start of every turn, for a total of " + (StaticVariables.drawNum + d) + ".");
                     summary += "\n";
                     summary += "\n";
                     break;
                 case AllyCatalog.StatusEffects.ReducedDraw:
-                    summary += ("You have the Reduced Draw status. You will draw " + d + " fewer cards at the start of every turn, for a total of " + (StaticVariables.drawNum - d) + ".");
+                    if (d==1) summary += ("You have the Reduced Draw status. You will draw " + d + " fewer card at the start of every turn, for a total of " + (StaticVariables.drawNum - d) + ".");
+                    else summary += ("You have the Reduced Draw status. You will draw " + d + " fewer cards at the start of every turn, for a total of " + (StaticVariables.drawNum - d) + ".");
                     summary += "\n";
                     summary += "\n";
                     break;
