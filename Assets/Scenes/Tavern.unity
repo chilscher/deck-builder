@@ -1053,7 +1053,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.611383}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &829536412
@@ -1162,8 +1162,8 @@ MonoBehaviour:
     allyArt: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
     startingCards:
     - hit
-    - hit
-    - block
+    - demotivate
+    - motivate
     - block
   - name: Rogue
     allyArt: {fileID: 21300000, guid: 102378875f09e1e4cba9e6e1800bfdb6, type: 3}
@@ -1213,6 +1213,12 @@ MonoBehaviour:
     decrementsAfterTurn: 0
   - statusType: 1
     icon: {fileID: 21300000, guid: 108a049a084d4274cb6458e13c136302, type: 3}
+    decrementsAfterTurn: 0
+  - statusType: 2
+    icon: {fileID: 21300000, guid: 12097473b0fa7c54cab1edae7bc7f072, type: 3}
+    decrementsAfterTurn: 0
+  - statusType: 3
+    icon: {fileID: 21300000, guid: 4f44a492aad715548999e2a61bcf398a, type: 3}
     decrementsAfterTurn: 0
 --- !u!4 &836529859
 Transform:
@@ -2343,6 +2349,30 @@ MonoBehaviour:
       parameter: 7
     - effectType: 14
       parameter: 1
+  - cardName: motivate
+    text: 'increase the base damage of your attacks by 1 for the rest of the encounter
+
+      remove this card from your deck'
+    manaCost: 2
+    cardArt: {fileID: 21300000, guid: 12097473b0fa7c54cab1edae7bc7f072, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 15
+      parameter: 1
+    - effectType: 12
+      parameter: 1
+  - cardName: demotivate
+    text: 'decrease the base damage of your attacks by 1 for the rest of the encounter
+
+      draw 5 cards'
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: 4f44a492aad715548999e2a61bcf398a, type: 3}
+    requiresTarget: 0
+    effects:
+    - effectType: 16
+      parameter: 1
+    - effectType: 6
+      parameter: 5
 --- !u!4 &1356205481
 Transform:
   m_ObjectHideFlags: 0
@@ -2393,7 +2423,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.59655994}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1436168420
@@ -2699,7 +2729,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.611383}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1521817612

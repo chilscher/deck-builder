@@ -343,6 +343,18 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
+                case Catalog.EffectTypes.IncreaseDamage:
+                    cardTextInfo += ("Increases the base damage of your attacks by " + p + ".");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
+                case Catalog.EffectTypes.DecreaseDamage:
+                    cardTextInfo += ("Decreases the base damage of your attacks by " + p + ".");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("Attacks cannot do less than 1 damage.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
             }
         }
         if (cardTextInfo.Length >= 2) {
@@ -434,6 +446,18 @@ public class DetailsPopup : MonoBehaviour {
                 case AllyCatalog.StatusEffects.ReducedDraw:
                     if (d==1) summary += ("You have the Reduced Draw status. You will draw " + d + " fewer card at the start of every turn, for a total of " + (StaticVariables.drawNum - d) + ".");
                     else summary += ("You have the Reduced Draw status. You will draw " + d + " fewer cards at the start of every turn, for a total of " + (StaticVariables.drawNum - d) + ".");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+                case AllyCatalog.StatusEffects.IncreasedDamage:
+                    summary += ("The base damage of your attacks is increased by " + d + ".");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+                case AllyCatalog.StatusEffects.ReducedDamage:
+                    summary += ("The base damage of your attacks is decreased by " + d + ".");
+                    summary += "\n";
+                    summary += "Attacks cannot do less than 1 damage.";
                     summary += "\n";
                     summary += "\n";
                     break;

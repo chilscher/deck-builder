@@ -22,7 +22,7 @@ public class AllyCatalog : MonoBehaviour {
     }
 
 
-    public enum StatusEffects { IncreasedDraw, ReducedDraw };
+    public enum StatusEffects { IncreasedDraw, ReducedDraw, IncreasedDamage, ReducedDamage  };
     //to add new enemy status effects, add a new element in this StatusEffects list
     //then, go to the EnemyCatalog script in the inspector, and add a new element to the enemyStatuses list
     //each status effect type defined in the StatusEffects enumerator should correspond to exactly one element in the enemyStatuses list.

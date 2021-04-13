@@ -671,12 +671,13 @@ public class CombatController : MonoBehaviour {
         //deals damage to the enemy. if the enemy dies from the damage, then defeats the enemy
         //enemy vulnerability is taken into account
 
-        float d = damage;
-        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= vulnerableScalar; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
-        int totalDamage = (int) d; //after applying vulnerability, rounds the number down to find the total damage the attack did
-        
+        //float d = damage;
+        //if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= vulnerableScalar; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
+        //int totalDamage = (int) d; //after applying vulnerability, rounds the number down to find the total damage the attack did
+
         // deal damage to enemy
-        enemy.hitPointDamage += totalDamage;
+        enemy.hitPointDamage += CalculateDamageToEnemy(damage, enemy);
+        //enemy.hitPointDamage += totalDamage;
 
         if (enemy.hitPointDamage > enemy.source.hitPoints) {
             enemy.hitPointDamage = enemy.source.hitPoints;
@@ -698,6 +699,28 @@ public class CombatController : MonoBehaviour {
                 StartCoroutine(WaitForWin(enemyDeathDuration + winPopupDelay));
             }
         }
+    }
+
+    private int CalculateDamageToEnemy(int damage, Enemy enemy) {
+        int result = damage;
+
+        //first, add/subtract to base damage
+        int addDamage = GetDurationOfAllyStatus(AllyCatalog.StatusEffects.IncreasedDamage);
+        damage += addDamage;
+        int subtDamage = GetDurationOfAllyStatus(AllyCatalog.StatusEffects.ReducedDamage);
+        damage -= subtDamage;
+
+        //then, multiply base damage
+        float d = damage;
+        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= vulnerableScalar; }
+
+        //then, round damage down
+        damage = (int)d;
+
+        //damage has a minimum value of 1
+        if (damage < 1) damage = 1;
+
+        return damage;
     }
 
     IEnumerator WaitForWin(float f) {
@@ -999,6 +1022,52 @@ public class CombatController : MonoBehaviour {
 
     }
 
+    public void ChangeBaseDamage(int amt) {
+        bool hasAddDmg = false;
+        bool hasSubtrDmg = false;
+        int priorAmt = 0;
+        List<AllyStatus> newList = new List<AllyStatus>();
 
+        foreach (AllyStatus status in allyStatuses) {
+            if (status.source == StaticVariables.allyCatalog.GetStatusWithType(AllyCatalog.StatusEffects.IncreasedDamage)) {
+                hasAddDmg = true;
+                priorAmt = status.turnsRemaining;
+            }
+            else if (status.source == StaticVariables.allyCatalog.GetStatusWithType(AllyCatalog.StatusEffects.ReducedDamage)) {
+                hasSubtrDmg = true;
+                priorAmt = status.turnsRemaining;
+            }
+            else {
+                newList.Add(status);
+            }
+        }
+
+        if (hasAddDmg) {
+            int newAmt = priorAmt + amt;
+            if (newAmt > 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDamage, newAmt));
+            if (newAmt < 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.ReducedDamage, -newAmt));
+        }
+        else if (hasSubtrDmg) {
+            int newAmt = -priorAmt + amt;
+            if (newAmt > 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDamage, newAmt));
+            if (newAmt < 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.ReducedDamage, -newAmt));
+
+        }
+        else if (amt > 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDamage, amt));
+        else if (amt < 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.ReducedDamage, -amt));
+
+        allyStatuses = newList;
+        mainCanvas.DisplayStatuses(allyStatuses);
+        detailsPopup.DisplayAllyStatuses(allyStatuses);
+    }
+
+    private int GetDurationOfAllyStatus(AllyCatalog.StatusEffects status) {
+        foreach (AllyStatus st in allyStatuses) {
+            if (st.source == StaticVariables.allyCatalog.GetStatusWithType(status)) {
+                return st.turnsRemaining;
+            }
+        }
+        return 0;
+    }
 
 }

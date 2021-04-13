@@ -196,6 +196,12 @@ public class CombatCard: MonoBehaviour{
             case Catalog.EffectTypes.DecreaseTurnDraw:
                 combatController.ChangeTurnDraw(-p);
                 break;
+            case Catalog.EffectTypes.IncreaseDamage:
+                combatController.ChangeBaseDamage(p);
+                break;
+            case Catalog.EffectTypes.DecreaseDamage:
+                combatController.ChangeBaseDamage(-p);
+                break;
         }
     }
 
