@@ -71,14 +71,11 @@ public class CombatController : MonoBehaviour {
     public float pauseBeforeEnemyAttacks = 0.2f; //the amount of time between when the bleeds are done being applied and when the enemies start attacking the player
     public float pauseBetweenEnemyAttacks = 0.3f; //the amount of time between enemy attacks
     
-
     private float enemyAttackDuration = 1f;
     private float enemyDeathDuration = 1f;
     private float playerAttackedDuration = 1f;
     private float enemyDamageDuration = 1f;
-
-    //public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
-
+    
     public List<CombatCard> cardQueue = new List<CombatCard>();
     public List<Enemy> targetQueue = new List<Enemy>();
 
@@ -155,11 +152,6 @@ public class CombatController : MonoBehaviour {
             }
         }
 
-
-
-        //basic display function
-        //enemy display function is bundled in AddNewEnemy above
-
         //hide all pre-existing gameobjects in the hand, except the card dead zone
         //card dead zone detects if the player moved a non-targeting card enough to play it
         //card dead zone needs to be active, because otherwise TouchController won't find it with a collision
@@ -183,7 +175,6 @@ public class CombatController : MonoBehaviour {
         }
         detailsPopup.SetAllyImages();
         detailsPopup.DisplayAllyStatuses(allyStatuses);
-        //drawNum = StaticVariables.drawNum;
         
         //fade the screen in, then start drawing cards
         yield return GeneralFunctions.StartFadeIn();
@@ -201,14 +192,6 @@ public class CombatController : MonoBehaviour {
             }
         }
     }
-
-    /*
-    private void MadeCardSmallAndRed(CombatCard cc) {
-        Image im = dc.transform.Find("Circle Overlay").GetComponent<Image>();
-        GeneralFunctions.SetTransparency(im, 1f);
-        dc.transform.localScale = new Vector3(tinyCardScale, tinyCardScale, tinyCardScale);
-    }
-    */
 
     private IEnumerator DrawCards(int amt) {
         //draws num cards from the deck and adds them to the hand. shuffles the discard pile into the deck if more cards need to be drawn
@@ -257,7 +240,6 @@ public class CombatController : MonoBehaviour {
             //put the card on top of the discard pile, and make it a small red ball
             cc.transform.position = mainCanvas.GetCenterOfDiscardPile();
             cc.GetComponent<CardVisuals>().MakeSmallAndRed();
-            //MadeCardSmallAndRed(dc);
             //move the card to the deck then destroy it
             cc.transform.DOMove(mainCanvas.GetCenterOfDeck(), TimingValues.durationOfCardMoveFromDiscardToDeck).OnComplete(()=> 
                 DestroyCardAndAddToDeck(cc));
@@ -272,8 +254,8 @@ public class CombatController : MonoBehaviour {
     }
 
     private void DestroyCardAndAddToDeck(CombatCard cc) {
-        //adds the displaycard's associated card to the deck, updates the deck's visible card count
-        //then destroys the displaycard
+        //adds the combatcard's associated card to the deck, updates the deck's visible card count
+        //then destroys the combatcard
         deck.Add(cc.associatedCard);
         DisplayDeckCount();
         GameObject.Destroy(cc.gameObject);
@@ -303,7 +285,6 @@ public class CombatController : MonoBehaviour {
         //put the card on top of the deck and make it a small red ball
         cc.transform.position = mainCanvas.GetCenterOfDeck();
         cc.GetComponent<CardVisuals>().MakeSmallAndRed();
-        //MadeCardSmallAndRed(dc);
 
         //move the card to the correct position in the hand, and move other cards to make room for it
         yield return StartCoroutine(PositionCardsInHand());
@@ -313,7 +294,7 @@ public class CombatController : MonoBehaviour {
     }
 
     private CombatCard CreateCombatCard(CardData cardData) {
-        //creates a DisplayCard for the provided CardData. Sets the visuals and references for the DisplayCard, but does not set its position
+        //creates a CombatCard for the provided CardData. Sets the visuals and references for the CombatCard, but does not set its position
 
         GameObject g = Instantiate(cardVisualsPrefab);
         CardVisuals cv = g.GetComponent<CardVisuals>();
@@ -327,33 +308,6 @@ public class CombatController : MonoBehaviour {
         cc.touchHandler = GetComponent<TouchHandler>();
         combatCardsInHand.Add(cc);
         return cc;
-
-        /*
-        //instantiate the prefab and set its position and parent
-        GameObject c = Instantiate(combatCardPrefab);
-        c.transform.SetParent(handGameObject.transform, false);
-
-        //set the card art to match the provided card art sprite
-        c.transform.Find("Card Art").GetComponent<Image>().sprite = cardData.source.cardArt;
-
-        //set the DisplayCard's CardData reference, so when you click the DisplayCard you can interact with the CardData it represents
-        c.GetComponent<CombatCard>().associatedCard = cardData;
-
-        //set the DisplayCard's CombatController and TouchHandler references
-        c.GetComponent<CombatCard>().combatController = this;
-        c.GetComponent<CombatCard>().touchHandler = GetComponent<TouchHandler>();
-
-
-        //set the visual's text, name, and mana cost from the card data
-        c.transform.Find("Name").GetComponent<Text>().text = cardData.source.cardName.ToUpper();
-        c.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
-        c.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardData.source.manaCost];
-
-        //add the new DisplayCard to the list of cards displayed in the hand
-        displayCardsInHand.Add(c.GetComponent<DisplayCard>());
-
-        return c.GetComponent<DisplayCard>();
-        */
     }
     
     public IEnumerator PositionCardsInHand() { 
@@ -378,7 +332,6 @@ public class CombatController : MonoBehaviour {
 
         //set the card's position based on the predetermined distance between all cards, and the card's index in the hand
         for (int i = 0; i < hand.Count; i++) {
-            //print(i);
             Vector2 cardPos = Vector2.zero;
             cardPos.x -= totalHandSize / 2; //move all cards left by half the available space
             cardPos.x += distBetweenCards * i; //move each card right by its index and the predetermined distance
@@ -418,35 +371,6 @@ public class CombatController : MonoBehaviour {
         pileDetailsPopup.TogglePileDetails("DISCARD CONTENTS", discardPile, CardVisuals.clickOptions.OpenDetails);
     }
 
-    /*
-    public void MoveCardFromHandToDiscard(CardData card) {
-        //takes card from hand and moves it to the discard pile, then re-displays the hand, deck, and discard pile
-        //used when a card is played
-
-        //remove the DisplayCard and send it to the discard pile
-        List<DisplayCard> temp = new List<DisplayCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
-        foreach (DisplayCard dc in displayCardsInHand) {
-            if (dc.associatedCard == card) {
-                //tween the card going to the discard pile
-                SendCardToDiscard(dc);
-            } else { temp.Add(dc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
-        }
-
-        displayCardsInHand = temp; //all the cards that haven't just been removed
-
-        //move the card from the hand to the discard pile
-        hand.Remove(card);
-
-        //display the cards in the hand, deck, and discard pile
-        StartCoroutine(PositionCardsInHand());        
-    }
-    */
-
-   // public void MoveCardToDiscard(DisplayCard dc) {
-        //moves a displaycard to the discard pile. nothing fancy.
-        //SendCardToDiscard(dc);
-    //}
-
     public void RemoveCardFromHand(CardData card) {
         //removes a card from the hand without sending it to the discard pile
         //displaycards have to continue existing after they are played, before they go to the discard
@@ -454,10 +378,7 @@ public class CombatController : MonoBehaviour {
         //remove the DisplayCard and send it to the discard pile
         List<CombatCard> temp = new List<CombatCard>(); //we can't remove elements from a list during iteration through that list, so we need a temp list to store the DisplayCards we want to keep
         foreach (CombatCard cc in combatCardsInHand) {
-            if (cc.associatedCard == card) {
-                //dc.transform.SetParent(mainCanvas.transform);
-            }
-            else { temp.Add(cc); } //if we don't want to remove the card, add it to the list of cards to keep a reference for
+            if (cc.associatedCard != card) {temp.Add(cc);} //if we don't want to remove the card, add it to the list of cards to keep a reference for
         }
 
         combatCardsInHand = temp; //all the cards that haven't just been removed
@@ -496,9 +417,7 @@ public class CombatController : MonoBehaviour {
 
         //do not return until the card has been sent to the discard pile
         float discardDuration = (TimingValues.cardScalingTime + TimingValues.durationOfCardMoveFromPlayToDiscard);
-        //print(discardDuration);
         yield return new WaitForSeconds(discardDuration);
-        //print("ok");
     }
 
     public IEnumerator RemoveCardFromGame(CombatCard cc) {
@@ -512,19 +431,9 @@ public class CombatController : MonoBehaviour {
         yield return new WaitForSeconds(TimingValues.cardScalingTime);
     }
 
-    /*
-    private void AddCardToDiscardIfNotRemoved(CombatCard cc) {
-        //adds the card to the discard pile
-        //if the card removes itself from the game due to its own effect, do not add it back to the discard, and just remove it instead
-        if (!cc.hasBeenRemoved) {
-            discardPile.Add(cc.associatedCard)
-        }
-    }
-    */
-
     private IEnumerator SendCardToDiscardThenDestroy(CombatCard cc) {
+        //sends a card to the discard pile, waits for that process to complete, then destroys the card
         yield return StartCoroutine(SendCardToDiscard(cc));
-        //print("destroy now!");
         GameObject.Destroy(cc.gameObject);
     }
 
@@ -532,17 +441,14 @@ public class CombatController : MonoBehaviour {
         //adds the card to the discard pile list, updates the visual display for the number of cards in the discard pile, then destroys the displaycard
         discardPile.Add(cc.associatedCard);
         DisplayDiscardCount();
-        //GameObject.Destroy(dc.gameObject);
 
     }
 
-    public void MoveDisplayCardToQueue(CombatCard cc) {
+    public void MoveCombatCardToQueue(CombatCard cc) {
         //moves the displaycard to the queue, and repositions all cards in the queue
-        //dc.transform.DOMove(mainCanvas.GetCenterOfQueue(), 0.1f);
         cc.transform.DOScale(1f, 0.1f);
         cc.transform.SetParent(mainCanvas.transform.Find("InPlay Queue"));
         PositionCardsInQueue();
-        //put the card at the back of the queue?
     }
 
     public void PositionCardsInQueue() {
@@ -613,6 +519,7 @@ public class CombatController : MonoBehaviour {
     }
 
     private void CheckForLoss() {
+        //checks to see if the player lost
         if (StaticVariables.health <= 0) {
             StaticVariables.health = 0;
             Lose();
@@ -620,6 +527,7 @@ public class CombatController : MonoBehaviour {
     }
 
     private void UpdateHPandShields() {
+        //updates the number display for the hp and shields
         int beforeHP = mainCanvas.ShownHP();
         int diffHP = beforeHP - StaticVariables.health;
         if (diffHP > 0) {
@@ -646,7 +554,6 @@ public class CombatController : MonoBehaviour {
 
     private void Lose() {
         //stuff that happens when the player loses all their health
-        //more functions to be added later
         hasLost = true;
         losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
@@ -671,13 +578,8 @@ public class CombatController : MonoBehaviour {
         //deals damage to the enemy. if the enemy dies from the damage, then defeats the enemy
         //enemy vulnerability is taken into account
 
-        //float d = damage;
-        //if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= vulnerableScalar; } //enemy vulnerability is factored in here - if the enemy is vulnerable, they take extra damage
-        //int totalDamage = (int) d; //after applying vulnerability, rounds the number down to find the total damage the attack did
-
         // deal damage to enemy
         enemy.hitPointDamage += CalculateDamageToEnemy(damage, enemy);
-        //enemy.hitPointDamage += totalDamage;
 
         if (enemy.hitPointDamage > enemy.source.hitPoints) {
             enemy.hitPointDamage = enemy.source.hitPoints;
@@ -702,6 +604,7 @@ public class CombatController : MonoBehaviour {
     }
 
     private int CalculateDamageToEnemy(int damage, Enemy enemy) {
+        //calculates the total damage recieved by the enemy, based on the provided base damage
         int result = damage;
 
         //first, add/subtract to base damage
@@ -731,22 +634,15 @@ public class CombatController : MonoBehaviour {
 
     private void DefeatEnemy(Enemy enemy) {
         //stuff that happens when an enemy drops to 0 HP
-        //more functions to be added here later
         enemies.Remove(enemy);
         enemy.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("FadeOut");
     }
 
     private void Win() {
         //stuff that happens after all enemies are defeated!
-        //more functions to be added here later
         hasWon = true;
         winPopup.GetComponent<WinPopup>().PlayerWins();
     }
-
-    public void AddCardToPlayerDeck(string cardName) {
-        StaticVariables.playerDeck.Add(new CardData(StaticVariables.catalog.GetCardWithName(cardName)));
-    }
-
     
     IEnumerator EnemiesAttackInSequence() {
         //makes each enemy attack in sequence
@@ -832,7 +728,7 @@ public class CombatController : MonoBehaviour {
     }
 
     public void UpdateEnemyAttack(Enemy enemy) {
-
+        //updates the visuals for an enemy, displaying their next attack
         string attack = enemy.source.enemyAttacks[enemy.currentAttackIndex];
 
         if (attack.Split('-')[0] == "Damage") {
@@ -886,13 +782,10 @@ public class CombatController : MonoBehaviour {
                 if (status.source.statusType != EnemyCatalog.StatusEffects.ConstantBleed) { //the constant bleed status does not go down every turn
                     status.turnsRemaining -= 1;
                 }
- 
             }
             enemy.RemoveStatusesWithNoTurnsRemaining();
             enemy.ShowStatuses();
         }
-
-
     }
 
     private void CountDownAllyStatuses() {
@@ -984,15 +877,17 @@ public class CombatController : MonoBehaviour {
     }
 
     public void ClaimCardFromWin(CardData card) {
-        //    string cardName = obj.transform.parent.Find("Name").GetComponent<Text>().text.ToLower();
-        //    combatController.AddCardToPlayerDeck(cardName);
-        AddCardToPlayerDeck(card.source.cardName);
+        //stuff that happens when the player chooses a card to claim after they win the encounter
+        StaticVariables.playerDeck.Add(new CardData(StaticVariables.catalog.GetCardWithName(card.source.cardName)));
         //start fade-out
         StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
     }
 
 
     public void ChangeTurnDraw(int amt) {
+        //does the "Increase/Decrease Turn Draw" card effect
+        //Changes the amount of cards the player draws at the start of their turn
+        //also updates the visuals for any related status effects
         drawNum += amt;
         if (drawNum < 0) {
             drawNum = 0;
@@ -1005,7 +900,6 @@ public class CombatController : MonoBehaviour {
                 newList.Add(status);
             }
         }
-        
         if (drawNum > StaticVariables.drawNum) {
             int diff = drawNum - StaticVariables.drawNum;
             newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDraw, diff));
@@ -1014,20 +908,24 @@ public class CombatController : MonoBehaviour {
             int diff = StaticVariables.drawNum - drawNum;
             newList.Add(new AllyStatus(AllyCatalog.StatusEffects.ReducedDraw, diff));
         }
-
         allyStatuses = newList;
         
+        //re-display the player's current statuses
         mainCanvas.DisplayStatuses(allyStatuses);
         detailsPopup.DisplayAllyStatuses(allyStatuses);
 
     }
 
     public void ChangeBaseDamage(int amt) {
+        //does the "Increase/Decrease Damage" card effect
+        //Adds or subtracts from base damage before any multipliers
+        //also updates the visuals for any related status effects
         bool hasAddDmg = false;
         bool hasSubtrDmg = false;
         int priorAmt = 0;
         List<AllyStatus> newList = new List<AllyStatus>();
 
+        //remove damage mod statuses, and pull the current damage mod from any that currently exist
         foreach (AllyStatus status in allyStatuses) {
             if (status.source == StaticVariables.allyCatalog.GetStatusWithType(AllyCatalog.StatusEffects.IncreasedDamage)) {
                 hasAddDmg = true;
@@ -1042,6 +940,7 @@ public class CombatController : MonoBehaviour {
             }
         }
 
+        //adds a new status based on the damage mod
         if (hasAddDmg) {
             int newAmt = priorAmt + amt;
             if (newAmt > 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDamage, newAmt));
@@ -1055,13 +954,15 @@ public class CombatController : MonoBehaviour {
         }
         else if (amt > 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.IncreasedDamage, amt));
         else if (amt < 0) newList.Add(new AllyStatus(AllyCatalog.StatusEffects.ReducedDamage, -amt));
-
         allyStatuses = newList;
+
+        //re-display the player's current statuses
         mainCanvas.DisplayStatuses(allyStatuses);
         detailsPopup.DisplayAllyStatuses(allyStatuses);
     }
 
     private int GetDurationOfAllyStatus(AllyCatalog.StatusEffects status) {
+        //returns the "turns remaining" of an ally status effect
         foreach (AllyStatus st in allyStatuses) {
             if (st.source == StaticVariables.allyCatalog.GetStatusWithType(status)) {
                 return st.turnsRemaining;
@@ -1069,5 +970,4 @@ public class CombatController : MonoBehaviour {
         }
         return 0;
     }
-
 }

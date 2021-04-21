@@ -43,16 +43,12 @@ public class Catalog : MonoBehaviour {
             }
             result.Add(c);
         }
-
         return result;
-
     }
-
-
+    
     public CardData GetRandomCard() {
         //returns a random card from the list of all possible cards
         int index = StaticVariables.random.Next(cards.Length);
         return new CardData(cards[index]);
     }
-    
 }

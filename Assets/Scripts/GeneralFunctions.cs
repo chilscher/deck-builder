@@ -12,7 +12,7 @@ public static class GeneralFunctions {
 
 
     public static void SetTransparency(Image im, float val) {
-        //sets the transparence of the image to val
+        //immediately sets the transparency of the image to val
         Color c = im.color;
         c.a = val;
         im.color = c;
@@ -20,6 +20,7 @@ public static class GeneralFunctions {
 
     
     public static IEnumerator StartFadeIn() {
+        //fades in the screen from complete blackness to complete transparency
         Image blackScreenOverlay = GameObject.Find("Fade Canvas").transform.Find("Background").GetComponent<Image>();
         GeneralFunctions.SetTransparency(blackScreenOverlay, 1f);
         blackScreenOverlay.DOFade(0, TimingValues.screenFadeTime);
@@ -28,6 +29,7 @@ public static class GeneralFunctions {
     }
 
     public static IEnumerator StartFadeOut(string nextScene) {
+        //fades out the screen from complete transparency to complete blackness
         Image blackScreenOverlay = GameObject.Find("Fade Canvas").transform.Find("Background").GetComponent<Image>();
         GeneralFunctions.SetTransparency(blackScreenOverlay, 0f);
         blackScreenOverlay.DOFade(1, TimingValues.screenFadeTime);

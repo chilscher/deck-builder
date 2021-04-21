@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStatus{
-
-    //public EnemyCatalog.StatusEffects statusType;
+    
     public PlatonicEnemyStatus source;
     public int turnsRemaining;
 

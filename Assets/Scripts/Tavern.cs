@@ -56,8 +56,7 @@ public class Tavern : MonoBehaviour {
         }
 
         UpdateAllyButtons();
-
-        //cardDetailsPopup.SetActive(false);
+        
         foreach (Transform t in startingCardsPopup.transform) {
             t.gameObject.SetActive(false);
         }
@@ -73,30 +72,31 @@ public class Tavern : MonoBehaviour {
 
 
     public void ShowStartingCards() {
+        //shows the starting cards popup
         foreach (Transform t in startingCardsPopup.transform) {
             t.gameObject.SetActive(true);
         }
+
+        float showTime = 0.5f;
         startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
-        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
+        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, showTime);
 
         startingCardsPopup.transform.Find("Background").DOScale(0, 0);
-        startingCardsPopup.transform.Find("Background").DOScale(1, 0.5f);
-        //startingCardsPopup.SetActive(true);
+        startingCardsPopup.transform.Find("Background").DOScale(1, showTime);
 
     }
 
     public void HideStartingCards() {
-        foreach (Transform t in startingCardsPopup.transform) {
-            //t.gameObject.SetActive(false);
-        }
+        //hides the starting cards popup
         foreach (Transform t in startingCardsPopup.transform.Find("Background").Find("Card Options")) {
             foreach (Transform t2 in t) {
                 Destroy(t2.gameObject);
             }
         }
-        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0f, 0.3f).OnComplete(() => startingCardsPopup.transform.Find("Grey Backdrop").gameObject.SetActive(false));
+        float hideTime = 0.3f;
+        startingCardsPopup.transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0f, hideTime).OnComplete(() => startingCardsPopup.transform.Find("Grey Backdrop").gameObject.SetActive(false));
         
-        startingCardsPopup.transform.Find("Background").DOScale(0, 0.3f).OnComplete(() => startingCardsPopup.transform.Find("Background").gameObject.SetActive(false));
+        startingCardsPopup.transform.Find("Background").DOScale(0, hideTime).OnComplete(() => startingCardsPopup.transform.Find("Background").gameObject.SetActive(false));
     }
 
     public void StartGame() {
@@ -150,6 +150,7 @@ public class Tavern : MonoBehaviour {
     }
 
     public void DisplayAllyCards(GameObject allySelector) {
+        //sets the visuals for the starting cards popup to match the chosen ally
         Ally newAlly = new Ally(allyCatalog.GetAllyWithName(allySelector.name));
 
         //changes the visual display of the ally starting cards
@@ -165,7 +166,8 @@ public class Tavern : MonoBehaviour {
         }
 
         startingCardsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = newAlly.source.name.ToUpper();
-        //startingCardsPopup.SetActive(true);
+
+        //show the popup
         ShowStartingCards();
     }
 
@@ -215,7 +217,6 @@ public class Tavern : MonoBehaviour {
                     dr.type = Overworld.RoomTypes.Boss;
                     break;
             }
-
         }
         
         //create an empty list of parents
@@ -229,9 +230,7 @@ public class Tavern : MonoBehaviour {
                    child.parentNodes.Add(room);
             }
         }
-
-
-
+        
         //calculate column number for each room
         foreach(DungeonRoom room in rooms) {
             if (room.parentNodes.Count == 0) {
@@ -245,6 +244,4 @@ public class Tavern : MonoBehaviour {
         //store the dungeon floor rooms into StaticVariables
         StaticVariables.dungeonFloor = rooms;
     }
-
-
 }

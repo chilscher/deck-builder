@@ -15,6 +15,5 @@ public class PlatonicAllyStatus {
 
     public AllyCatalog.StatusEffects statusType; //the status type: vulnerable, weak, etc
     public Sprite icon; //the icon that will show on an enemy when they have this status
-    //public string description; //the text description for what this status does, will be used in a variety of places
     public bool decrementsAfterTurn = false;
 }

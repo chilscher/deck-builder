@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class WinPopup : MonoBehaviour {
     //controls the canvas for the popup that appears after the player wins a combat encounter
@@ -13,6 +14,8 @@ public class WinPopup : MonoBehaviour {
 
     void Start() {
         SetVisibility(false);
+        GeneralFunctions.SetTransparency(transform.Find("Grey Backdrop").GetComponent<Image>(), 0f);
+        transform.Find("Background").DOScale(0f, 0f);
         ShowWinCards();
     }
 
@@ -26,8 +29,9 @@ public class WinPopup : MonoBehaviour {
     public void PlayerWins() {
         //called by the Combat Controller when the player wins the encounter
         SetVisibility(true);
-        transform.Find("Background").GetComponent<Animator>().SetTrigger("Popup");
-        transform.Find("Grey Backdrop").GetComponent<Animator>().SetTrigger("Fade In");
+        float showTime = 0.4f;
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, showTime);
+        transform.Find("Background").DOScale(1f, showTime);
     }
 
     public void ShowWinCards() {
@@ -39,16 +43,6 @@ public class WinPopup : MonoBehaviour {
 
             go.GetComponent<CardVisuals>().SwitchCardData(cardReward);
             go.GetComponent<CardVisuals>().clickOption = CardVisuals.clickOptions.TakeFromWin;
-
-            //CardData cardData = new CardData(StaticVariables.catalog.GetCardWithName(cardReward));
-
-            //set the card art to match the provided card art sprite
-            //go.transform.Find("Card Art").GetComponent<Image>().sprite = cardReward.source.cardArt;
-
-            //set the visual's text, name, and mana cost from the card data
-            //go.transform.Find("Name").GetComponent<Text>().text = cardReward.source.cardName.ToUpper();
-            //go.transform.Find("Text").GetComponent<Text>().text = cardReward.source.text.ToUpper();
-            //go.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardReward.source.manaCost];
         }
     }
     

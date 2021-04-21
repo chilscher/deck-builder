@@ -256,10 +256,6 @@ public class MainCanvas : MonoBehaviour {
                 c.transform.Find("Text").GetComponent<Text>().text = statuses[i].turnsRemaining + "";
             }
         }
-
-        //update their next attack display
-        //specifically important if the enemy gains or loses the weak status
-        //combatController.UpdateEnemyAttack(this);
     }
     
 

@@ -24,7 +24,6 @@ public class PlatonicCard {
 
     [Header("Effect Data")]
     public bool requiresTarget;
-
-    //public List<string> effects;
+    
     public List<EffectBit> effects;
 }

@@ -76,7 +76,6 @@ public class CombatCard: MonoBehaviour{
                 }
             }
             //if the card is out of the hand's dead zone, play it. else, return it to the hand
-            //if (cardOutOfHand) { StartCoroutine(PlayCard()); }
             if (cardOutOfHand) { QueueForPlay(); }
             else { ReturnToStartingPos(); }            
         }
@@ -90,44 +89,19 @@ public class CombatCard: MonoBehaviour{
         StartCoroutine(combatController.PositionCardsInHand());
         combatController.cardQueue.Add(this);
         combatController.targetQueue.Add(e);
-        //move the displaycard to the queue pile
-        //transform.DOMove(combatController.mainCanvas.GetCenterOfQueue(), 0.1f);
-        //transform.DOScale(0.54f, 0.1f);
-        combatController.MoveDisplayCardToQueue(this);
-        if (combatController.cardQueue[0] == this) {
-            //StartCoroutine(PlayCard(e));
-        }
+        //move the combatcard to the queue pile
+        combatController.MoveCombatCardToQueue(this);
     }
     
     public IEnumerator PlayCard(Enemy enemy = null) {
-        //plays the associated card. if a target enemy is required for the effect, it can be provided
+        //activates this card's effects
         inPlay = true;
-        //print("bah");
-        //subtract the card's mana cost from the player's remaining mana
-        //combatController.mana -= associatedCard.source.manaCost;
-
-        //combatController.DisplayMana();
-
-        //remove the card from the hand, and reposition the cards already in the hand
-        //combatController.RemoveCardFromHand(associatedCard);
-        //StartCoroutine(combatController.PositionCardsInHand());
-        //print("good");
-
-        //iterate through all the effects of the card, and do each one
-        //doing the effect has to go last, just in case the card has a drawing effect
-        //           -- a drawing effect will re-deal the hand with the to-be-discarded card still in it
+        //iterate through all the effects of the card, and do each one in order
         foreach (EffectBit effect in associatedCard.source.effects) {
 
             yield return DoCardEffect(effect, enemy);
         }
-
-        //print("tah");
-
-        //discard the card
-        //combatController.MoveCardFromHandToDiscard(associatedCard);
-        //combatController.MoveCardToDiscard(this);
-        //print("about to discard");
-
+        
         //send the card to the discard pile if it has not been removed due to its own effect
         if (!hasBeenRemoved) {
             yield return StartCoroutine(combatController.SendCardToDiscard(this));
@@ -135,15 +109,10 @@ public class CombatCard: MonoBehaviour{
         else {
             yield return StartCoroutine(combatController.RemoveCardFromGame(this));
         }
-        //print("done");
+        
         //remove this card from the queue.
-        //if there is another card in queue, start that card's activation
         combatController.cardQueue.RemoveAt(0);
         combatController.targetQueue.RemoveAt(0);
-        if (combatController.cardQueue.Count > 0) {
-            //print("there is another card in queue!");
-            //StartCoroutine(combatController.cardQueue[0].PlayCard(combatController.targetQueue[0]));
-        }
         Destroy(gameObject);
     }
     
@@ -206,15 +175,13 @@ public class CombatCard: MonoBehaviour{
     }
 
     public void ReturnToStartingPos() {
-        //returns the DisplayCard to the position it was at in the hand previously
+        //returns the CombatCard to the position it was at in the hand previously
         //also returns it to its rightful place in the hierarchy, so it is on top of earlier cards, and later cards are on top of it
-        //print("returning");
         tweening = true;
 
-        //tweens the card to its old position gradually
+        //tweens the card to its old position
         DOTween.To(()=> GetComponent<RectTransform>().anchoredPosition, x => GetComponent<RectTransform>().anchoredPosition = x, startingPosition, 0.2f).OnComplete(ClearTweeningFlag);
         transform.SetSiblingIndex(placeInHierarchy);
-        //print("return");
     }
 
     private void ClearTweeningFlag() {

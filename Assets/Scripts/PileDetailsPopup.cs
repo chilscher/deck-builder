@@ -30,7 +30,6 @@ public class PileDetailsPopup : MonoBehaviour {
         //called by the Combat Controller when the player taps the deck or discard pile
         if (visible == false){
             //show the popup
-            //visible = true;
             SetVisibility(true);
             Show();
             //create a shuffled list of the cards in the pile
@@ -62,14 +61,6 @@ public class PileDetailsPopup : MonoBehaviour {
                 //display the card's info
                 card.GetComponent<CardVisuals>().SwitchCardData(shuffledContents[i]);
                 card.GetComponent<CardVisuals>().clickOption = clickOption;
-                /*
-                PlatonicCard cardSource = shuffledContents[i].source;
-
-                card.transform.Find("Name").GetComponent<Text>().text = cardSource.cardName.ToUpper();
-                card.transform.Find("Card Art").GetComponent<Image>().sprite = cardSource.cardArt;
-                card.transform.Find("Text").GetComponent<Text>().text = cardSource.text.ToUpper();
-                card.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardSource.manaCost];
-                */
             }
 
             //scroll to top of pile contents window
@@ -79,14 +70,7 @@ public class PileDetailsPopup : MonoBehaviour {
 
     public void ClosePopup() {
         //hide the popup, from a button in the corner
-        //visible = false;
-        //SetVisibility(false);
         Hide();
-        //destroy all rows, so the popup is clear for next time
-        //foreach (Transform child in scrollView.transform) {
-        //    GameObject.Destroy(child.gameObject);
-        //}
-        //ClearCards();
     }
 
     public void ClearCards() {
@@ -120,33 +104,21 @@ public class PileDetailsPopup : MonoBehaviour {
     }
 
     public void Show() {
-        //SetAllowInteraction(false);
+        //starts the process to show the popup
+
+        float showTime = 0.5f;
         transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0);
-        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, 0.5f);
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0.5f, showTime);
 
         transform.Find("Background").DOScale(0, 0);
-        transform.Find("Background").DOScale(1, 0.5f);
-
-        //transform.Find("Text Info").DOScale(0, 0);
-        //transform.Find("Text Info").DOScale(1, 0.5f).OnComplete(() => SetAllowInteraction(true));
-        //yield return new WaitForSeconds(0.5f);
-        //SetOpen(true);
+        transform.Find("Background").DOScale(1, showTime);
     }
 
     public void Hide() {
-        //SetAllowInteraction(false);
+        //starts the process to hide the popup
 
-
-        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.3f).OnComplete(() => ClearCards());
-        transform.Find("Background").DOScale(0, 0.3f).OnComplete(() => SetVisibility(false));
-        /*
-        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, 0.3f);
-
-        transform.Find("Details Card").DOScale(0, 0.3f);
-
-        transform.Find("Details Enemy").DOScale(0, 0.3f).OnComplete(() => SetAllowInteraction(true));
-
-        transform.Find("Text Info").DOScale(0, 0.3f).OnComplete(() => SetVisibility(false));
-        */
+        float hideTime = 0.3f;
+        transform.Find("Grey Backdrop").GetComponent<Image>().DOFade(0, hideTime).OnComplete(() => ClearCards());
+        transform.Find("Background").DOScale(0, hideTime).OnComplete(() => SetVisibility(false));
     }
 }

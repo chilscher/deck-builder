@@ -26,15 +26,6 @@ public class CardVisuals: MonoBehaviour{
 
     public float tinyCardScale = 0.07f; //the scale size of a displaycard when it is tiny and moving around the screen
 
-    //private bool isFollowingMouse = false;
-
-    /*
-    private void Update() {
-        if (isFollowingMouse) {
-
-        }
-    }
-    */
 
     public void SetPositionImmediate(Vector2 newPos) {
         transform.position = newPos;
@@ -60,7 +51,6 @@ public class CardVisuals: MonoBehaviour{
 
     public void TapCard() {
         if (clickOption == clickOptions.DoNothing) {
-            //print("ouch you tapped me! i am " + source.source.cardName);
         }
         else if (clickOption == clickOptions.OpenDetails) {
             FindObjectOfType<DetailsPopup>().OpenCardDetails(source);
@@ -69,7 +59,6 @@ public class CardVisuals: MonoBehaviour{
             FindObjectOfType<CombatController>().ClaimCardFromWin(source);
         }
         else if (clickOption == clickOptions.TrashCard) {
-            //print("im outta here!");
             StaticVariables.playerDeck.Remove(source);
             StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
         }
@@ -79,10 +68,4 @@ public class CardVisuals: MonoBehaviour{
         GeneralFunctions.SetTransparency(circleOverlayIm, 1f);
         transform.localScale = new Vector3(tinyCardScale, tinyCardScale, tinyCardScale);
     }
-
-    /*
-    public void FollowMousePosition(bool shouldFollow) {
-        isFollowingMouse = shouldFollow;
-    }
-    */
 }

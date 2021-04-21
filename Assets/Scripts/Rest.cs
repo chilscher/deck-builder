@@ -56,6 +56,7 @@ public class Rest : MonoBehaviour {
     }
 
     public void SelectToTrash() {
+        //shows the pile details popup, allowing the player to tap a card to trash it
         FindObjectOfType<PileDetailsPopup>().TogglePileDetails("Select a Card to Trash", StaticVariables.playerDeck, CardVisuals.clickOptions.TrashCard);
     }
 }
