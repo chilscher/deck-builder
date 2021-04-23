@@ -19,7 +19,7 @@ public class Overworld : MonoBehaviour {
 
     public GameObject healthDisplay;
 
-    public enum RoomTypes { Empty, Combat, Rest, Boss }; 
+    public enum RoomTypes { Empty, Combat, Rest, Boss, Shop }; 
     
     public void Start() {
         //create and arrange the room buttons

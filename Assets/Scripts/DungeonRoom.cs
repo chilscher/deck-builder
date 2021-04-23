@@ -30,6 +30,8 @@ public class DungeonRoom{
                     GoToRest(); break;
                 case Overworld.RoomTypes.Boss:
                     GoToBossCombat(); break;
+                case Overworld.RoomTypes.Shop:
+                    GoToShop(); break;
             }
 
         }
@@ -98,6 +100,16 @@ public class DungeonRoom{
 
         //start fade-out
         GameObject.FindObjectOfType<Overworld>().GoToScene("Combat");
+    }
+
+    public void GoToShop() {
+        //go to a Shop
+        StaticVariables.shopOptions = StaticVariables.catalog.GetRandomCards(8);
+        StaticVariables.currentRoom = this;
+
+        //start fade-out
+        GameObject.FindObjectOfType<Overworld>().GoToScene("Shop");
+
     }
 
 }

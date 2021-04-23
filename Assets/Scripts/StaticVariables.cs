@@ -25,5 +25,6 @@ public class StaticVariables {
 
     static public GameObject cardVisualsPrefab;
     static public int drawNum; //the number of cards the player draws at the start of their turn
-    
+
+    static public List<CardData> shopOptions;
 }

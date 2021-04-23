@@ -363,12 +363,12 @@ public class CombatController : MonoBehaviour {
 
     public void DisplayDeck() {
         //displays the cards in the deck on screen. called via TouchHandler when the player touches the deck
-        pileDetailsPopup.TogglePileDetails("DECK CONTENTS", deck, CardVisuals.clickOptions.OpenDetails);
+        pileDetailsPopup.TogglePileDetails("DECK CONTENTS", deck, CardVisuals.clickOptions.OpenDetails, false);
     }
 
     public void DisplayDiscard() {
         //displays the cards in the discard pile on screen. called via TouchHandler when the player touches the discard pile
-        pileDetailsPopup.TogglePileDetails("DISCARD CONTENTS", discardPile, CardVisuals.clickOptions.OpenDetails);
+        pileDetailsPopup.TogglePileDetails("DISCARD CONTENTS", discardPile, CardVisuals.clickOptions.OpenDetails, false);
     }
 
     public void RemoveCardFromHand(CardData card) {
@@ -408,16 +408,20 @@ public class CombatController : MonoBehaviour {
 
     public IEnumerator SendCardToDiscard(CombatCard cc) {
         //moves a displaycard to the discard pile
+        cc.GetComponent<CardVisuals>().ShrinkCardAndSendSomewhere(mainCanvas.GetCenterOfDiscardPile());
+        /*
         cc.transform.DOScale(cc.GetComponent<CardVisuals>().tinyCardScale, TimingValues.cardScalingTime).OnComplete(() => 
             cc.transform.DOMove(mainCanvas.GetCenterOfDiscardPile(), TimingValues.durationOfCardMoveFromPlayToDiscard).OnComplete(() => 
                 AddCardToDiscardPile(cc)));
+                */
         cc.tweening = true; //the player can no longer tap the card
                             //hide the card art and replace it with a static image
-        cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
+        //cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
 
         //do not return until the card has been sent to the discard pile
         float discardDuration = (TimingValues.cardScalingTime + TimingValues.durationOfCardMoveFromPlayToDiscard);
         yield return new WaitForSeconds(discardDuration);
+        AddCardToDiscardPile(cc);
     }
 
     public IEnumerator RemoveCardFromGame(CombatCard cc) {

@@ -433,7 +433,7 @@ GameObject:
   - component: {fileID: 724553507913665851}
   - component: {fileID: 724553507913665850}
   m_Layer: 5
-  m_Name: Card Details Canvas
+  m_Name: Details Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -563,7 +563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &724553508257710490
 RectTransform:
   m_ObjectHideFlags: 0
@@ -688,7 +688,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &724553509026145874
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3169,7 +3169,7 @@ PrefabInstance:
     - target: {fileID: 3806193581650125391, guid: 1c28b49927830bd4589db75463b19dea,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8622772740804166300, guid: 1c28b49927830bd4589db75463b19dea,
         type: 3}

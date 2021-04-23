@@ -216,6 +216,9 @@ public class Tavern : MonoBehaviour {
                 case "BOSS":
                     dr.type = Overworld.RoomTypes.Boss;
                     break;
+                case "SHOP":
+                    dr.type = Overworld.RoomTypes.Shop;
+                    break;
             }
         }
         

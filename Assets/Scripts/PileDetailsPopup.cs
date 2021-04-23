@@ -12,7 +12,7 @@ public class PileDetailsPopup : MonoBehaviour {
     public CardData cardData;
     public GameObject cardRowPrefab;
     public GameObject scrollView;
-    public bool visible= false; //used to externally and internally identify if the popup is visible
+    public bool visible = false; //used to externally and internally identify if the popup is visible
 
     void Start() {
         SetVisibility(false);
@@ -26,29 +26,33 @@ public class PileDetailsPopup : MonoBehaviour {
         visible = b;
     }
 
-    public void TogglePileDetails(string title, List<CardData> contents, CardVisuals.clickOptions clickOption) {
+    public void TogglePileDetails(string title, List<CardData> contents, CardVisuals.clickOptions clickOption, bool shuffleContents) {
         //called by the Combat Controller when the player taps the deck or discard pile
-        if (visible == false){
+        if (visible == false) {
             //show the popup
             SetVisibility(true);
             Show();
             //create a shuffled list of the cards in the pile
             List<CardData> shuffledContents = Shuffle(contents);
+            List<CardData> sortedContents = Sort(contents);
+            List<CardData> displayOrder = contents;
+            if (shuffleContents) { displayOrder = shuffledContents; }
+            else { displayOrder = sortedContents; }
 
             //set the pile's identifying text
             transform.Find("Background").Find("Title Text").GetComponent<Text>().text = title.ToUpper();
 
             //display the correct number of rows of cards
-            int cardCount = shuffledContents.Count;
+            int cardCount = displayOrder.Count;
             int rowCount = (cardCount / 5) + 1;
-            for (int i= 0; i < rowCount; i++) {
+            for (int i = 0; i < rowCount; i++) {
                 GameObject newRow = Instantiate(cardRowPrefab);
                 newRow.transform.SetParent(scrollView.transform, false);
                 newRow.name = "Row " + (i + 1);
             }
 
             //display the card info for each card
-            for (int i =0; i < cardCount; i++) {
+            for (int i = 0; i < cardCount; i++) {
                 //find the row and position within that row that the card belongs to
                 int rowNum = ((i) / 5) + 1;
                 int cardNum = (i + 1) - ((rowNum - 1) * 5);
@@ -59,7 +63,7 @@ public class PileDetailsPopup : MonoBehaviour {
 
 
                 //display the card's info
-                card.GetComponent<CardVisuals>().SwitchCardData(shuffledContents[i]);
+                card.GetComponent<CardVisuals>().SwitchCardData(displayOrder[i]);
                 card.GetComponent<CardVisuals>().clickOption = clickOption;
             }
 
@@ -86,8 +90,8 @@ public class PileDetailsPopup : MonoBehaviour {
 
         //create a copy of the list
         List<CardData> newList = new List<CardData>();
-        for(int i =0; i<list.Count; i++) {
-            newList.Add(list[i]);
+        foreach (CardData cd in list) {
+            newList.Add(cd);
         }
 
         //shuffle the elements of the new list
@@ -100,6 +104,28 @@ public class PileDetailsPopup : MonoBehaviour {
             newList[n] = value;
         }
 
+        return newList;
+    }
+
+    public List<CardData> Sort(List<CardData> list) {
+        //returns a sorted copy of list, sorted alphabetically
+        List<CardData> newList = new List<CardData>();
+        List<CardData> oldList = new List<CardData>();
+        foreach(CardData cd in list) {
+            oldList.Add(cd);
+        }
+
+        while(oldList.Count > 0) {
+            CardData first = oldList[0];
+            foreach (CardData cd in oldList) {
+                int val = string.Compare(first.source.cardName, cd.source.cardName);
+                if (val > 0) {
+                    first = cd;
+                }
+            }
+            newList.Add(first);
+            oldList.Remove(first);
+        }
         return newList;
     }
 

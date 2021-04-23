@@ -68,4 +68,25 @@ public class CardVisuals: MonoBehaviour{
         GeneralFunctions.SetTransparency(circleOverlayIm, 1f);
         transform.localScale = new Vector3(tinyCardScale, tinyCardScale, tinyCardScale);
     }
+
+    public IEnumerator ShrinkCardAndSendSomewhere(Vector2 destination) {
+        //moves a displaycard to the discard pile
+        //print("movin");
+        transform.DOScale(tinyCardScale, TimingValues.cardScalingTime).OnComplete(() =>
+            transform.DOMove(destination, TimingValues.durationOfCardMoveFromPlayToDiscard));
+        //GetComponent<CombatCard>().tweening = true; //the player can no longer tap the card
+                            //hide the card art and replace it with a static image
+        transform.Find("Circle Overlay").GetComponent<Image>().DOFade(1, TimingValues.cardOverlayFadeTime);
+
+        //do not return until the card has been sent to the discard pile
+        float discardDuration = (TimingValues.cardScalingTime + TimingValues.durationOfCardMoveFromPlayToDiscard);
+        yield return new WaitForSeconds(discardDuration);
+    }
+
+    public IEnumerator ShrinkCardAndSendSomewhereThenDestroy(Vector2 destination) {
+        yield return StartCoroutine(ShrinkCardAndSendSomewhere(destination));
+        Destroy(gameObject);
+    }
+
+
 }

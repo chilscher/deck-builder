@@ -33,15 +33,19 @@ public class Catalog : MonoBehaviour {
         //will not return multiple copies of the same card
         //do NOT call this function using a num higher than the total number of cards in the catalog!
         List<CardData> result = new List<CardData>();
+        List<string> names = new List<string>();
         for (int i = 0; i<num; i++) {
             bool foundOne = false;
 
             CardData c = null;
+            string s = null;
             while (!foundOne) {
                 c = GetRandomCard();
-                foundOne = !result.Contains(c);
+                s = c.source.cardName;
+                foundOne = !names.Contains(s);
             }
             result.Add(c);
+            names.Add(s);
         }
         return result;
     }
