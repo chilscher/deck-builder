@@ -27,4 +27,6 @@ public class StaticVariables {
     static public int drawNum; //the number of cards the player draws at the start of their turn
 
     static public List<CardData> shopOptions;
+    static public bool hasStartedFloor = false;
+    static public DungeonCatalog dungeonCatalog;
 }

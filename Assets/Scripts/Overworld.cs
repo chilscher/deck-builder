@@ -18,19 +18,32 @@ public class Overworld : MonoBehaviour {
     public GameObject hallwayPrefab;
 
     public GameObject healthDisplay;
+    //[HideInInspector]
+    //public bool hasStartedFloor = false;
 
-    public enum RoomTypes { Empty, Combat, Rest, Boss, Shop }; 
+    public enum RoomTypes { Empty, Combat, Rest, Boss, Shop, Miniboss, Event }; 
     
     public void Start() {
+        //if the boss room has been completed, generate a new floor
+        if (StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1] == StaticVariables.currentRoom) {
+            //print("floor complete!");
+            StaticVariables.dungeonCatalog.GenerateFloor();
+            StaticVariables.hasStartedFloor = false;
+        }
+
         //create and arrange the room buttons
         BuildFloor(horizontalSpacing, verticalSpacing);
         AddHallways();
 
-        //if you haven't visited a room before, start with the first room
-        DungeonRoom start = StaticVariables.dungeonFloor[0];
-        if (!start.hasVisited && !start.canChooseNext) {
-            start.canChooseNext = true;
+        //if you haven't visited a room before, start with the first rooms
+        if (!StaticVariables.hasStartedFloor) {
+            foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
+                if (room.columnNumber == 0) {
+                    room.canChooseNext = true;
+                }
+            }
         }
+        
         //if you just came from a room, check your most recent room as visited
         //then, determine which rooms are available to visit next
         //then, display the visited/visitable status of every room
@@ -48,11 +61,6 @@ public class Overworld : MonoBehaviour {
         foreach (DungeonRoom room in StaticVariables.dungeonFloor) {
             room.ShowEntryStatus();
             room.ShowHallwayStatus();
-        }
-
-        //if you just beat the last room in the floor, congrats!
-        if (StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1].hasVisited) {
-            print("you beat the floor!");
         }
 
         DisplayHealth();

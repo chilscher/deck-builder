@@ -408,7 +408,7 @@ public class CombatController : MonoBehaviour {
 
     public IEnumerator SendCardToDiscard(CombatCard cc) {
         //moves a displaycard to the discard pile
-        cc.GetComponent<CardVisuals>().ShrinkCardAndSendSomewhere(mainCanvas.GetCenterOfDiscardPile());
+        StartCoroutine(cc.GetComponent<CardVisuals>().ShrinkCardAndSendSomewhere(mainCanvas.GetCenterOfDiscardPile()));
         /*
         cc.transform.DOScale(cc.GetComponent<CardVisuals>().tinyCardScale, TimingValues.cardScalingTime).OnComplete(() => 
             cc.transform.DOMove(mainCanvas.GetCenterOfDiscardPile(), TimingValues.durationOfCardMoveFromPlayToDiscard).OnComplete(() => 

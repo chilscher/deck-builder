@@ -23,7 +23,7 @@ public class Tavern : MonoBehaviour {
     public EncounterCatalog encounterCatalog;
     public GameObject cardVisualsPrefab;
     public int drawnNum; //the number of cards you draw at the start of your turn
-
+    public DungeonCatalog dungeonCatalog;
     public string[] floorNodes;
 
 
@@ -38,6 +38,7 @@ public class Tavern : MonoBehaviour {
         StaticVariables.encounterCatalog = encounterCatalog;
         StaticVariables.cardVisualsPrefab = cardVisualsPrefab;
         StaticVariables.drawNum = drawnNum;
+        StaticVariables.dungeonCatalog = dungeonCatalog;
 
         StaticVariables.allies = new List<Ally>();
         foreach (string allyName in startingAllyNames) {
@@ -110,7 +111,8 @@ public class Tavern : MonoBehaviour {
             }
         }
 
-        GenerateFloor(floorNodes);
+        //GeneralFunctions.GenerateFloor(floorNodes);
+        StaticVariables.dungeonCatalog.GenerateFloor();
 
         //start fade-out
         StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
@@ -171,80 +173,4 @@ public class Tavern : MonoBehaviour {
         ShowStartingCards();
     }
 
-    public void GenerateFloor(string[] s) {
-        //generates the Dungeon Rooms for the next floor based on the provided string
-
-        //first, create an empty list of rooms
-        List<DungeonRoom> rooms = new List<DungeonRoom>();
-
-        //then, create each room and assign their node numbers
-        for(int i =  0; i<s.Length; i++) {
-            DungeonRoom dr = new DungeonRoom();
-            dr.nodeNumber = i;
-            rooms.Add(dr);
-        }
-
-        //then, parse the room data string
-        //of the form #,#-Type
-        for (int i = 0; i<s.Length; i++) {
-            DungeonRoom dr = rooms[i];
-            string nodeList = s[i]; //the entire string for the room
-
-            string[] segments = nodeList.Split('-'); //first segment is child rooms, second segment is room type
-
-            //set the child nodes from the data string
-            string[] childStrings = segments[0].Split(',');
-            dr.childNodes = new List<DungeonRoom>();
-            foreach (string node in childStrings) {
-                int n = Int32.Parse(node);
-                DungeonRoom child = rooms[n];
-                if (child.nodeNumber != 0) { //if the child has 0 listed for its children, that means it is the last room of the floor. do not assign any children
-                    dr.childNodes.Add(child);
-                }
-            }
-
-            //set the room type from the data string
-            string roomType = segments[1];
-            dr.type = Overworld.RoomTypes.Combat; //the default is a combat room
-            switch (roomType.ToUpper()) {
-                case "COMBAT":
-                    dr.type = Overworld.RoomTypes.Combat;
-                    break;
-                case "REST":
-                    dr.type = Overworld.RoomTypes.Rest;
-                    break;
-                case "BOSS":
-                    dr.type = Overworld.RoomTypes.Boss;
-                    break;
-                case "SHOP":
-                    dr.type = Overworld.RoomTypes.Shop;
-                    break;
-            }
-        }
-        
-        //create an empty list of parents
-        foreach (DungeonRoom room in rooms) {
-            room.parentNodes = new List<DungeonRoom>();
-        }
-
-        //iterate through each room, and for each child, set the current room as its parent
-        foreach (DungeonRoom room in rooms) {
-            foreach (DungeonRoom child in room.childNodes) {
-                   child.parentNodes.Add(room);
-            }
-        }
-        
-        //calculate column number for each room
-        foreach(DungeonRoom room in rooms) {
-            if (room.parentNodes.Count == 0) {
-                room.columnNumber = 0;
-            }
-            else {
-                room.columnNumber = room.parentNodes[0].columnNumber + 1;
-            }
-        }
-
-        //store the dungeon floor rooms into StaticVariables
-        StaticVariables.dungeonFloor = rooms;
-    }
 }

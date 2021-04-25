@@ -1053,7 +1053,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000014746797}
+  m_AnchoredPosition: {x: 0, y: -0.000015254668}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &829536412
@@ -1162,8 +1162,8 @@ MonoBehaviour:
     allyArt: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
     startingCards:
     - hit
-    - demotivate
-    - motivate
+    - hit
+    - block
     - block
   - name: Rogue
     allyArt: {fileID: 21300000, guid: 102378875f09e1e4cba9e6e1800bfdb6, type: 3}
@@ -1356,6 +1356,203 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922001585}
   m_CullTransparentMesh: 0
+--- !u!1 &932491932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 932491934}
+  - component: {fileID: 932491933}
+  m_Layer: 0
+  m_Name: DungeonCatalog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &932491933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932491932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 950dfe11e696348499ec62481c24b7cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FloorLayouts:
+  - rooms:
+    - 1,2,3-c
+    - 4-c
+    - 4,5-r
+    - 5-c
+    - 6-c
+    - 7-c
+    - 8-s
+    - 8-c
+    - 9-r
+    - 0-b
+  - rooms:
+    - 3-c
+    - 4-c
+    - 4-c
+    - 5-r
+    - 5-s
+    - 6,7-m
+    - 8,9-c
+    - 9,10-c
+    - 11-r
+    - 11-c
+    - 12-c
+    - 13-c
+    - 14,15-c
+    - 0-b
+    - 0-b
+    - 0-b
+  - rooms:
+    - 2-c
+    - 3-c
+    - 4-e
+    - 5-c
+    - 6-c
+    - 6-c
+    - 7,8-m
+    - 9-s
+    - 9-r
+    - 10,11-c
+    - 0-b
+    - 0-b
+  - rooms:
+    - 1,2,3-c
+    - 4-r
+    - 5-c
+    - 5-c
+    - 6-c
+    - 7,8-s
+    - 9-m
+    - 10-c
+    - 10-c
+    - 11-c
+    - 11-c
+    - 0-b
+  - rooms:
+    - 4-c
+    - 4-c
+    - 5-c
+    - 5-c
+    - 6-s
+    - 6-r
+    - 7,8-m
+    - 9,10-c
+    - 11,12-r
+    - 0-b
+    - 0-b
+    - 0-b
+    - 0-b
+  - rooms:
+    - 1,2-c
+    - 3-c
+    - 4-c
+    - 5,6-c
+    - 6,7-c
+    - 8-r
+    - 9-s
+    - 10-e
+    - 11-c
+    - 12-c
+    - 13-c
+    - 0-b
+    - 0-b
+    - 0-b
+  - rooms:
+    - 2,3-c
+    - 4-c
+    - 5-m
+    - 6-c
+    - 7-c
+    - 8-r
+    - 9-c
+    - 9-c
+    - 10-c
+    - 11,12-m
+    - 13-c
+    - 13-c
+    - 14-r
+    - 0-b
+    - 0-b
+  - rooms:
+    - 2-c
+    - 3-c
+    - 4,5-m
+    - 5,6-r
+    - 7-c
+    - 8-c
+    - 9-c
+    - 10-s
+    - 10,11-c
+    - 1--c
+    - 12-c
+    - 13-m
+    - 14,15-e
+    - 16-r
+    - 0-b
+    - 0-b
+  - rooms:
+    - 1,2,3-c
+    - 4,5-c
+    - 6-r
+    - 7-m
+    - 8-e
+    - 8-m
+    - 9-c
+    - 10-c
+    - 11-c
+    - 12-m
+    - 12-s
+    - 13-c
+    - 14-e
+    - 15-c
+    - 16-c
+    - 0-b
+    - 0-b
+  - rooms:
+    - 3-c
+    - 4-c
+    - 5-c
+    - 6-e
+    - 7-e
+    - 7-c
+    - 8,9-c
+    - 10-c
+    - 11-r
+    - 12-s
+    - 13-c
+    - 14-m
+    - 14-c
+    - 14-m
+    - 15-r
+    - 16,17-c
+    - 0-b
+    - 0-b
+--- !u!4 &932491934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932491932}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1419.513, y: 841.23645, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1019771194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1583,7 +1780,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 14427ec75f0db1e42ad442c8bfe5cbe2, type: 3}
   - {fileID: 21300000, guid: 6380e61a9bc0ae642a65059ac155e4b6, type: 3}
   - {fileID: 21300000, guid: 82e037d6bfd47874d9068c4a50732883, type: 3}
-  startingHealth: 5
+  startingHealth: 20
   startingAllyNames:
   - Civillian
   - Civillian
@@ -1599,14 +1796,15 @@ MonoBehaviour:
   cardVisualsPrefab: {fileID: 3806193581650125391, guid: 1c28b49927830bd4589db75463b19dea,
     type: 3}
   drawnNum: 6
+  dungeonCatalog: {fileID: 932491933}
   floorNodes:
-  - 1,2,3-shop
+  - 1,2,3-combat
   - 4-combat
   - 4,5-rest
   - 5-combat
   - 6-combat
   - 7-combat
-  - 8-combat
+  - 8-shop
   - 8-combat
   - 9-rest
   - 0-boss
@@ -2423,7 +2621,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000014746797}
+  m_AnchoredPosition: {x: 0, y: -0.000015254668}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1436168420
@@ -2729,7 +2927,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000014746797}
+  m_AnchoredPosition: {x: 0, y: -0.000015254668}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1521817612

@@ -1,56 +1,23 @@
-﻿
-using UnityEngine;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine.UI;
-using DG.Tweening;
+//for deck-builder, copyright Cole Hilscher & Jack Hilscher 2020
+
 using System.Collections;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 
-public static class GeneralFunctions {
-    //here are several utility functions used by several scripts in different scenes
+public class DungeonCatalog : MonoBehaviour {
+    //this script contains the entire collection of allies in the game. it is loaded in the main menu, and not destroyed during transition between scenes
 
+    public Floor[] FloorLayouts;
 
-    public static void SetTransparency(Image im, float val) {
-        //immediately sets the transparency of the image to val
-        Color c = im.color;
-        c.a = val;
-        im.color = c;
+    public string[] GetRandomFloorString() {
+        //return FloorLayouts[2].rooms;
+        return FloorLayouts[StaticVariables.random.Next(FloorLayouts.Length)].rooms;
     }
 
-    
-    public static IEnumerator StartFadeIn() {
-        //fades in the screen from complete blackness to complete transparency
-        Image blackScreenOverlay = GameObject.Find("Fade Canvas").transform.Find("Background").GetComponent<Image>();
-        GeneralFunctions.SetTransparency(blackScreenOverlay, 1f);
-        blackScreenOverlay.DOFade(0, TimingValues.screenFadeTime);
-        yield return new WaitForSeconds(TimingValues.screenFadeTime);
-        
-    }
-
-    public static IEnumerator StartFadeOut(string nextScene) {
-        //fades out the screen from complete transparency to complete blackness
-        Image blackScreenOverlay = GameObject.Find("Fade Canvas").transform.Find("Background").GetComponent<Image>();
-        GeneralFunctions.SetTransparency(blackScreenOverlay, 0f);
-        blackScreenOverlay.DOFade(1, TimingValues.screenFadeTime);
-        yield return new WaitForSeconds(TimingValues.screenFadeTime);
-        SceneManager.LoadScene(nextScene);
-    }
-
-    /*
-    public static string[] GetRandomFloorString() {
-        //gets a string that can be used by GenerateFloor
-        //each floor has to end with a boss
-        //to start, just copy the layout used in tavern
-        //string[] result = new string[] { "1,2,3-combat", "4-combat", "4,5-rest", "5-combat", "6-combat", "7-combat", "8-shop", "8-combat", "9-rest", "0-boss" };
-        //string[] result = new string[] { "2,3-combat", "3,4-combat", "5-combat", "5,6-rest", "6-combat", "7-combat", "8-combat", "9-shop", "9-combat", "10-rest", "11-combat", "12-combat", "0-boss" };
-        return StaticVariables.dungeonCatalog.GetRandomFloorString();
-        //return result;
-    }
-
-    public static void GenerateFloor(string[] s = null) {
+    public void GenerateFloor(string[] s = null) {
         //generates the Dungeon Rooms for the next floor based on the provided string
         //if string is null, generate a random one
         if (s == null) s = GetRandomFloorString();
@@ -141,5 +108,10 @@ public static class GeneralFunctions {
         StaticVariables.dungeonFloor = rooms;
     }
 
-    */
+
+    [System.Serializable]
+    public class Floor {
+        public string[] rooms;
+    }
+    
 }

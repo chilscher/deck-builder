@@ -23,6 +23,7 @@ public class DungeonRoom{
         //if the player is allowed to enter this room, enter it
         //call the appropriate function based on the room type
         if (canChooseNext) {
+            StaticVariables.hasStartedFloor = true;
             switch (type) {
                 case Overworld.RoomTypes.Combat:
                     GoToNormalCombat(); break;
@@ -32,6 +33,11 @@ public class DungeonRoom{
                     GoToBossCombat(); break;
                 case Overworld.RoomTypes.Shop:
                     GoToShop(); break;
+                case Overworld.RoomTypes.Miniboss:
+                    GoToMinibossCombat(); break;
+                case Overworld.RoomTypes.Event:
+                    GoToRest(); break;
+
             }
 
         }
@@ -84,8 +90,27 @@ public class DungeonRoom{
         GameObject.FindObjectOfType<Overworld>().GoToScene("Rest");
     }
 
+    public void GoToEvent() {
+        //go to the event room
+        //currently just regular rest room, for now
+        StaticVariables.currentRoom = this;
+
+        //start fade-out
+        GameObject.FindObjectOfType<Overworld>().GoToScene("Rest");
+    }
+
     public void GoToNormalCombat() {
         //go to a random normal (non-boss) combat encounter
+        StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomNormal());
+        StaticVariables.currentRoom = this;
+
+        //start fade-out
+        GameObject.FindObjectOfType<Overworld>().GoToScene("Combat");
+    }
+
+    public void GoToMinibossCombat() {
+        //go to a random miniboss combat encounter
+        //currently just goes to a normal combat, for now
         StaticVariables.encounter = new Encounter(StaticVariables.encounterCatalog.GetRandomNormal());
         StaticVariables.currentRoom = this;
 
