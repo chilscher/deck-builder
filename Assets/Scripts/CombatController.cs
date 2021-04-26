@@ -71,7 +71,7 @@ public class CombatController : MonoBehaviour {
     public float pauseBeforeEnemyAttacks = 0.2f; //the amount of time between when the bleeds are done being applied and when the enemies start attacking the player
     public float pauseBetweenEnemyAttacks = 0.3f; //the amount of time between enemy attacks
     
-    private float enemyAttackDuration = 1f;
+    public float enemyAttackDuration = 1f;
     private float enemyDeathDuration = 1f;
     private float playerAttackedDuration = 1f;
     private float enemyDamageDuration = 1f;
@@ -513,9 +513,9 @@ public class CombatController : MonoBehaviour {
             DisplayMana();
             DisplayShields();
 
-            UpdateEnemyAttacks();
 
             yield return StartCoroutine(DrawCards(drawNum));
+            UpdateEnemyAttacks();
 
             FindObjectOfType<TouchHandler>().endingTurn = false;
         }
@@ -532,6 +532,7 @@ public class CombatController : MonoBehaviour {
 
     private void UpdateHPandShields() {
         //updates the number display for the hp and shields
+        //animates any gain or loss to the shields or hp
         int beforeHP = mainCanvas.ShownHP();
         int diffHP = beforeHP - StaticVariables.health;
         if (diffHP > 0) {
@@ -559,6 +560,7 @@ public class CombatController : MonoBehaviour {
     private void Lose() {
         //stuff that happens when the player loses all their health
         hasLost = true;
+        StaticVariables.hasStartedFloor = false;
         losePopup.GetComponent<LosePopup>().PlayerLoses();
     }
 
@@ -630,6 +632,39 @@ public class CombatController : MonoBehaviour {
         return damage;
     }
 
+    public int CalculateDamageToPlayer(int damage, Enemy enemy) {
+        //calculates the total damage dealt by the enemy, based on the provided base damage
+        int result = damage;
+
+        //first, add/subtract to base damage
+
+        //then, multiply base damage
+        float d = damage;
+        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { d *= weakScalar; }
+
+        //then, round damage down
+        damage = (int) d;
+
+        //damage has a minimum value of 1
+        if (damage < 1) damage = 1;
+
+        return damage;
+    }
+
+    public void DealDamageToPlayer(int damage) {
+        //deals damage to the player
+        //deducts from shields first
+
+        shieldCount -= damage;
+        if (shieldCount < 0) {
+            StaticVariables.health += shieldCount;
+            shieldCount = 0;
+        }
+
+        //updates the visual display for the player's health and shields
+        UpdateHPandShields();
+    }
+
     IEnumerator WaitForWin(float f) {
         //waits the specified amount of time, then shows the win popup screen
         yield return new WaitForSeconds(f);
@@ -651,65 +686,10 @@ public class CombatController : MonoBehaviour {
     IEnumerator EnemiesAttackInSequence() {
         //makes each enemy attack in sequence
 
-        foreach (Enemy el in enemies) {
-            if (el.gameObject.activeSelf) {
-                //if the enemy is stunned, skip their attack
-                if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Stun)) {
-                    //do nothing here
-                }
-
-                else {
-                    if (StaticVariables.health > 0) { //skip the attack if the player is at 0 hp
-                                                      // access current attack
-                        string currentAttack = el.source.enemyAttacks[el.currentAttackIndex];
-
-                        string[] allCurrentAttacks = currentAttack.Split(new string[] { ", " }, System.StringSplitOptions.None);
-
-                        foreach (string atk in allCurrentAttacks) {
-                            string associatedEffect = atk.Split('-')[0];
-                            int associatedValue = int.Parse(atk.Split('-')[1]);
-
-                            //animate the attack
-                            el.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
-
-                            //wait for half the attack animation, then animate the party being hit
-                            yield return new WaitForSeconds(enemyAttackDuration / 2);
-                            allies.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
-                            yield return new WaitForSeconds(enemyAttackDuration / 2);
-
-                            if (associatedEffect == "Damage") {
-
-                                //take the weak status into account here
-                                float temp = associatedValue;
-                                if (el.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { temp *= weakScalar; }
-                                int totalDamage = (int)temp;
-
-                                int netDamage = 0;
-                                if (totalDamage >= shieldCount) {
-                                    netDamage = totalDamage - shieldCount;
-                                    shieldCount = 0;
-                                }
-                                else {
-                                    shieldCount -= totalDamage;
-                                }
-                                StaticVariables.health -= netDamage;
-
-                            }
-
-                            //after the enemy attack animation is done, update the party hp
-                            UpdateHPandShields();
-                            yield return new WaitForSeconds(pauseBetweenEnemyAttacks);
-
-                        }
-                    }
-                }
-
-                if (el.currentAttackIndex + 1 < el.source.enemyAttacks.Length) {
-                    el.currentAttackIndex += 1;
-                }
-                else if (el.currentAttackIndex + 1 == el.source.enemyAttacks.Length) {
-                    el.currentAttackIndex = 0;
-                }
+        foreach (Enemy e in enemies) {
+            if (e.gameObject.activeSelf) {
+                yield return e.DoNextAttack();
+                yield return new WaitForSeconds(pauseBetweenEnemyAttacks);
             }
 
         }
@@ -727,24 +707,8 @@ public class CombatController : MonoBehaviour {
         //updates the attack text for all enemies that are still alive, called at the end of the turn
         //also called when an enemy gets the weak condition applied to them
         foreach (Enemy enemy in enemies) {
-            UpdateEnemyAttack(enemy);
+            enemy.UpdateNextAttackText();
         }
-    }
-
-    public void UpdateEnemyAttack(Enemy enemy) {
-        //updates the visuals for an enemy, displaying their next attack
-        string attack = enemy.source.enemyAttacks[enemy.currentAttackIndex];
-
-        if (attack.Split('-')[0] == "Damage") {
-            float originalAmount = Int32.Parse(attack.Split('-')[1]);
-            if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) {
-                originalAmount *= weakScalar;
-                int newAmount = (int)originalAmount;
-                attack = "Damage-" + newAmount;
-            }
-        }
-
-        enemy.transform.Find("Visuals").Find("Next Attack").GetComponent<Text>().text = attack;
     }
 
     private Enemy AddNewEnemy(PlatonicEnemy p, int enemyNum) {

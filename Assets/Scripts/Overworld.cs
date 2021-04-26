@@ -48,6 +48,7 @@ public class Overworld : MonoBehaviour {
         //then, determine which rooms are available to visit next
         //then, display the visited/visitable status of every room
         else {
+            print("ya");
             StaticVariables.currentRoom.hasVisited = true;            
             foreach(DungeonRoom room in StaticVariables.dungeonFloor) {
                 room.canChooseNext = false;

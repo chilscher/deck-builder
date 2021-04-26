@@ -11,6 +11,8 @@ public class EnemyCatalog : MonoBehaviour {
 
     public PlatonicEnemy[] allEnemies; //the collection of enemies. enemies are added and modified in the inspector
 
+    public enum AttackTypes { Damage, Idle };
+
     public enum StatusEffects { Vulnerable, Weak, Stun, ConstantBleed, DiminishingBleed };
     //to add new enemy status effects, add a new element in this StatusEffects list
     //then, go to the EnemyCatalog script in the inspector, and add a new element to the enemyStatuses list
@@ -35,6 +37,12 @@ public class EnemyCatalog : MonoBehaviour {
             }
         }
         return null;
+    }
+
+    [System.Serializable]
+    public class EnemyAttack {
+        public AttackTypes attackType;
+        public int parameter;
     }
 
 

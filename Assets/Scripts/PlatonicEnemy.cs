@@ -23,6 +23,6 @@ public class PlatonicEnemy {
     public bool isLargeEnemy;
 
     [Header("Attacks")]
-    public string[] enemyAttacks;
+    public EnemyCatalog.EnemyAttack[] enemyAttacks;
 
 }

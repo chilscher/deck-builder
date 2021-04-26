@@ -896,25 +896,30 @@ MonoBehaviour:
     enemyArt: {fileID: 21300000, guid: f6d91bd115346084fb737a93bc9f28d3, type: 3}
     isLargeEnemy: 0
     enemyAttacks:
-    - Damage-4
-    - Damage-3
+    - attackType: 0
+      parameter: 2
+    - attackType: 1
+      parameter: 0
+    - attackType: 0
+      parameter: 4
   - name: Lauren
     id: 2
     hitPoints: 8
     enemyArt: {fileID: 21300000, guid: 34799b0322647304eb617c44db2274ce, type: 3}
     isLargeEnemy: 0
     enemyAttacks:
-    - Damage-1
-    - Damage-2
-    - Damage-5
+    - attackType: 0
+      parameter: 2
   - name: Nancy
     id: 3
     hitPoints: 8
     enemyArt: {fileID: 21300000, guid: e24d2175ac07231488d4faeeef6e34d6, type: 3}
     isLargeEnemy: 1
     enemyAttacks:
-    - Damage-0
-    - Damage-10
+    - attackType: 1
+      parameter: 0
+    - attackType: 0
+      parameter: 10
   enemyStatuses:
   - statusType: 0
     icon: {fileID: 21300000, guid: 380316c747c9298429161b580a35f0ae, type: 3}
@@ -1053,7 +1058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000015254668}
+  m_AnchoredPosition: {x: 0, y: -0.000015256001}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &829536412
@@ -1495,11 +1500,12 @@ MonoBehaviour:
     - 9-c
     - 10-s
     - 10,11-c
-    - 1--c
+    - 11-c
     - 12-c
     - 13-m
     - 14,15-e
     - 16-r
+    - 0-b
     - 0-b
     - 0-b
   - rooms:
@@ -2621,7 +2627,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000015254668}
+  m_AnchoredPosition: {x: 0, y: -0.000015256001}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1436168420
@@ -2927,7 +2933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000015254668}
+  m_AnchoredPosition: {x: 0, y: -0.000015256001}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1521817612

@@ -303,24 +303,31 @@ public class DetailsPopup : MonoBehaviour {
     private string GetEnemySummary(Enemy e) {
         //creates a string that describes the enemy's next attack and statuses
         string summary = "";
+        
+        EnemyCatalog.EnemyAttack attack = e.source.enemyAttacks[e.currentAttackIndex];
 
-        string attack = e.source.enemyAttacks[e.currentAttackIndex];
-
-        if (attack.Split('-')[0] == "Damage") {
-            int originalAmount = Int32.Parse(attack.Split('-')[1]);
-            summary += ("The enemy intends to attack for " + originalAmount + " damage.");
-            if (e.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) {
-                int newAmount = (int)(FindObjectOfType<CombatController>().weakScalar * originalAmount);
-                int diff = originalAmount - newAmount;
-                if (diff > 0) {
-                    summary = ""; //the previous attack damage is invalid, clear the whole string and start again
-                    summary += ("The enemy intends to attack for " + newAmount + " damage.");
-                    summary += "\n";
-                    summary += ("This damage has been reduced by " + diff + " from being Weakened.");
+        switch (attack.attackType) {
+            case EnemyCatalog.AttackTypes.Damage:
+                int originalAmount = attack.parameter;
+                summary += ("The enemy intends to attack for " + originalAmount + " damage.");
+                if (e.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) {
+                    int newAmount = (int)(FindObjectOfType<CombatController>().weakScalar * originalAmount);
+                    int diff = originalAmount - newAmount;
+                    if (diff > 0) {
+                        summary = ""; //the previous attack damage is invalid, clear the whole string and start again
+                        summary += ("The enemy intends to attack for " + newAmount + " damage.");
+                        summary += "\n";
+                        summary += ("This damage has been reduced by " + diff + " from being Weakened.");
+                    }
                 }
-            }
-            summary += "\n";
-            summary += "\n";
+                summary += "\n";
+                summary += "\n";
+                break;
+            case EnemyCatalog.AttackTypes.Idle:
+                summary += "The enemy does not intend to attack this turn.";
+                summary += "\n";
+                summary += "\n";
+                break;
         }
 
         foreach (EnemyStatus status in e.statuses) {
