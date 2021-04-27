@@ -580,12 +580,20 @@ public class CombatController : MonoBehaviour {
         UpdateHPandShields();
     }
 
-    public void DealDamageToEnemy(int damage, Enemy enemy) {
+    public IEnumerator DealDamageToEnemyWithCalc(int damage, Enemy enemy) {
         //deals damage to the enemy. if the enemy dies from the damage, then defeats the enemy
         //enemy vulnerability is taken into account
 
+        //calculate damage to enemy
+        int d = CalculateDamageToEnemy(damage, enemy);
+
+        //deal damage to enemy
+        yield return DealDamageToEnemyNoCalc(d, enemy);
+    }
+
+    public IEnumerator DealDamageToEnemyNoCalc(int damage, Enemy enemy) {
         // deal damage to enemy
-        enemy.hitPointDamage += CalculateDamageToEnemy(damage, enemy);
+        enemy.hitPointDamage += damage;
 
         if (enemy.hitPointDamage > enemy.source.hitPoints) {
             enemy.hitPointDamage = enemy.source.hitPoints;
@@ -598,7 +606,7 @@ public class CombatController : MonoBehaviour {
         enemy.ShowDamage();
 
         // if the enemy data has more damage than it has hitpoints, remove it
-        if (enemy.hitPointDamage >= enemy.source.hitPoints){
+        if (enemy.hitPointDamage >= enemy.source.hitPoints) {
             DefeatEnemy(enemy);
 
             //check to see if you win!
@@ -607,9 +615,12 @@ public class CombatController : MonoBehaviour {
                 StartCoroutine(WaitForWin(enemyDeathDuration + winPopupDelay));
             }
         }
+
+        //full enemy damage duration feels a little too long, lets try 60% of it
+        yield return new WaitForSeconds(enemyDamageDuration * 0.6f);
     }
 
-    private int CalculateDamageToEnemy(int damage, Enemy enemy) {
+    public int CalculateDamageToEnemy(int damage, Enemy enemy) {
         //calculates the total damage recieved by the enemy, based on the provided base damage
         int result = damage;
 
@@ -629,6 +640,9 @@ public class CombatController : MonoBehaviour {
         //damage has a minimum value of 1
         if (damage < 1) damage = 1;
 
+        if (damage > (enemy.source.hitPoints - enemy.hitPointDamage))
+            damage = enemy.source.hitPoints - enemy.hitPointDamage;
+        
         return damage;
     }
 
@@ -817,7 +831,7 @@ public class CombatController : MonoBehaviour {
 
         //iterate through each enemy in the new array
         //we can't just iterate through the enemies themselves, because the length of the enemy list changes if one of them dies
-        for (int i =0; i<array.Length; i++) { DealDamageToEnemy(amount, array[i]); }
+        for (int i =0; i<array.Length; i++) { DealDamageToEnemyWithCalc(amount, array[i]); }
     }
 
     public void HurtEnemiesFromBleed() {
@@ -836,10 +850,10 @@ public class CombatController : MonoBehaviour {
             int diminishingBleedDmg = e.GetDurationOfStatus(EnemyCatalog.StatusEffects.DiminishingBleed);
 
             if (constantBleedDmg > 0) {
-                DealDamageToEnemy(constantBleedDmg, e);
+                DealDamageToEnemyWithCalc(constantBleedDmg, e);
             }
             if (diminishingBleedDmg > 0) {
-                DealDamageToEnemy(diminishingBleedDmg, e);
+                DealDamageToEnemyWithCalc(diminishingBleedDmg, e);
             }
         }
     }

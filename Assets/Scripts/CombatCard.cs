@@ -121,7 +121,7 @@ public class CombatCard: MonoBehaviour{
         int p = effect.parameter;
         switch (effect.effectType) {
             case Catalog.EffectTypes.Damage:
-                combatController.DealDamageToEnemy(p, enemy);
+                yield return combatController.DealDamageToEnemyWithCalc(p, enemy);
                 break;
             case Catalog.EffectTypes.Shield:
                 combatController.AddShields(p);
@@ -170,6 +170,13 @@ public class CombatCard: MonoBehaviour{
                 break;
             case Catalog.EffectTypes.DecreaseDamage:
                 combatController.ChangeBaseDamage(-p);
+                break;
+            case Catalog.EffectTypes.LifeSteal:
+                int damage = combatController.CalculateDamageToEnemy(p, enemy);
+                yield return combatController.DealDamageToEnemyNoCalc(damage, enemy);
+                int healAmt = (damage / 2);
+                if (healAmt < 1) healAmt = 1;
+                combatController.HealPlayer(healAmt);
                 break;
         }
     }

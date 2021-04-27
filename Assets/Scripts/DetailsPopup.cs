@@ -289,6 +289,15 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
+                case Catalog.EffectTypes.LifeSteal:
+                    cardTextInfo += ("Does " + p + " damage to the target enemy.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("Heals the party by half the damage dealt, with a minimum of 1.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("Healing restores lost HP, but not above your party's maximum.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
             }
         }
 
