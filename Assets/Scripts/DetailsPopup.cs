@@ -317,8 +317,14 @@ public class DetailsPopup : MonoBehaviour {
 
         switch (attack.attackType) {
             case EnemyCatalog.AttackTypes.Damage:
-                int originalAmount = attack.parameter;
-                summary += ("The enemy intends to attack for " + originalAmount + " damage.");
+                int damage = attack.parameter;
+                summary += ("The enemy intends to attack for " + damage + " damage.");
+                int modifiedDamage = FindObjectOfType<CombatController>().CalculateDamageToPlayer(damage, e);
+                if (modifiedDamage != damage) {
+                    summary += "\n";
+                    summary += ("After accounting for all relevant status effects, the attack will deal " + modifiedDamage + " damage.");
+                }
+                /*
                 if (e.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) {
                     int newAmount = (int)(FindObjectOfType<CombatController>().weakScalar * originalAmount);
                     int diff = originalAmount - newAmount;
@@ -329,11 +335,70 @@ public class DetailsPopup : MonoBehaviour {
                         summary += ("This damage has been reduced by " + diff + " from being Weakened.");
                     }
                 }
+                */
+                summary += "\n";
+                summary += "\n";
+                break;
+            case EnemyCatalog.AttackTypes.LifeSteal:
+                int lifeStealDamage = attack.parameter;
+                summary += ("The enemy intends to attack for " + lifeStealDamage + " damage.");
+                int modifiedLifeStealDamage = FindObjectOfType<CombatController>().CalculateDamageToPlayer(lifeStealDamage, e);
+                if (modifiedLifeStealDamage != lifeStealDamage) {
+                    summary += "\n";
+                    summary += ("After accounting for all relevant status effects, the attack will deal " + modifiedLifeStealDamage + " damage.");
+                }
+                /*
+                if (e.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) {
+                    int newAmount = (int)(FindObjectOfType<CombatController>().weakScalar * lifeStealDamage);
+                    int diff = lifeStealDamage - newAmount;
+                    if (diff > 0) {
+                        summary = ""; //the previous attack damage is invalid, clear the whole string and start again
+                        summary += ("The enemy intends to attack for " + newAmount + " damage.");
+                        summary += "\n";
+                        summary += ("This damage has been reduced by " + diff + " from being Weakened.");
+                    }
+                }
+                */
+                summary += "\n";
+                summary += "The enemy will heal by half the damage dealt.";
                 summary += "\n";
                 summary += "\n";
                 break;
             case EnemyCatalog.AttackTypes.Idle:
                 summary += "The enemy does not intend to attack this turn.";
+                summary += "\n";
+                summary += "\n";
+                break;
+            case EnemyCatalog.AttackTypes.Heal:
+                int healAmt = attack.parameter;
+                summary += "The enemy intends to heal " + healAmt + " damage.";
+                summary += "\n";
+                summary += "Healing restores lost HP, but not above the enemy's maximum.";
+                summary += "\n";
+                summary += "\n";
+                break;
+            case EnemyCatalog.AttackTypes.ShieldBreak:
+                summary += "The enemy intends to destroy your shields.";
+                summary += "\n";
+                summary += "This does not prevent you from gaining shields on later turns.";
+                summary += "\n";
+                summary += "\n";
+                break;
+            case EnemyCatalog.AttackTypes.Resilient:
+                int resilientTurns = attack.parameter;
+                float r = FindObjectOfType<CombatController>().resilientScalar;
+                summary += "The enemy intends to give itself the Resilient status for " + resilientTurns + " turns.";
+                summary += "\n";
+                summary += "An enemy with the Resilient status takes " + r + "x damage from attacks.";
+                summary += "\n";
+                summary += "\n";
+                break;
+            case EnemyCatalog.AttackTypes.Strength:
+                int strengthTurns = attack.parameter;
+                float s = FindObjectOfType<CombatController>().strengthScalar;
+                summary += "The enemy intends to give itself the Strength status for " + strengthTurns + " turns.";
+                summary += "\n";
+                summary += "An enemy with the Strength status deals " + s + "x damage with its attacks.";
                 summary += "\n";
                 summary += "\n";
                 break;
@@ -367,6 +432,18 @@ public class DetailsPopup : MonoBehaviour {
                     break;
                 case EnemyCatalog.StatusEffects.DiminishingBleed:
                     summary += ("This enemy has a bleed. The enemy will take " + d + " damage every turn, decreasing each time.");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+                case EnemyCatalog.StatusEffects.Resilient:
+                    float r = FindObjectOfType<CombatController>().resilientScalar;
+                    summary += ("This enemy is Resilient. For the next " + d + " turns, the enemy takes " + r + "x damage.");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+                case EnemyCatalog.StatusEffects.Strength:
+                    float s = FindObjectOfType<CombatController>().strengthScalar;
+                    summary += ("This enemy is Strong. For the next " + d + " turns, the enemy deals " + s + "x damage.");
                     summary += "\n";
                     summary += "\n";
                     break;

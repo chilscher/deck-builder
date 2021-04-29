@@ -45,9 +45,11 @@ public class CombatController : MonoBehaviour {
     [Header("Status Effect Power")]
     public float weakScalar = 0.5f; //damage rounds down
     public float vulnerableScalar = 1.5f; //damage rounds down
+    public float strengthScalar = 1.5f;
+    public float resilientScalar = 0.5f;
 
     
-    private int shieldCount = 0;
+    public int shieldCount = 0;
     
     public int[] startingEnemies;
 
@@ -530,7 +532,7 @@ public class CombatController : MonoBehaviour {
         }
     }
 
-    private void UpdateHPandShields() {
+    public void UpdateHPandShields() {
         //updates the number display for the hp and shields
         //animates any gain or loss to the shields or hp
         int beforeHP = mainCanvas.ShownHP();
@@ -620,6 +622,18 @@ public class CombatController : MonoBehaviour {
         yield return new WaitForSeconds(enemyDamageDuration * 0.6f);
     }
 
+    public void HealEnemy(int amt, Enemy enemy) {
+        // heal damage from the enemy
+        enemy.hitPointDamage -= amt;
+
+        if (enemy.hitPointDamage < 0) {
+            enemy.hitPointDamage = 0;
+        }
+
+        //updates the current health of the enemy
+        UpdateEnemyHP(enemy);
+    }
+
     public int CalculateDamageToEnemy(int damage, Enemy enemy) {
         //calculates the total damage recieved by the enemy, based on the provided base damage
         int result = damage;
@@ -633,6 +647,7 @@ public class CombatController : MonoBehaviour {
         //then, multiply base damage
         float d = damage;
         if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Vulnerable)) { d *= vulnerableScalar; }
+        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Resilient)) { d *= resilientScalar; }
 
         //then, round damage down
         damage = (int)d;
@@ -655,6 +670,7 @@ public class CombatController : MonoBehaviour {
         //then, multiply base damage
         float d = damage;
         if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Weak)) { d *= weakScalar; }
+        if (enemy.DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Strength)) { d *= strengthScalar; }
 
         //then, round damage down
         damage = (int) d;

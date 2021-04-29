@@ -11,9 +11,9 @@ public class EnemyCatalog : MonoBehaviour {
 
     public PlatonicEnemy[] allEnemies; //the collection of enemies. enemies are added and modified in the inspector
 
-    public enum AttackTypes { Damage, Idle };
+    public enum AttackTypes { Damage, Idle, LifeSteal, Heal, ShieldBreak, Resilient, Strength };
 
-    public enum StatusEffects { Vulnerable, Weak, Stun, ConstantBleed, DiminishingBleed };
+    public enum StatusEffects { Vulnerable, Weak, Stun, ConstantBleed, DiminishingBleed, Resilient, Strength };
     //to add new enemy status effects, add a new element in this StatusEffects list
     //then, go to the EnemyCatalog script in the inspector, and add a new element to the enemyStatuses list
     //each status effect type defined in the StatusEffects enumerator should correspond to exactly one element in the enemyStatuses list.

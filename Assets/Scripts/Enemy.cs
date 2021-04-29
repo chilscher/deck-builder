@@ -24,10 +24,49 @@ public class Enemy : MonoBehaviour {
 
     public void AddStatus(EnemyCatalog.StatusEffects status, int duration) {
         //if the enemy already has the provided staus, add to its time remaining. Otherwise, add the new status
-        if (!DoesEnemyHaveStatus(status)) { statuses.Add(new EnemyStatus(status, duration)); }
+        if (!DoesEnemyHaveStatus(status) && (duration != 0)) { statuses.Add(new EnemyStatus(status, duration)); }
         else { AddDurationToStatus(status, duration); }
+
+        //cancel out any conflicting status effects
+        CancelStatuses();
         //show all status effects on the enemy afterwards
         ShowStatuses();
+    }
+
+    private void CancelStatuses() {
+        //if the enemy has two status effects that negate each other, sort it out
+        CancelStatusPair(EnemyCatalog.StatusEffects.Weak, EnemyCatalog.StatusEffects.Strength);
+        CancelStatusPair(EnemyCatalog.StatusEffects.Vulnerable, EnemyCatalog.StatusEffects.Resilient);
+    }
+
+    private void CancelStatusPair(EnemyCatalog.StatusEffects s1, EnemyCatalog.StatusEffects s2) {
+        //takes a pair of status effects that should negate each other
+        //if the enemy has both statuses, figure out which one has more duration and keep it with reduced duration
+        if (DoesEnemyHaveStatus(s1) && DoesEnemyHaveStatus(s2)) {
+
+            int s1Amt = GetDurationOfStatus(s1);
+            int s2Amt = GetDurationOfStatus(s2);
+            int diff = s1Amt - s2Amt;
+            RemoveStatus(s1);
+            RemoveStatus(s2);
+            if (diff > 0) {
+                statuses.Add(new EnemyStatus(s1, diff));
+            }
+            if (diff < 0) {
+                statuses.Add(new EnemyStatus(s2, -diff));
+            }
+        }
+    }
+
+    private void RemoveStatus(EnemyCatalog.StatusEffects s) {
+        //removes the specified status, no matter what its duration is
+        List<EnemyStatus> newList = new List<EnemyStatus>();
+        foreach (EnemyStatus status in statuses) {
+            if (status.source.statusType != s) {
+                newList.Add(status);
+            }
+        }
+        statuses = newList;
     }
 
     public void ShowStatuses() {
@@ -124,9 +163,97 @@ public class Enemy : MonoBehaviour {
                     RemoveNextAttackText();
 
                     break;
+                case EnemyCatalog.AttackTypes.LifeSteal:
+                    //calculate damage to player
+                    int lifeStealBaseDamage = currentAttack.parameter;
+                    int lifeStealDamage = combatController.CalculateDamageToPlayer(lifeStealBaseDamage, this);
+
+                    //animate the enemy moving for the attack
+                    transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
+
+                    //wait for half the attack animation, apply and animate damage
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+                    combatController.allies.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+
+                    //after the enemy attack animation, update player hp/shields
+                    combatController.DealDamageToPlayer(lifeStealDamage);
+                    //also apply the healing to the enemy at this point
+                    combatController.HealEnemy((lifeStealDamage / 2), this);
+
+                    //also remove the next attack text for the enemy
+                    RemoveNextAttackText();
+
+                    break;
                 case EnemyCatalog.AttackTypes.Idle:
                     //do nothing, no animation
                     RemoveNextAttackText();
+                    break;
+                case EnemyCatalog.AttackTypes.Heal:
+                    int healAmt = currentAttack.parameter;
+                    //animate the enemy moving for the attack
+                    transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
+
+                    //wait for half the attack animation, apply and animate damage
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+
+                    //after the enemy attack animation, heal the enemy
+                    combatController.HealEnemy(healAmt, this);
+
+                    //also remove the next attack text for the enemy
+                    RemoveNextAttackText();
+
+                    break;
+                case EnemyCatalog.AttackTypes.ShieldBreak:
+                    //animate the enemy moving for the attack
+                    transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
+
+                    //wait for half the attack animation, apply and animate damage
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+
+                    //after the enemy attack animation, heal the enemy
+                    combatController.shieldCount = 0;
+                    combatController.UpdateHPandShields();
+
+                    //also remove the next attack text for the enemy
+                    RemoveNextAttackText();
+
+                    break;
+                case EnemyCatalog.AttackTypes.Resilient:
+                    //get the number of turns to apply the resilient status for
+                    int resilientTurns = currentAttack.parameter;
+                    //animate the enemy moving for the attack
+                    transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
+
+                    //wait for half the attack animation, apply and animate damage
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+
+                    //after the enemy attack animation, apply the status
+                    AddStatus(EnemyCatalog.StatusEffects.Resilient, resilientTurns);
+
+                    //also remove the next attack text for the enemy
+                    RemoveNextAttackText();
+
+                    break;
+                case EnemyCatalog.AttackTypes.Strength:
+                    //get the number of turns to apply the resilient status for
+                    int strengthTurns = currentAttack.parameter;
+                    //animate the enemy moving for the attack
+                    transform.Find("Visuals").GetComponent<Animator>().SetTrigger("Attack");
+
+                    //wait for half the attack animation, apply and animate damage
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+                    yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
+
+                    //after the enemy attack animation, apply the status
+                    AddStatus(EnemyCatalog.StatusEffects.Strength, strengthTurns);
+
+                    //also remove the next attack text for the enemy
+                    RemoveNextAttackText();
+
                     break;
             }
         }
@@ -155,8 +282,23 @@ public class Enemy : MonoBehaviour {
             case EnemyCatalog.AttackTypes.Damage:
                 str = "Damage-" + source.enemyAttacks[currentAttackIndex].parameter;
                 break;
+            case EnemyCatalog.AttackTypes.LifeSteal:
+                str = "Life Steal-" + source.enemyAttacks[currentAttackIndex].parameter;
+                break;
             case EnemyCatalog.AttackTypes.Idle:
                 str = "Idle";
+                break;
+            case EnemyCatalog.AttackTypes.Heal:
+                str = "Heal-" + source.enemyAttacks[currentAttackIndex].parameter;
+                break;
+            case EnemyCatalog.AttackTypes.ShieldBreak:
+                str = "Shield Break";
+                break;
+            case EnemyCatalog.AttackTypes.Resilient:
+                str = "Resilient-" + source.enemyAttacks[currentAttackIndex].parameter;
+                break;
+            case EnemyCatalog.AttackTypes.Strength:
+                str = "Strength-" + source.enemyAttacks[currentAttackIndex].parameter;
                 break;
 
         }
