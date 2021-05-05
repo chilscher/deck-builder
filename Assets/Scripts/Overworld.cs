@@ -25,7 +25,7 @@ public class Overworld : MonoBehaviour {
     
     public void Start() {
         //if the boss room has been completed, generate a new floor
-        if (StaticVariables.dungeonFloor[StaticVariables.dungeonFloor.Count - 1] == StaticVariables.currentRoom) {
+        if ((StaticVariables.currentRoom != null) && (StaticVariables.currentRoom.type == RoomTypes.Boss)) {
             //print("floor complete!");
             StaticVariables.dungeonCatalog.GenerateFloor();
             StaticVariables.hasStartedFloor = false;

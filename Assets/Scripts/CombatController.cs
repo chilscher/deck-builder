@@ -847,7 +847,7 @@ public class CombatController : MonoBehaviour {
 
         //iterate through each enemy in the new array
         //we can't just iterate through the enemies themselves, because the length of the enemy list changes if one of them dies
-        for (int i =0; i<array.Length; i++) { DealDamageToEnemyWithCalc(amount, array[i]); }
+        for (int i =0; i<array.Length; i++) { StartCoroutine(DealDamageToEnemyWithCalc(amount, array[i])); }
     }
 
     public void HurtEnemiesFromBleed() {
