@@ -169,11 +169,11 @@ public class CombatController : MonoBehaviour {
         mainCanvas.DisplayStatuses(allyStatuses);
         UpdateEnemyAttacks();
 
-        for (int i=0; i < StaticVariables.allies.Count; i++) {
-            GameObject imageGO = allies.transform.GetChild(i).gameObject;
-            GameObject textGO = imageGO.transform.Find("Text").gameObject;
-            imageGO.GetComponent<Image>().sprite = StaticVariables.allies[i].source.allyArt;
-            textGO.GetComponent<Text>().text = StaticVariables.allies[i].source.name;
+        for (int i=0; i < StaticVariables.party.Count; i++) {
+            GameObject imageGO = allies.transform.Find("Party Member " + (i+1) + " Icon").gameObject;
+            //GameObject textGO = imageGO.transform.Find("Text").gameObject;
+            imageGO.GetComponent<Image>().sprite = StaticVariables.party[i].headShot;
+            //textGO.GetComponent<Text>().text = StaticVariables.party[i].name;
         }
         detailsPopup.SetAllyImages();
         detailsPopup.DisplayAllyStatuses(allyStatuses);

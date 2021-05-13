@@ -17,7 +17,7 @@ public class StaticVariables {
     static public System.Random random = new System.Random();
     static public int health; //the player's health
     static public int maxHealth; //the player's max health, they cannot heal above this value
-    static public List<Ally> allies;
+    static public List<Ally> party;
     static public EncounterCatalog encounterCatalog;
 
     static public List<DungeonRoom> dungeonFloor;

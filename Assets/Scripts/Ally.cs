@@ -1,4 +1,4 @@
-﻿//for deck-builder, copyright Cole Hilscher & Jack Hilscher 2020
+//for deck-builder, copyright Cole Hilscher & Jack Hilscher 2020
 
 using System.Collections;
 using System.Collections.Generic;
@@ -6,13 +6,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+[System.Serializable] //you can create new copies of this from a list in the inspector
 public class Ally {
-    //an ally which inherits its data from a PlatnoicAlly in the AllyCatalog
+    //contains the data for one of ally. these are created in the inspector within the AllyCatalog script
 
-    [HideInInspector]
-    public PlatonicAlly source; //the PlatonicAlly from which this Ally inherits its data
+    [Header("Displayed Info")]
+    public string name;
+    public AllyCatalog.AllyIDs ID;
 
-    public Ally(PlatonicAlly source) {
-        this.source = source;
-    }
+    [Header("Visuals")]
+    public Sprite allyArt;
+    public Sprite headShot;
+
+    [Header("Starting Cards")]
+    public string[] startingCards;
+    
 }

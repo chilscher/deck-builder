@@ -116,12 +116,12 @@ public class DetailsPopup : MonoBehaviour {
 
     public void SetAllyImages() {
         //sets the sprites for all allies
-        string a1Name = StaticVariables.allies[0].source.name;
-        Sprite a1Im = StaticVariables.allies[0].source.allyArt;
-        string a2Name = StaticVariables.allies[1].source.name;
-        Sprite a2Im = StaticVariables.allies[1].source.allyArt;
-        string a3Name = StaticVariables.allies[2].source.name;
-        Sprite a3Im = StaticVariables.allies[2].source.allyArt;
+        string a1Name = StaticVariables.party[0].name;
+        Sprite a1Im = StaticVariables.party[0].allyArt;
+        string a2Name = StaticVariables.party[1].name;
+        Sprite a2Im = StaticVariables.party[1].allyArt;
+        string a3Name = StaticVariables.party[2].name;
+        Sprite a3Im = StaticVariables.party[2].allyArt;
 
         transform.Find("Details Allies").Find("Ally 1").GetComponent<Image>().sprite = a1Im;
         transform.Find("Details Allies").Find("Ally 1").Find("Text").GetComponent<Text>().text = a1Name;

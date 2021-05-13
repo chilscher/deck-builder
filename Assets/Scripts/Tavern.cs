@@ -21,7 +21,7 @@ public class Tavern : MonoBehaviour {
     public GameObject cardVisualsPrefab;
     public int drawnNum; //the number of cards you draw at the start of your turn
     public DungeonCatalog dungeonCatalog;
-    public GameObject currentAlliesGO;
+    public GameObject partyGO;
     public GameObject allyOptionsGO;
     public Sprite blankImage;
     private int selectedAllyNum = 0; // 0, 1, or 2 - which ally is currently being interacted with by the player
@@ -40,7 +40,7 @@ public class Tavern : MonoBehaviour {
         StaticVariables.drawNum = drawnNum;
         StaticVariables.dungeonCatalog = dungeonCatalog;
 
-        StaticVariables.allies = new List<Ally> { null, null, null };
+        StaticVariables.party = new List<Ally> { null, null, null };
 
         ShowAllies();
         
@@ -58,23 +58,23 @@ public class Tavern : MonoBehaviour {
     }
 
     public void ShowAllies() {
-        //update the visuals for the current party, and for the available party members in the tavern
+        //update the visuals for the current party, and for the allt options in the tavern
 
-        //set the current ally icons
-        ShowAllyIcon(0);
-        ShowAllyIcon(1);
-        ShowAllyIcon(2);
+        //set the current party member icons
+        ShowPartyMemberIcon(0);
+        ShowPartyMemberIcon(1);
+        ShowPartyMemberIcon(2);
 
-        //set the colors of the available allies, based on if they have been selected yet or not
+        //set the colors of the ally options, based on if they have been selected yet or not
         foreach (Transform t in allyOptionsGO.transform) {
-            if (IsAllyCurrentlyInParty(t.gameObject.name)) { t.GetComponent<Image>().color = Color.gray; }
+            if (IsAllyCurrentlyInParty(t.GetComponent<AllyOption>().allyID)) { t.GetComponent<Image>().color = Color.gray; }
             else { t.GetComponent<Image>().color = Color.white; }
         }
 
-        //put a border around an ally icon that has not been filled yet
+        //put a border around a party member icon that has not been filled yet
         RemoveBorderFromAllyIcons();
         int firstEmptyAlly = GetFirstEmptyAllySlot();
-        if (firstEmptyAlly != -1) { AddBorderToAllyIcon(firstEmptyAlly); }
+        if (firstEmptyAlly != -1) { AddBorderToPartyMemberIcon(firstEmptyAlly); }
 
         //grey out the start button if the party is not full
         if (firstEmptyAlly != -1) { startButton.GetComponent<Image>().color = Color.grey; }
@@ -84,42 +84,42 @@ public class Tavern : MonoBehaviour {
     public int GetFirstEmptyAllySlot() {
         //returns the index of the first empty party member slot
         //returns -1 if the party is full
-        if (StaticVariables.allies[0] == null) { return 0; }
-        if (StaticVariables.allies[1] == null) { return 1; }
-        if (StaticVariables.allies[2] == null) { return 2; }
+        if (StaticVariables.party[0] == null) { return 0; }
+        if (StaticVariables.party[1] == null) { return 1; }
+        if (StaticVariables.party[2] == null) { return 2; }
         return -1;
     }
 
-    public void AddBorderToAllyIcon(int allyNum) {
+    public void AddBorderToPartyMemberIcon(int allyNum) {
         //puts a border around the specified ally icon
-        currentAlliesGO.transform.Find("Border " + (allyNum + 1)).gameObject.SetActive(true);
+        partyGO.transform.Find("Border " + (allyNum + 1)).gameObject.SetActive(true);
     }
 
     public void RemoveBorderFromAllyIcons() {
         //removes the border from every all icon
-        currentAlliesGO.transform.Find("Border 1").gameObject.SetActive(false);
-        currentAlliesGO.transform.Find("Border 2").gameObject.SetActive(false);
-        currentAlliesGO.transform.Find("Border 3").gameObject.SetActive(false);
+        partyGO.transform.Find("Border 1").gameObject.SetActive(false);
+        partyGO.transform.Find("Border 2").gameObject.SetActive(false);
+        partyGO.transform.Find("Border 3").gameObject.SetActive(false);
     }
 
 
-    public void ShowAllyIcon(int allyNum) {
+    public void ShowPartyMemberIcon(int allyNum) {
         //shows the icon for a specific ally
         //allyNum should be 0, 1, or 2
 
-        Image im = currentAlliesGO.transform.Find((allyNum + 1) + "").GetComponent<Image>();
-        Ally ally = StaticVariables.allies[allyNum];
+        Image im = partyGO.transform.Find("Party Member " + (allyNum + 1) + " Icon").GetComponent<Image>();
+        Ally ally = StaticVariables.party[allyNum];
         
         //if the ally is null, show nothing
         if (ally == null) { im.sprite = blankImage; }
         //if the ally is not null, show the ally image
-        else { im.sprite = ally.source.allyArt; }
+        else { im.sprite = ally.headShot; }
     }
 
-    public bool IsAllyCurrentlyInParty(string allyName) {
+    public bool IsAllyCurrentlyInParty(AllyCatalog.AllyIDs allyID) {
         //returns true if there is an ally in the party with the provided name
-        foreach (Ally ally in StaticVariables.allies) {
-            if (ally != null && ally.source.name == allyName) {
+        foreach (Ally ally in StaticVariables.party) {
+            if ((ally != null) && (ally.ID == allyID)) {
                 return true;
             }
         }
@@ -129,16 +129,17 @@ public class Tavern : MonoBehaviour {
     public void TapAlly(GameObject go) {
         //what happens when you tap an ally in the tavern
 
-        string allyname = go.name;
+        AllyCatalog.AllyIDs id = go.GetComponent<AllyOption>().allyID;
 
         //if the ally is already in your party, do nothing
-        if (IsAllyCurrentlyInParty(allyname)) return;
+        if (IsAllyCurrentlyInParty(id)) return;
 
         //set specified ally slot to be the chosen ally
-        Ally newAlly = new Ally(allyCatalog.GetAllyWithName(go.name));
+        //Ally newAlly = new Ally(allyCatalog.GetAllyWithName(go.name));
+        Ally ally = allyCatalog.GetAllyWithID(id);
         int chosenSpot = GetFirstEmptyAllySlot();
         if (chosenSpot != -1) {
-            StaticVariables.allies[chosenSpot] = newAlly;
+            StaticVariables.party[chosenSpot] = ally;
         } 
 
         //update available and current ally visuals
@@ -149,8 +150,8 @@ public class Tavern : MonoBehaviour {
         //sets the visuals for the starting cards popup to match the chosen ally
 
         //changes the visual display of the ally starting cards
-        for (int i = 0; i < ally.source.startingCards.Length; i++) {
-            string cardName = ally.source.startingCards[i];
+        for (int i = 0; i < ally.startingCards.Length; i++) {
+            string cardName = ally.startingCards[i];
             PlatonicCard pc = catalog.GetCardWithName(cardName);
             CardData cd = new CardData(catalog.GetCardWithName(cardName));
 
@@ -160,28 +161,30 @@ public class Tavern : MonoBehaviour {
             cv.SetParent(allyDetailsPopup.transform.Find("Background").Find("Card Options").GetChild(i));
         }
 
-        allyDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = ally.source.name.ToUpper();
+        allyDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = ally.name.ToUpper();
 
         //show the popup
         ShowAllyDetails();
     }
 
-    public void TapAllyIcon(GameObject go) {
+    public void TapPartyMemberIcon(GameObject go) {
         //what happens when you tap the icon of a current party member
 
         //assign the index of the ally
-        int allyNum = Int32.Parse(go.name) - 1;
+        //get the ally number from the name of the gameobject - assume format is like Party Member 2 Icon
+
+        int allyNum = Int32.Parse(go.name.Split(' ')[2]) - 1;
         selectedAllyNum = allyNum;
 
         //if the ally is null, do nothing
-        if (StaticVariables.allies[allyNum] == null) { return; }
+        if (StaticVariables.party[allyNum] == null) { return; }
        
         //if the ally is not null
         //show the ally's starting cards
-        DisplayAllyCards(StaticVariables.allies[allyNum]);
+        DisplayAllyCards(StaticVariables.party[allyNum]);
         //put a border around the selected ally icon
         RemoveBorderFromAllyIcons();
-        AddBorderToAllyIcon(allyNum);
+        AddBorderToPartyMemberIcon(allyNum);
     }
 
 
@@ -229,8 +232,8 @@ public class Tavern : MonoBehaviour {
         if (GetFirstEmptyAllySlot() != -1) { return; }
 
         StaticVariables.playerDeck = new List<CardData>();
-        foreach(Ally ally in StaticVariables.allies) {
-            foreach (string cardName in ally.source.startingCards) {
+        foreach(Ally ally in StaticVariables.party) {
+            foreach (string cardName in ally.startingCards) {
                 StaticVariables.playerDeck.Add(new CardData(catalog.GetCardWithName(cardName)));
             }
         }
@@ -244,7 +247,7 @@ public class Tavern : MonoBehaviour {
 
     public void RemoveAlly() {
         //removes an ally and updates the tavern visuals
-        StaticVariables.allies[selectedAllyNum] = null;
+        StaticVariables.party[selectedAllyNum] = null;
         HideAllyDetails();
         ShowAllies();
     }

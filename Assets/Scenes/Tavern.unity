@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 128322494}
   - component: {fileID: 128322493}
   - component: {fileID: 128322492}
+  - component: {fileID: 128322495}
   m_Layer: 5
   m_Name: Battlemage
   m_TagString: Untagged
@@ -308,6 +309,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128322490}
   m_CullTransparentMesh: 0
+--- !u!114 &128322495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128322490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 5
 --- !u!1 &142957261
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,6 +435,7 @@ GameObject:
   - component: {fileID: 155467197}
   - component: {fileID: 155467196}
   - component: {fileID: 155467195}
+  - component: {fileID: 155467198}
   m_Layer: 5
   m_Name: Witch
   m_TagString: Untagged
@@ -533,6 +548,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155467193}
   m_CullTransparentMesh: 0
+--- !u!114 &155467198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155467193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 6
 --- !u!1 &191538274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,7 +1031,7 @@ GameObject:
   - component: {fileID: 447696815}
   - component: {fileID: 447696814}
   m_Layer: 5
-  m_Name: 3
+  m_Name: Party Member 3 Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1050,7 +1078,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1136881645}
-        m_MethodName: TapAllyIcon
+        m_MethodName: TapPartyMemberIcon
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 447696813}
@@ -1078,7 +1106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3ae95949c4adcef4cbde928599daabe7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1361,6 +1389,7 @@ GameObject:
   - component: {fileID: 519693339}
   - component: {fileID: 519693338}
   - component: {fileID: 519693337}
+  - component: {fileID: 519693340}
   m_Layer: 5
   m_Name: Ranger
   m_TagString: Untagged
@@ -1473,6 +1502,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519693335}
   m_CullTransparentMesh: 0
+--- !u!114 &519693340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519693335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 4
 --- !u!1 &539903587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1485,6 +1527,7 @@ GameObject:
   - component: {fileID: 539903591}
   - component: {fileID: 539903590}
   - component: {fileID: 539903589}
+  - component: {fileID: 539903592}
   m_Layer: 5
   m_Name: Brawler
   m_TagString: Untagged
@@ -1597,6 +1640,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539903587}
   m_CullTransparentMesh: 0
+--- !u!114 &539903592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539903587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 3
 --- !u!1 &551506749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,6 +1665,7 @@ GameObject:
   - component: {fileID: 551506753}
   - component: {fileID: 551506752}
   - component: {fileID: 551506751}
+  - component: {fileID: 551506754}
   m_Layer: 5
   m_Name: Rogue
   m_TagString: Untagged
@@ -1704,7 +1761,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 102378875f09e1e4cba9e6e1800bfdb6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 93888bfb028842640a11428fba401a21, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1721,6 +1778,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 551506749}
   m_CullTransparentMesh: 0
+--- !u!114 &551506754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551506749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 1
 --- !u!1 &730975386
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,50 +1987,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allAllies:
-  - name: Civillian
+  - name: Civilian
+    ID: 0
     allyArt: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
+    headShot: {fileID: 21300000, guid: 72b0c4e02efb54143bad7f34f59fbc3e, type: 3}
     startingCards:
     - win
     - win
     - block
     - block
   - name: Rogue
-    allyArt: {fileID: 21300000, guid: 102378875f09e1e4cba9e6e1800bfdb6, type: 3}
+    ID: 1
+    allyArt: {fileID: 21300000, guid: 93888bfb028842640a11428fba401a21, type: 3}
+    headShot: {fileID: 21300000, guid: bc5707d8be94a3049b67cbdbbe832e7e, type: 3}
     startingCards:
     - backstab
     - shiv
     - shiv
     - hide
   - name: Medic
+    ID: 2
     allyArt: {fileID: 21300000, guid: ddfa96053ed13ad48bc46e6bc17c8a6d, type: 3}
+    headShot: {fileID: 21300000, guid: 3ae95949c4adcef4cbde928599daabe7, type: 3}
     startingCards:
     - aura
     - aura
     - draw life
     - draw life
   - name: Brawler
+    ID: 3
     allyArt: {fileID: 21300000, guid: e48caea01937f9a489f1dab1a9b44530, type: 3}
+    headShot: {fileID: 21300000, guid: bc3e3f8ad95efc344904bdf718cb96b9, type: 3}
     startingCards:
     - bite
     - bite
     - blitz
     - annihilate
   - name: Ranger
+    ID: 4
     allyArt: {fileID: 21300000, guid: 60aab0bdc527ff047887fa60e456679d, type: 3}
+    headShot: {fileID: 21300000, guid: d6d1995b69624d84383d8e37da4d5db7, type: 3}
     startingCards:
     - lash
     - lash
     - salve
     - salve
   - name: Battlemage
+    ID: 5
     allyArt: {fileID: 21300000, guid: 9dd92ac2f886d7d45b398da61c1a6908, type: 3}
+    headShot: {fileID: 21300000, guid: 6cfa8024b60df934a90ce3fa6c73a40f, type: 3}
     startingCards:
     - fireball
     - firebolt
     - innovate
     - deflect
   - name: Witch
+    ID: 6
     allyArt: {fileID: 21300000, guid: 09af3712985872747b26f2148b88e437, type: 3}
+    headShot: {fileID: 21300000, guid: 6761671e5228c224ab79be1e2f81a92d, type: 3}
     startingCards:
     - replenish
     - replenish
@@ -2476,6 +2560,7 @@ GameObject:
   - component: {fileID: 1118836242}
   - component: {fileID: 1118836241}
   - component: {fileID: 1118836240}
+  - component: {fileID: 1118836243}
   m_Layer: 5
   m_Name: Civillian
   m_TagString: Untagged
@@ -2588,6 +2673,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118836238}
   m_CullTransparentMesh: 0
+--- !u!114 &1118836243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118836238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 0
 --- !u!1 &1121977336
 GameObject:
   m_ObjectHideFlags: 0
@@ -2770,20 +2868,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6380e61a9bc0ae642a65059ac155e4b6, type: 3}
   - {fileID: 21300000, guid: 82e037d6bfd47874d9068c4a50732883, type: 3}
   startingHealth: 20
-  startingAllyNames:
-  - Civillian
-  - Rogue
-  - Medic
   allyDetailsPopup: {fileID: 142957261}
   encounterCatalog: {fileID: 1909583653}
   cardVisualsPrefab: {fileID: 3806193581650125391, guid: 1c28b49927830bd4589db75463b19dea,
     type: 3}
   drawnNum: 6
   dungeonCatalog: {fileID: 932491933}
-  currentAlliesGO: {fileID: 1838832692}
+  partyGO: {fileID: 1838832692}
   allyOptionsGO: {fileID: 246046861}
   blankImage: {fileID: 21300000, guid: a1bb1a7e0b6f1434cb600a0e62b2309c, type: 3}
-  selectedAllyNum: 0
   startButton: {fileID: 452925866}
 --- !u!1 &1161965372
 GameObject:
@@ -3430,6 +3523,7 @@ GameObject:
   - component: {fileID: 1445154691}
   - component: {fileID: 1445154690}
   - component: {fileID: 1445154689}
+  - component: {fileID: 1445154692}
   m_Layer: 5
   m_Name: Medic
   m_TagString: Untagged
@@ -3542,6 +3636,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1445154687}
   m_CullTransparentMesh: 0
+--- !u!114 &1445154692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445154687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19eef8d9740eb841856fdb3b2435b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allyID: 2
 --- !u!1 &1488183158
 GameObject:
   m_ObjectHideFlags: 0
@@ -3709,7 +3816,7 @@ GameObject:
   - component: {fileID: 1694963396}
   - component: {fileID: 1694963395}
   m_Layer: 5
-  m_Name: 2
+  m_Name: Party Member 2 Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3731,7 +3838,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -267.2, y: 197.6654}
+  m_AnchoredPosition: {x: -266.6, y: 197.6654}
   m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1694963395
@@ -3775,7 +3882,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1136881645}
-        m_MethodName: TapAllyIcon
+        m_MethodName: TapPartyMemberIcon
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1694963393}
@@ -3803,7 +3910,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bc5707d8be94a3049b67cbdbbe832e7e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3907,7 +4014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1838832693}
   m_Layer: 5
-  m_Name: Current Allies
+  m_Name: Party
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4320,7 +4427,7 @@ GameObject:
   - component: {fileID: 1925151568}
   - component: {fileID: 1925151567}
   m_Layer: 5
-  m_Name: 1
+  m_Name: Party Member 1 Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4342,7 +4449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -346.55, y: 197.6654}
+  m_AnchoredPosition: {x: -348, y: 197.6654}
   m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1925151567
@@ -4386,7 +4493,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1136881645}
-        m_MethodName: TapAllyIcon
+        m_MethodName: TapPartyMemberIcon
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1925151565}
@@ -4414,7 +4521,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 72b0c4e02efb54143bad7f34f59fbc3e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
