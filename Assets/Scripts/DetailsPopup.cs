@@ -319,9 +319,9 @@ public class DetailsPopup : MonoBehaviour {
                     break;
                 case Catalog.EffectTypes.AddRandomBeast:
                     if (p == -1)
-                        cardTextInfo += ("Adds a random Beast card to your discard pile.");
+                        cardTextInfo += ("Creates a random Beast card and adds it to your discard pile.");
                     else
-                        cardTextInfo += ("Adds a random " + p + "-cost Beast card to your discard pile.");
+                        cardTextInfo += ("Creates a random " + p + "-cost Beast card and adds it to your discard pile.");
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
