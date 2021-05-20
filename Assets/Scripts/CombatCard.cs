@@ -178,6 +178,10 @@ public class CombatCard: MonoBehaviour{
                 if (healAmt < 1) healAmt = 1;
                 combatController.HealPlayer(healAmt);
                 break;
+            case Catalog.EffectTypes.AddRandomBeast:
+                CardData cd = StaticVariables.catalog.GetRandomCardWithTag(Catalog.Tags.Beast, 0);
+                combatController.AddNewCardToDiscard(cd);
+                break;
         }
     }
 

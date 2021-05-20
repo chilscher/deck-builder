@@ -21,6 +21,8 @@ public class CardVisuals: MonoBehaviour{
     public Image manaCostBackgroundIm;
     public Image manaCostIm;
     public Image circleOverlayIm;
+    public Text tagTxt;
+    public Image tagBorder;
     public enum clickOptions { DoNothing, OpenDetails, TakeFromWin, TrashCard };
     public clickOptions clickOption = clickOptions.DoNothing;
 
@@ -37,6 +39,15 @@ public class CardVisuals: MonoBehaviour{
         nameTxt.text = source.source.cardName.ToUpper();
         cardTextTxt.text = source.source.text.ToUpper();
         manaCostIm.sprite = StaticVariables.numbers[source.source.manaCost];
+        if (newSource.source.tag == Catalog.Tags.None) {
+            tagTxt.gameObject.SetActive(false);
+            tagBorder.gameObject.SetActive(false);
+        }       
+        else {
+            tagTxt.gameObject.SetActive(true);
+            tagBorder.gameObject.SetActive(true);
+            tagTxt.text = newSource.source.tag.ToString();
+        }
     }
 
     public void SetParent(Transform newParent) {

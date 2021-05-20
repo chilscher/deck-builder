@@ -40,6 +40,8 @@ public class Tavern : MonoBehaviour {
         StaticVariables.drawNum = drawnNum;
         StaticVariables.dungeonCatalog = dungeonCatalog;
 
+        catalog.AssignTags();
+
         StaticVariables.party = new List<Ally> { null, null, null };
 
         ShowAllies();

@@ -968,4 +968,9 @@ public class CombatController : MonoBehaviour {
         }
         return 0;
     }
+
+    public void AddNewCardToDiscard(CardData cd) {
+        discardPile.Add(cd);
+        DisplayDiscardCount();
+    }
 }

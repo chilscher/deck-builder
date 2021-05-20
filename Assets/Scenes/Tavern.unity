@@ -1992,10 +1992,10 @@ MonoBehaviour:
     allyArt: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
     headShot: {fileID: 21300000, guid: 72b0c4e02efb54143bad7f34f59fbc3e, type: 3}
     startingCards:
-    - win
-    - win
-    - block
-    - block
+    - evoke
+    - evoke
+    - shape change
+    - evoke
   - name: Rogue
     ID: 1
     allyArt: {fileID: 21300000, guid: 93888bfb028842640a11428fba401a21, type: 3}
@@ -3260,6 +3260,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: f5d283aae31c8184da209d333bfe9730, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 2
       parameter: 1
@@ -3272,6 +3273,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 350e654a701e7e643b6379811445b9ca, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 2
       parameter: 1
@@ -3282,6 +3284,7 @@ MonoBehaviour:
     manaCost: 2
     cardArt: {fileID: 21300000, guid: 5bbd90977628db94ea19446a6ec17086, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 0
       parameter: 8
@@ -3290,6 +3293,7 @@ MonoBehaviour:
     manaCost: 3
     cardArt: {fileID: 21300000, guid: e38d7ca58c23eb845bd69db30ca5d474, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 1
       parameter: 50
@@ -3300,6 +3304,7 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 0
       parameter: 1
@@ -3310,6 +3315,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 4606da54934735f43bb25720f1f18c2a, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 0
       parameter: 3
@@ -3318,6 +3324,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: f62018749ed78474d8881e12c9e80da1, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 1
       parameter: 4
@@ -3328,6 +3335,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: d597184c7eaa0f44bb68b7705c6b7e9e, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 0
       parameter: 5
@@ -3340,6 +3348,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 7d9f6a74dcbae284d82eb5a10e8b6164, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 4
       parameter: 2
@@ -3350,6 +3359,7 @@ MonoBehaviour:
     manaCost: 2
     cardArt: {fileID: 21300000, guid: 979481d6aa4840b41999787526bf8d08, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 11
       parameter: 4
@@ -3360,6 +3370,7 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: a9e8254c00fcada49a4ecb212712ad84, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 2
       parameter: 1
@@ -3372,6 +3383,7 @@ MonoBehaviour:
     manaCost: 3
     cardArt: {fileID: 21300000, guid: d597184c7eaa0f44bb68b7705c6b7e9e, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 9
       parameter: 5
@@ -3380,6 +3392,7 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: d597184c7eaa0f44bb68b7705c6b7e9e, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 0
       parameter: 2
@@ -3388,6 +3401,7 @@ MonoBehaviour:
     manaCost: 2
     cardArt: {fileID: 21300000, guid: 010e49c81144f1e43a927921cd261b91, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 1
       parameter: 9
@@ -3396,6 +3410,7 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: e38d7ca58c23eb845bd69db30ca5d474, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 6
       parameter: 2
@@ -3404,6 +3419,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 55dbce8f9493a9f45988d8da84117459, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 3
       parameter: 4
@@ -3412,6 +3428,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 5bbd90977628db94ea19446a6ec17086, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 4
       parameter: 3
@@ -3424,6 +3441,7 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: 131f30d0d0ec807428981c82b5f5dec5, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 7
       parameter: 1
@@ -3438,6 +3456,7 @@ MonoBehaviour:
     manaCost: 3
     cardArt: {fileID: 21300000, guid: babbd39da242cac4e8e0ce0d8c446bda, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 13
       parameter: 1
@@ -3450,6 +3469,7 @@ MonoBehaviour:
     manaCost: 1
     cardArt: {fileID: 21300000, guid: 0a117688b7732c842924fe2b6a10c8c4, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 0
       parameter: 7
@@ -3462,6 +3482,7 @@ MonoBehaviour:
     manaCost: 2
     cardArt: {fileID: 21300000, guid: 12097473b0fa7c54cab1edae7bc7f072, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 15
       parameter: 1
@@ -3474,6 +3495,7 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: 4f44a492aad715548999e2a61bcf398a, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 16
       parameter: 1
@@ -3486,6 +3508,7 @@ MonoBehaviour:
     manaCost: 2
     cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
     requiresTarget: 1
+    tag: 0
     effects:
     - effectType: 17
       parameter: 4
@@ -3494,9 +3517,79 @@ MonoBehaviour:
     manaCost: 0
     cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
     requiresTarget: 0
+    tag: 0
     effects:
     - effectType: 9
       parameter: 40
+  - cardName: evoke
+    text: add a random 0-cost Beast to your discard pile
+    manaCost: 2
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 0
+    tag: 0
+    effects:
+    - effectType: 18
+      parameter: 0
+  - cardName: shape change
+    text: add a random 0-cost Beast to your discard pile. remove this card from your
+      deck
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 0
+    tag: 0
+    effects:
+    - effectType: 18
+      parameter: 0
+    - effectType: 12
+      parameter: 0
+  - cardName: squirrel
+    text: Add 2 shield
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 0
+    tag: 2
+    effects:
+    - effectType: 1
+      parameter: 2
+  - cardName: crow
+    text: Add 1 mana
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 0
+    tag: 2
+    effects:
+    - effectType: 7
+      parameter: 1
+  - cardName: pig
+    text: Heal 2 damage
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 0
+    tag: 2
+    effects:
+    - effectType: 2
+      parameter: 2
+  - cardName: rat
+    text: apply 1 vulnerable
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 1
+    tag: 2
+    effects:
+    - effectType: 3
+      parameter: 1
+  - cardName: bat
+    text: deal 1 damage. heal 1 damage
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: ccfbfd3c2e6c3ce4896aa482b146f919, type: 3}
+    requiresTarget: 1
+    tag: 2
+    effects:
+    - effectType: 0
+      parameter: 1
+    - effectType: 2
+      parameter: 1
+  cardsWithTag_Beast: []
 --- !u!4 &1356205481
 Transform:
   m_ObjectHideFlags: 0

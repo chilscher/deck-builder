@@ -11,11 +11,25 @@ public class Catalog : MonoBehaviour {
 
     public enum EffectTypes { Damage, Shield, Heal, Vulnerable, Weak,
         SelfDamage, Draw, AddMana, Stun, DamageAll, ConstantBleed, DiminishingBleed,
-        RemoveFromDeck, IncreaseTurnDraw, DecreaseTurnDraw, IncreaseDamage, DecreaseDamage, LifeSteal}; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
+        RemoveFromDeck, IncreaseTurnDraw, DecreaseTurnDraw, IncreaseDamage, DecreaseDamage, LifeSteal, AddRandomBeast}; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
 
+    public enum Tags { None, Quick, Beast};
 
     public PlatonicCard[] cards; //the collection of cards. cards are added and modified in the inspector
-    
+
+    [HideInInspector]
+    public List<PlatonicCard> cardsWithTag_Beast;
+
+    public void AssignTags() {
+        cardsWithTag_Beast = new List<PlatonicCard>();
+        foreach (PlatonicCard card in cards) {
+            if (card.tag == Tags.Beast) {
+                cardsWithTag_Beast.Add(card);
+            }
+        }
+    }
+
+
     public PlatonicCard GetCardWithName(string name) {
         //returns the PlatonicCard with the specified name
         foreach (PlatonicCard card in cards) {
@@ -55,4 +69,38 @@ public class Catalog : MonoBehaviour {
         int index = StaticVariables.random.Next(cards.Length);
         return new CardData(cards[index]);
     }
+
+    public CardData GetRandomCardWithTag(Tags tag, int cost = -1) {
+        //gets a card with the specfied tag. A mana cost restriction can also be provided
+        PlatonicCard failureCard = cards[0]; //if there is a failure, the first card in the catalog is returned
+
+        //set the list of cards that we are searching through
+        List<PlatonicCard> list = null;
+        if (tag == Tags.Beast) 
+            list = cardsWithTag_Beast;
+
+        if (list == null)
+            return new CardData(failureCard);
+
+        //check to see if there actually is a card with the desired cost in the list
+        if (cost != -1) {
+            bool foundOne = false;
+            foreach (PlatonicCard pc in list) {
+                if (pc.manaCost == cost)
+                    foundOne = true;
+            }
+            if (!foundOne)
+                return new CardData(failureCard);
+        }
+        
+        //look until you find a card with the right cost
+        while (true) {
+                PlatonicCard pc = list[StaticVariables.random.Next(cardsWithTag_Beast.Count)];
+                if (cost == pc.manaCost)
+                    return new CardData(pc);
+                if (cost == -1)
+                    return new CardData(pc);
+        }
+    }
+    
 }

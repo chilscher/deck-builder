@@ -86,6 +86,20 @@ public class DetailsPopup : MonoBehaviour {
         details.transform.Find("Text").GetComponent<Text>().text = cardData.source.text.ToUpper();
         details.transform.Find("Mana Cost").GetComponent<Image>().sprite = StaticVariables.numbers[cardData.source.manaCost];
         transform.Find("Text Info").Find("Text").GetComponent<Text>().text = GetEffectInfoText(dc);
+
+        Text tagTxt = details.transform.Find("Tag").Find("Tag Text").GetComponent<Text>();
+        Image tagBorder = details.transform.Find("Tag").Find("Tag Border").GetComponent<Image>();
+        if (dc.source.tag == Catalog.Tags.None) {
+            tagTxt.gameObject.SetActive(false);
+            tagBorder.gameObject.SetActive(false);
+        }
+
+        else {
+            tagTxt.gameObject.SetActive(true);
+            tagTxt.text = dc.source.tag.ToString();
+            tagBorder.gameObject.SetActive(true);
+        }
+
         Show();
     }
 
@@ -171,12 +185,17 @@ public class DetailsPopup : MonoBehaviour {
     private string GetEffectInfoText(CardData dc) {
         //creates a string that describes all of the effects of a card.
         string cardTextInfo = "";
+
+        if (cardData.source.tag != Catalog.Tags.None) {
+            cardTextInfo += ("This card has the tag " + cardData.source.tag.ToString() + ".");
+            cardTextInfo += "\n";
+            cardTextInfo += "\n";
+        }
         if (cardData.source.requiresTarget) {
             cardTextInfo += ("This card needs to target an enemy in order to work.");
             cardTextInfo += "\n";
             cardTextInfo += "\n";
         }
-        
         foreach (EffectBit effectBit in cardData.source.effects) {
             int p = effectBit.parameter;
             switch (effectBit.effectType) {
@@ -295,6 +314,14 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += ("Heals the party by half the damage dealt, with a minimum of 1.");
                     cardTextInfo += "\n";
                     cardTextInfo += ("Healing restores lost HP, but not above your party's maximum.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
+                case Catalog.EffectTypes.AddRandomBeast:
+                    if (p == -1)
+                        cardTextInfo += ("Adds a random Beast card to your discard pile.");
+                    else
+                        cardTextInfo += ("Adds a random " + p + "-cost Beast card to your discard pile.");
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
