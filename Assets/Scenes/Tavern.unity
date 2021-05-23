@@ -969,6 +969,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7971203261756715803, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.099998474
+      objectReference: {fileID: 0}
     - target: {fileID: 8831180972243317808, guid: 5d60cf4934ed7ad4c966f7b1c0287887,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1904,7 +1909,7 @@ MonoBehaviour:
     enemyArt: {fileID: 21300000, guid: f6d91bd115346084fb737a93bc9f28d3, type: 3}
     isLargeEnemy: 0
     enemyAttacks:
-    - attackType: 4
+    - attackType: 0
       parameter: 2
     - attackType: 2
       parameter: 3

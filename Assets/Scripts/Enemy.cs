@@ -154,7 +154,7 @@ public class Enemy : MonoBehaviour {
 
                     //wait for half the attack animation, apply and animate damage
                     yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
-                    combatController.allies.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
+                    combatController.mainCanvas.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
                     yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
 
                     //at the low point in the enemy animation, update player hp/shields
@@ -173,7 +173,7 @@ public class Enemy : MonoBehaviour {
 
                     //wait for half the attack animation, apply and animate damage
                     yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
-                    combatController.allies.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
+                    combatController.mainCanvas.transform.Find("Party Damage Animation").GetComponent<Animator>().SetTrigger("Attacked");
                     yield return new WaitForSeconds(combatController.enemyAttackDuration / 2);
 
                     //after the enemy attack animation, update player hp/shields

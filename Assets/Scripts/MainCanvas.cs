@@ -9,6 +9,7 @@ using System;
 public class MainCanvas : MonoBehaviour {
     //controls the main canvas for combat. contains several functions to update visuals
 
+    public HealthBar healthBarScript;
 
     public void DisplayHealth() {
         //shows the player's current health and max health, with a max of 999 for each
@@ -28,14 +29,18 @@ public class MainCanvas : MonoBehaviour {
         transform.Find("Health Display").Find("Max Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[mHundreds];
         transform.Find("Health Display").Find("Max Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[mTens];
         transform.Find("Health Display").Find("Max Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[mOnes];
+
+        //update the health bar
+
+        healthBarScript.SetHealth(StaticVariables.health, StaticVariables.maxHealth);
     }
 
     public void DisplayShields(int shieldCount) {
         //displays the player's current shields, with a max of 99
         int tens = shieldCount / 10;
         int ones = shieldCount - (tens * 10);
-        transform.Find("Shield Display").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[tens];
-        transform.Find("Shield Display").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[ones];
+        transform.Find("Shield Display").Find("Current Shields").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[tens];
+        transform.Find("Shield Display").Find("Current Shields").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[ones];
     }
 
     public void DisplayDeckCount(int count) {
@@ -79,9 +84,9 @@ public class MainCanvas : MonoBehaviour {
 
         int amt = 0;
 
-        amt += 10 * (Convert.ToInt32(transform.Find("Shield Display").Find("Tens").GetComponent<Image>().sprite.name.Split('#')[1]));
+        amt += 10 * (Convert.ToInt32(transform.Find("Shield Display").Find("Current Shields").Find("Tens").GetComponent<Image>().sprite.name.Split('#')[1]));
 
-        amt += (Convert.ToInt32(transform.Find("Shield Display").Find("Ones").GetComponent<Image>().sprite.name.Split('#')[1]));
+        amt += (Convert.ToInt32(transform.Find("Shield Display").Find("Current Shields").Find("Ones").GetComponent<Image>().sprite.name.Split('#')[1]));
 
         return amt;
     }

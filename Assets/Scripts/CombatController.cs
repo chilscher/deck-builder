@@ -141,7 +141,7 @@ public class CombatController : MonoBehaviour {
                 enemyAttackDuration = clip.length;
             }
         }
-        anim = allies.transform.Find("Party Damage Animation").GetComponent<Animator>();
+        anim = mainCanvas.transform.Find("Party Damage Animation").GetComponent<Animator>();
         foreach (AnimationClip clip in anim.runtimeAnimatorController.animationClips) {
             if (clip.name == "Party Damage") {
                 playerAttackedDuration = clip.length;
