@@ -39,4 +39,24 @@ public static class GeneralFunctions {
         SceneManager.LoadScene(nextScene);
     }
 
+    public static void DisplayHealth(Transform healthParent) {
+        if (StaticVariables.health < 0) { StaticVariables.health = 0; }
+        int currentHP = StaticVariables.health;
+        int maxHP = StaticVariables.maxHealth;
+        int cHundreds = currentHP / 100;
+        int cTens = (currentHP - cHundreds * 100) / 10;
+        int cOnes = currentHP - (cTens * 10) - (cHundreds * 100);
+        healthParent.Find("Current Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[cHundreds];
+        healthParent.Find("Current Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[cTens];
+        healthParent.Find("Current Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[cOnes];
+
+        int mHundreds = maxHP / 100;
+        int mTens = (maxHP - mHundreds * 100) / 10;
+        int mOnes = maxHP - (mTens * 10) - (mHundreds * 100);
+        healthParent.Find("Max Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[mHundreds];
+        healthParent.Find("Max Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[mTens];
+        healthParent.Find("Max Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[mOnes];
+
+    }
+
 }

@@ -1997,10 +1997,10 @@ MonoBehaviour:
     allyArt: {fileID: 21300000, guid: c3feb2ceaa53f2542b80688f8d7d0bb0, type: 3}
     headShot: {fileID: 21300000, guid: 72b0c4e02efb54143bad7f34f59fbc3e, type: 3}
     startingCards:
-    - evoke
-    - evoke
-    - shape change
-    - evoke
+    - win
+    - win
+    - win
+    - win
   - name: Rogue
     ID: 1
     allyArt: {fileID: 21300000, guid: 93888bfb028842640a11428fba401a21, type: 3}

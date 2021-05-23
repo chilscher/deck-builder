@@ -13,23 +13,7 @@ public class MainCanvas : MonoBehaviour {
 
     public void DisplayHealth() {
         //shows the player's current health and max health, with a max of 999 for each
-        if (StaticVariables.health < 0) { StaticVariables.health = 0; }
-        int currentHP = StaticVariables.health;
-        int maxHP = StaticVariables.maxHealth;
-        int cHundreds = currentHP / 100;
-        int cTens = (currentHP - cHundreds * 100) / 10;
-        int cOnes = currentHP - (cTens * 10) - (cHundreds * 100);
-        transform.Find("Health Display").Find("Current Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[cHundreds];
-        transform.Find("Health Display").Find("Current Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[cTens];
-        transform.Find("Health Display").Find("Current Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[cOnes];
-
-        int mHundreds = maxHP / 100;
-        int mTens = (maxHP - mHundreds * 100) / 10;
-        int mOnes = maxHP - (mTens * 10) - (mHundreds * 100);
-        transform.Find("Health Display").Find("Max Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[mHundreds];
-        transform.Find("Health Display").Find("Max Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[mTens];
-        transform.Find("Health Display").Find("Max Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[mOnes];
-
+        GeneralFunctions.DisplayHealth(transform.Find("Health Display"));
         //update the health bar
 
         healthBarScript.SetHealth(StaticVariables.health, StaticVariables.maxHealth);

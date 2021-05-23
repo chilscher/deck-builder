@@ -63,7 +63,7 @@ public class Overworld : MonoBehaviour {
             room.ShowHallwayStatus();
         }
 
-        DisplayHealth();
+        GeneralFunctions.DisplayHealth(healthDisplay.transform);
 
         //start fade-in
         StartCoroutine(GeneralFunctions.StartFadeIn());
@@ -180,25 +180,6 @@ public class Overworld : MonoBehaviour {
                 room.childHallways.Add(hallway);
             }
         }
-    }
-
-    public void DisplayHealth() {
-        //shows the player's current health and max health, with a max of 999 for each
-        int currentHP = StaticVariables.health;
-        int maxHP = StaticVariables.maxHealth;
-        int cHundreds = currentHP / 100;
-        int cTens = (currentHP - cHundreds * 100) / 10;
-        int cOnes = currentHP - (cTens * 10) - (cHundreds * 100);
-        healthDisplay.transform.Find("Current Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[cHundreds];
-        healthDisplay.transform.Find("Current Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[cTens];
-        healthDisplay.transform.Find("Current Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[cOnes];
-
-        int mHundreds = maxHP / 100;
-        int mTens = (maxHP - mHundreds * 100) / 10;
-        int mOnes = maxHP - (mTens * 10) - (mHundreds * 100);
-        healthDisplay.transform.Find("Max Health").Find("Hundreds").GetComponent<Image>().sprite = StaticVariables.numbers[mHundreds];
-        healthDisplay.transform.Find("Max Health").Find("Tens").GetComponent<Image>().sprite = StaticVariables.numbers[mTens];
-        healthDisplay.transform.Find("Max Health").Find("Ones").GetComponent<Image>().sprite = StaticVariables.numbers[mOnes];
     }
 
     public void GoToScene(string nextScene) {

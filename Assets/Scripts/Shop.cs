@@ -16,11 +16,13 @@ public class Shop : MonoBehaviour {
     public List<bool> canStillBuy;
     public GameObject deck;
     public PileDetailsPopup pileDetailsPopup;
+    public GameObject healthDisplay;
 
     public void Start() {
         //DisplayHealth();
         ShowCardOptions();
         DisplayDeckCount();
+        GeneralFunctions.DisplayHealth(healthDisplay.transform);
         //start fade-in
         StartCoroutine(GeneralFunctions.StartFadeIn());
     }
