@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class AllyCatalog : MonoBehaviour {
     //this script contains the entire collection of allies in the game. it is loaded in the main menu, and not destroyed during transition between scenes
-    public enum AllyIDs { Civilian, Rogue, Medic, Brawler, Ranger, Battlemage, Witch }; //all possible allies in the game
+    public enum AllyIDs { Civilian, Rogue, Medic, Brawler, Ranger, Battlemage, Witch, Hero, Mercenary, Guard}; //all possible allies in the game
     public Ally[] allAllies; //the collection of allies. allies are added and modified in the inspector
     //to add a new ally, add an element to the allyIDs enumerator, add an element to the allAllies list in the inspector, then finally add a child of the AllyOptions gameobject in the tavern
 

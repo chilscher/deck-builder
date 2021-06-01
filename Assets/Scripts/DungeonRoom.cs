@@ -36,7 +36,7 @@ public class DungeonRoom{
                 case Overworld.RoomTypes.Miniboss:
                     GoToMinibossCombat(); break;
                 case Overworld.RoomTypes.Event:
-                    GoToRest(); break;
+                    GoToEvent(); break;
 
             }
 
@@ -96,7 +96,7 @@ public class DungeonRoom{
         StaticVariables.currentRoom = this;
 
         //start fade-out
-        GameObject.FindObjectOfType<Overworld>().GoToScene("Rest");
+        GameObject.FindObjectOfType<Overworld>().GoToScene("EventScene");
     }
 
     public void GoToNormalCombat() {

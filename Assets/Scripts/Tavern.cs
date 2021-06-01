@@ -26,6 +26,9 @@ public class Tavern : MonoBehaviour {
     public Sprite blankImage;
     private int selectedAllyNum = 0; // 0, 1, or 2 - which ally is currently being interacted with by the player
     public GameObject startButton;
+    public EventCatalog eventCatalog;
+    public bool useCustomFloor;
+    public string[] customFloor;
 
     public void Start() {
         //assumes you only go to the tavern once, at the start of the game session
@@ -33,6 +36,7 @@ public class Tavern : MonoBehaviour {
         StaticVariables.catalog = catalog;
         StaticVariables.enemyCatalog = enemyCatalog;
         StaticVariables.allyCatalog = allyCatalog;
+        StaticVariables.eventCatalog = eventCatalog;
         StaticVariables.health = startingHealth;
         StaticVariables.maxHealth = startingHealth;
         StaticVariables.encounterCatalog = encounterCatalog;
@@ -163,7 +167,7 @@ public class Tavern : MonoBehaviour {
             cv.SetParent(allyDetailsPopup.transform.Find("Background").Find("Card Options").GetChild(i));
         }
 
-        allyDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = ally.name.ToUpper();
+        allyDetailsPopup.transform.Find("Background").Find("Name").GetComponent<Text>().text = ("THE " + ally.name.ToUpper());
 
         //show the popup
         ShowAllyDetails();
@@ -240,8 +244,11 @@ public class Tavern : MonoBehaviour {
             }
         }
 
+        if (useCustomFloor)
+            StaticVariables.dungeonCatalog.GenerateFloor(customFloor);
         //GeneralFunctions.GenerateFloor(floorNodes);
-        StaticVariables.dungeonCatalog.GenerateFloor();
+        else
+            StaticVariables.dungeonCatalog.GenerateFloor();
 
         //start fade-out
         StartCoroutine(GeneralFunctions.StartFadeOut("Overworld"));
