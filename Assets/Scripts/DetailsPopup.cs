@@ -325,6 +325,18 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
+                case Catalog.EffectTypes.AddRandomDiscardToHand:
+                    if (p == 1) {
+                        cardTextInfo += ("Selects " + p + " card from your discard pile at random and adds it to your hand.");
+                    }
+                    else {
+                        cardTextInfo += ("Selects " + p + " cards from your discard pile at random and adds them to your hand.");
+                    }
+                    cardTextInfo += ("If your discard pile is empty, no card is added to your hand.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
             }
         }
 

@@ -11,7 +11,8 @@ public class Catalog : MonoBehaviour {
 
     public enum EffectTypes { Damage, Shield, Heal, Vulnerable, Weak,
         SelfDamage, Draw, AddMana, Stun, DamageAll, ConstantBleed, DiminishingBleed,
-        RemoveFromDeck, IncreaseTurnDraw, DecreaseTurnDraw, IncreaseDamage, DecreaseDamage, LifeSteal, AddRandomBeast}; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
+        RemoveFromDeck, IncreaseTurnDraw, DecreaseTurnDraw, IncreaseDamage, DecreaseDamage,
+        LifeSteal, AddRandomBeast, AddRandomDiscardToHand }; //to add new effect types, add a new element in this EffectType list. To implement its effect, add a new switch case in DisplayCard.DoCardEffect
 
     public enum Tags { None, Quick, Beast};
 

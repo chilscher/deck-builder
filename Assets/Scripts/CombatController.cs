@@ -14,7 +14,7 @@ public class CombatController : MonoBehaviour {
     //the various lists of the player's cards. they start empty
     private List<CardData> deck = new List<CardData>();
     private List<CardData> hand = new List<CardData>();
-    private List<CardData> discardPile = new List<CardData>();
+    public List<CardData> discardPile = new List<CardData>();
 
     //the gameobjects that show where the player's cards are
     public GameObject handGameObject; //card display objects will get added to this dynamically
@@ -391,21 +391,28 @@ public class CombatController : MonoBehaviour {
 
     private IEnumerator DiscardHand() {
         //discards all cards in the player's hand in order, with a pause in between
-        
+        //print(combatCardsInHand.Count);
         combatCardsInHand.Reverse();
-        //move all the display cards to the discard pile
+        List<CombatCard> temp = new List<CombatCard>();
         foreach (CombatCard cc in combatCardsInHand) {
+            temp.Add(cc);
+        }
+        //move all the display cards to the discard pile
+        foreach (CombatCard cc in temp) {
             StartCoroutine(SendCardToDiscardThenDestroy(cc));
             yield return new WaitForSeconds(TimingValues.pauseBetweenCardsMoving);
 
         }
+
+
+        //give extra time at the end for all cards to make it to the discard pile
+        yield return new WaitForSeconds(TimingValues.durationOfCardMoveFromPlayToDiscard * 2f);
+
         //empty the DisplayCard list
         combatCardsInHand = new List<CombatCard>();
 
         hand = new List<CardData>();
-
-        //give extra time at the end for all cards to make it to the discard pile
-        yield return new WaitForSeconds(TimingValues.durationOfCardMoveFromPlayToDiscard * 2f);
+        
     }
 
     public IEnumerator SendCardToDiscard(CombatCard cc) {
@@ -424,6 +431,7 @@ public class CombatController : MonoBehaviour {
         float discardDuration = (TimingValues.cardScalingTime + TimingValues.durationOfCardMoveFromPlayToDiscard);
         yield return new WaitForSeconds(discardDuration);
         AddCardToDiscardPile(cc);
+        combatCardsInHand.Remove(cc);
     }
 
     public IEnumerator RemoveCardFromGame(CombatCard cc) {
@@ -969,8 +977,55 @@ public class CombatController : MonoBehaviour {
         return 0;
     }
 
-    public void AddNewCardToDiscard(CardData cd) {
-        discardPile.Add(cd);
+    public IEnumerator AddNewCardToDiscard(CardData cd, Vector2 startingPos) {
+        //discardPile.Add(cd);
+        CombatCard cc = CreateCombatCard(cd);
+        //DisplayDiscardCount();
+
+        //put the new card in the right position and make it have 0 size
+        cc.transform.position = startingPos;
+        cc.GetComponent<CardVisuals>().MakeSmallAndRed();
+        cc.transform.localScale = new Vector3(0,0,0);
+        yield return new WaitForSeconds(TimingValues.cardScalingTime);
+        //cc.transform.DOScale(0, 0);
+
+        //move the card to the correct position in the hand, and move other cards to make room for it
+        //yield return StartCoroutine(PositionCardsInHand());
+        //then enlarge the card and remove the red overlay
+        //cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(0, TimingValues.cardOverlayFadeTime);
+        cc.transform.DOScale(cc.GetComponent<CardVisuals>().tinyCardScale, TimingValues.cardScalingTime);
+        yield return new WaitForSeconds(TimingValues.cardScalingTime);
+        yield return SendCardToDiscardThenDestroy(cc);
+        //yield return new WaitForSeconds(5);
+    }
+
+
+    public IEnumerator AddCardToHandFromDiscard(CardData cd) {
+        discardPile.Remove(cd);
+        hand.Add(cd);
+
+        //draws one card from the discard pile and adds it to the hand
+        //hand.Add(cd);
+        CombatCard cc = CreateCombatCard(cd);
         DisplayDiscardCount();
+
+        //put the card on top of the discard pile and make it a small red ball
+        cc.transform.position = mainCanvas.GetCenterOfDiscardPile();
+        cc.GetComponent<CardVisuals>().MakeSmallAndRed();
+
+        //move the card to the correct position in the hand, and move other cards to make room for it
+        yield return StartCoroutine(PositionCardsInHand());
+        //then enlarge the card and remove the red overlay
+        cc.transform.Find("Circle Overlay").GetComponent<Image>().DOFade(0, TimingValues.cardOverlayFadeTime);
+        cc.transform.DOScale(1, TimingValues.cardScalingTime);
+
+
+    }
+
+
+
+    public CardData GetRandomDiscardCard() {
+        CardData cd = discardPile[StaticVariables.random.Next(discardPile.Count)];
+        return cd;
     }
 }

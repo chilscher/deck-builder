@@ -2421,19 +2421,19 @@ MonoBehaviour:
     allyArt: {fileID: 21300000, guid: 93888bfb028842640a11428fba401a21, type: 3}
     headShot: {fileID: 21300000, guid: bc5707d8be94a3049b67cbdbbe832e7e, type: 3}
     startingCards:
-    - strike
-    - strike
-    - block
-    - valor
+    - shape change
+    - evoke
+    - evoke
+    - shape change
   - name: Mercenary
     ID: 8
     allyArt: {fileID: 21300000, guid: e48caea01937f9a489f1dab1a9b44530, type: 3}
     headShot: {fileID: 21300000, guid: bc3e3f8ad95efc344904bdf718cb96b9, type: 3}
     startingCards:
-    - strike
-    - strike
-    - assault
-    - disable
+    - deceive
+    - deceive
+    - deceive
+    - deceive
   - name: Guard
     ID: 9
     allyArt: {fileID: 21300000, guid: 9b092cc2b15b3cf42a031fcfb066db6d, type: 3}
@@ -3359,7 +3359,7 @@ MonoBehaviour:
   eventCatalog: {fileID: 1378423445}
   useCustomFloor: 1
   customFloor:
-  - 1-e
+  - 1-c
   - 0-b
 --- !u!1 &1161965372
 GameObject:
@@ -4145,6 +4145,24 @@ MonoBehaviour:
     - effectType: 2
       parameter: 2
     - effectType: 15
+      parameter: 1
+  - cardName: charm
+    text: Apply 2 vulnerable to the target.
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: fb9bcc3943d1ca94497fd61e5e8c2fde, type: 3}
+    requiresTarget: 1
+    tag: 0
+    effects:
+    - effectType: 3
+      parameter: 2
+  - cardName: deceive
+    text: Add a random card from your discard pile to your hand
+    manaCost: 1
+    cardArt: {fileID: 21300000, guid: fb9bcc3943d1ca94497fd61e5e8c2fde, type: 3}
+    requiresTarget: 0
+    tag: 0
+    effects:
+    - effectType: 19
       parameter: 1
   cardsWithTag_Beast: []
 --- !u!4 &1356205481

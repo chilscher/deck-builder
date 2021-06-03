@@ -180,7 +180,14 @@ public class CombatCard: MonoBehaviour{
                 break;
             case Catalog.EffectTypes.AddRandomBeast:
                 CardData cd = StaticVariables.catalog.GetRandomCardWithTag(Catalog.Tags.Beast, 0);
-                combatController.AddNewCardToDiscard(cd);
+                yield return combatController.AddNewCardToDiscard(cd, combatController.mainCanvas.GetCenterOfQueue());
+                break;
+            case Catalog.EffectTypes.AddRandomDiscardToHand:
+                int amt = Mathf.Min(p, combatController.discardPile.Count);
+                for (int i=0; i<amt; i++) {
+                    CardData cd2 = combatController.GetRandomDiscardCard();
+                    yield return (combatController.AddCardToHandFromDiscard(cd2));
+                }
                 break;
         }
     }
