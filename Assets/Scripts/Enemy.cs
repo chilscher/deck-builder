@@ -132,6 +132,9 @@ public class Enemy : MonoBehaviour {
 
     public IEnumerator DoNextAttack() {
         //executes the enemy's next attack, and then advances their attack turn counter
+        
+        //track if the enemy needs to be burned, poisoned, etc
+        bool didDamagingAttack = false;
 
         //skips the attack if the enemy is stunned
         if (DoesEnemyHaveStatus(EnemyCatalog.StatusEffects.Stun)) {
@@ -145,6 +148,8 @@ public class Enemy : MonoBehaviour {
             EnemyCatalog.EnemyAttack currentAttack = source.enemyAttacks[currentAttackIndex];
             switch (currentAttack.attackType) {
                 case EnemyCatalog.AttackTypes.Damage:
+                    didDamagingAttack = true;
+
                     //calculate damage to player
                     int originalDamage = currentAttack.parameter;
                     int damage = combatController.CalculateDamageToPlayer(originalDamage, this);
@@ -164,6 +169,8 @@ public class Enemy : MonoBehaviour {
 
                     break;
                 case EnemyCatalog.AttackTypes.LifeSteal:
+                    didDamagingAttack = true;
+
                     //calculate damage to player
                     int lifeStealBaseDamage = currentAttack.parameter;
                     int lifeStealDamage = combatController.CalculateDamageToPlayer(lifeStealBaseDamage, this);
@@ -265,6 +272,17 @@ public class Enemy : MonoBehaviour {
         else if (currentAttackIndex + 1 == source.enemyAttacks.Length) {
             currentAttackIndex = 0;
         }
+
+        if (didDamagingAttack) {
+            yield return TakeBurnDamage();
+        }
+    }
+
+    public IEnumerator TakeBurnDamage() {
+        int originalDamage = GetDurationOfStatus(EnemyCatalog.StatusEffects.Burn);
+        if (originalDamage >= 1)
+            yield return combatController.DealDamageToEnemyWithCalc(originalDamage, this);
+
     }
 
     public void RemoveNextAttackText() {

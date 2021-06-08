@@ -2294,6 +2294,7 @@ MonoBehaviour:
       parameter: 0
     - attackType: 0
       parameter: 10
+  permanentStatuses: 0300000007000000
   enemyStatuses:
   - statusType: 0
     icon: {fileID: 21300000, guid: 380316c747c9298429161b580a35f0ae, type: 3}
@@ -2309,6 +2310,8 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: c5ed363a4d1e252419183b045771fbcf, type: 3}
   - statusType: 6
     icon: {fileID: 21300000, guid: fad81a620348f694d925d7112df1c2ac, type: 3}
+  - statusType: 7
+    icon: {fileID: 21300000, guid: 9725fb87facc42a4984598500f76e0fb, type: 3}
 --- !u!4 &770692637
 Transform:
   m_ObjectHideFlags: 0
@@ -2439,10 +2442,10 @@ MonoBehaviour:
     allyArt: {fileID: 21300000, guid: 9b092cc2b15b3cf42a031fcfb066db6d, type: 3}
     headShot: {fileID: 21300000, guid: aa8ae06cfa906434985ed399b95ebc79, type: 3}
     startingCards:
-    - block
-    - block
-    - bolster
-    - protect
+    - haymaker
+    - haymaker
+    - singe
+    - singe
   allyStatuses:
   - statusType: 0
     icon: {fileID: 21300000, guid: 73a008f003bffbd4c868db11a704b9da, type: 3}
@@ -4164,6 +4167,28 @@ MonoBehaviour:
     effects:
     - effectType: 19
       parameter: 1
+  - cardName: singe
+    text: Deal 2 damage to an enemy. Has a 50% chance to add 1 burn damage.
+    manaCost: 0
+    cardArt: {fileID: 21300000, guid: 9f69b220176e6964fbd87f5f158d45e3, type: 3}
+    requiresTarget: 1
+    tag: 3
+    effects:
+    - effectType: 0
+      parameter: 2
+    - effectType: 20
+      parameter: 1
+  - cardName: haymaker
+    text: Deal 15 Damage. End your turn.
+    manaCost: 2
+    cardArt: {fileID: 21300000, guid: 9f69b220176e6964fbd87f5f158d45e3, type: 3}
+    requiresTarget: 1
+    tag: 1
+    effects:
+    - effectType: 0
+      parameter: 15
+    - effectType: 21
+      parameter: 0
   cardsWithTag_Beast: []
 --- !u!4 &1356205481
 Transform:

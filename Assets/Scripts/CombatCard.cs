@@ -76,7 +76,7 @@ public class CombatCard: MonoBehaviour{
                 }
             }
             //if the card is out of the hand's dead zone, play it. else, return it to the hand
-            if (cardOutOfHand) { QueueForPlay(); }
+            if (cardOutOfHand && !combatController.endTurnAfterCard) { QueueForPlay(); }
             else { ReturnToStartingPos(); }            
         }
     }
@@ -188,6 +188,20 @@ public class CombatCard: MonoBehaviour{
                     CardData cd2 = combatController.GetRandomDiscardCard();
                     yield return (combatController.AddCardToHandFromDiscard(cd2));
                 }
+                break;
+            case Catalog.EffectTypes.ChanceToBurn50:
+                int burnChance = 50; //from 0 to 100
+                bool doesBurn = (StaticVariables.random.Next(100) <= burnChance);
+                if (doesBurn)
+                    enemy.AddStatus(EnemyCatalog.StatusEffects.Burn, p);
+                break;
+
+            case Catalog.EffectTypes.EndTurn:
+                combatController.endTurnAfterCard = true;
+                //yield return new WaitForSeconds(2);
+                yield return combatController.ReturnQueueCardsToHand(this);
+                //yield return new WaitForSeconds(2);
+
                 break;
         }
     }

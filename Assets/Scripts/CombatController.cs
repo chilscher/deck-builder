@@ -84,6 +84,9 @@ public class CombatController : MonoBehaviour {
     [HideInInspector]
     public List<AllyStatus> allyStatuses = new List<AllyStatus>();
 
+    [HideInInspector]
+    public bool endTurnAfterCard = false;
+
     private IEnumerator Start() {
         //draw level data from StaticVariables
         FindObjectOfType<TouchHandler>().startingCombat = true;
@@ -192,6 +195,10 @@ public class CombatController : MonoBehaviour {
                 PositionCardsInQueue();
                 StartCoroutine(cardQueue[0].PlayCard(targetQueue[0]));
             }
+        }
+        if (cardQueue.Count == 0 && !hasWon && !hasLost && endTurnAfterCard) {
+            endTurnAfterCard = false;
+            EndTurn();
         }
     }
 
@@ -353,7 +360,11 @@ public class CombatController : MonoBehaviour {
             //do not wait for the card to move before continuing - all of the cards should move at the same time
             //do not move a card if: it is currently being dragged by the touch handler
             TouchHandler th = FindObjectOfType<TouchHandler>();
-            if (!(th.movingCard == cc && cc.isDragged)) { rt.DOAnchorPos(cardPos, 0.2f); }
+            if (!(th.movingCard == cc && cc.isDragged)) {
+                rt.DOAnchorPos(cardPos, 0.2f);
+                //also scale the card to the normal card size
+                //rt.DOScale(1f, 0.2f);
+            }
 
             //also set the card's sorting order in the hierarchy, based on the number of non-DisplayCards in the hierarchy and this card's place in the hand
             cc.placeInHierarchy = nonCardsInHierarchy + i;
@@ -479,7 +490,42 @@ public class CombatController : MonoBehaviour {
             cardQueue[i].transform.SetSiblingIndex(cardQueue.Count - i);
         }
     }
-    
+
+    public IEnumerator ReturnQueueCardsToHand(CombatCard exception) {
+        //iterate through every card in the queue
+        //put the card back in the hand
+        //refund card mana cost
+        //position cards in hand
+
+        //empty queue
+        List<CombatCard> temp = new List<CombatCard>(cardQueue);
+        foreach (CombatCard cc in temp) {
+            if (cc != exception) {
+                //print("hand size: " + hand.Count);
+                mana += cc.associatedCard.source.manaCost;
+                DisplayMana();
+                cc.inQueue = false;
+                //print(cardQueue.Count);
+                //print(targetQueue.Count);
+                targetQueue.RemoveAt(cardQueue.IndexOf(cc));
+                cardQueue.Remove(cc);
+                hand.Add(cc.associatedCard);
+                combatCardsInHand.Add(cc);
+                cc.transform.SetParent(handGameObject.transform);
+                cc.transform.DOScale(1, TimingValues.cardScalingTime);
+                yield return StartCoroutine(PositionCardsInHand());
+            }
+
+
+        }
+        
+
+        //cardQueue = new List<CombatCard>();
+        //targetQueue = new List<Enemy>();
+
+
+    }
+
 
     public void EndTurn() {
         //ends the player's turn, and starts everything that happens after
@@ -712,7 +758,8 @@ public class CombatController : MonoBehaviour {
     private void DefeatEnemy(Enemy enemy) {
         //stuff that happens when an enemy drops to 0 HP
         enemies.Remove(enemy);
-        enemy.transform.Find("Visuals").GetComponent<Animator>().SetTrigger("FadeOut");
+        enemy.transform.Find("Visuals").GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() =>
+                enemy.gameObject.SetActive(false));
     }
 
     private void Win() {
@@ -724,12 +771,14 @@ public class CombatController : MonoBehaviour {
     IEnumerator EnemiesAttackInSequence() {
         //makes each enemy attack in sequence
 
-        foreach (Enemy e in enemies) {
-            if (e.gameObject.activeSelf) {
+        //iterate through all of the enemy gameobjects
+        foreach (Transform t in enemies[0].transform.parent) {
+            //if the enemy gameobject is not active, don't make it attack
+            if (t.gameObject.activeSelf) {
+                Enemy e = t.GetComponent<Enemy>();
                 yield return e.DoNextAttack();
                 yield return new WaitForSeconds(pauseBetweenEnemyAttacks);
             }
-
         }
 
         CheckForLoss();
@@ -785,7 +834,7 @@ public class CombatController : MonoBehaviour {
         //takes one turn off of all ongoing enemy statuses. If a status drops to 0 turns left, remove it
         foreach (Enemy enemy in enemies) {
             foreach (EnemyStatus status in enemy.statuses) {
-                if (status.source.statusType != EnemyCatalog.StatusEffects.ConstantBleed) { //the constant bleed status does not go down every turn
+                if (!StaticVariables.enemyCatalog.permanentStatuses.Contains(status.source.statusType)) { 
                     status.turnsRemaining -= 1;
                 }
             }

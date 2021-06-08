@@ -337,6 +337,22 @@ public class DetailsPopup : MonoBehaviour {
                     cardTextInfo += "\n";
                     cardTextInfo += "\n";
                     break;
+                case Catalog.EffectTypes.ChanceToBurn50:
+                    cardTextInfo += ("Has a 50% chance to apply " + p + " burn the target enemy.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("An enemy with burn takes damage every time they do an attacking move for the rest of the battle.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("Burn damage is taken after the enemy's attack finishes.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
+                case Catalog.EffectTypes.EndTurn:
+                    cardTextInfo += ("Immediately after this card's effect finishes, your turn ends.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += ("Any cards left in queue are returned to your hand.");
+                    cardTextInfo += "\n";
+                    cardTextInfo += "\n";
+                    break;
             }
         }
 
@@ -483,6 +499,13 @@ public class DetailsPopup : MonoBehaviour {
                 case EnemyCatalog.StatusEffects.Strength:
                     float s = FindObjectOfType<CombatController>().strengthScalar;
                     summary += ("This enemy is Strong. For the next " + d + " turns, the enemy deals " + s + "x damage.");
+                    summary += "\n";
+                    summary += "\n";
+                    break;
+                case EnemyCatalog.StatusEffects.Burn:
+                    summary += ("This enemy is Burned. For the rest of the battle, the enemy takes " + d + " damage each time it makes an attacking move.");
+                    summary += "\n";
+                    summary += ("Burn damage is taken after the enemy's attack finishes.");
                     summary += "\n";
                     summary += "\n";
                     break;

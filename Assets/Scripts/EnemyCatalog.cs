@@ -13,7 +13,8 @@ public class EnemyCatalog : MonoBehaviour {
 
     public enum AttackTypes { Damage, Idle, LifeSteal, Heal, ShieldBreak, Resilient, Strength };
 
-    public enum StatusEffects { Vulnerable, Weak, Stun, ConstantBleed, DiminishingBleed, Resilient, Strength };
+    public enum StatusEffects { Vulnerable, Weak, Stun, ConstantBleed, DiminishingBleed, Resilient, Strength, Burn };
+    public List<StatusEffects> permanentStatuses = new List<StatusEffects> { StatusEffects.ConstantBleed, StatusEffects.Burn };
     //to add new enemy status effects, add a new element in this StatusEffects list
     //then, go to the EnemyCatalog script in the inspector, and add a new element to the enemyStatuses list
     //each status effect type defined in the StatusEffects enumerator should correspond to exactly one element in the enemyStatuses list.
